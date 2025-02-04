@@ -78,6 +78,8 @@
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbControllerComm = new System.Windows.Forms.GroupBox();
+            this.lblCID = new System.Windows.Forms.Label();
+            this.lblCID_ = new System.Windows.Forms.Label();
             this.lblAID = new System.Windows.Forms.Label();
             this.lblSID = new System.Windows.Forms.Label();
             this.btnConnectController = new System.Windows.Forms.Button();
@@ -93,8 +95,7 @@
             this.ConnectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblServerStatus_ = new System.Windows.Forms.Label();
             this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
-            this.lblCID = new System.Windows.Forms.Label();
-            this.lblCID_ = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -107,6 +108,7 @@
             this.gbControllerVariables.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVariables)).BeginInit();
             this.gbControllerComm.SuspendLayout();
+            this.tabCEApplication.SuspendLayout();
             this.tabCEServer.SuspendLayout();
             this.gbSignalRComm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserList)).BeginInit();
@@ -569,6 +571,24 @@
             this.gbControllerComm.TabStop = false;
             this.gbControllerComm.Text = "Communication";
             // 
+            // lblCID
+            // 
+            this.lblCID.AutoSize = true;
+            this.lblCID.Location = new System.Drawing.Point(112, 118);
+            this.lblCID.Name = "lblCID";
+            this.lblCID.Size = new System.Drawing.Size(16, 17);
+            this.lblCID.TabIndex = 20;
+            this.lblCID.Text = "0";
+            // 
+            // lblCID_
+            // 
+            this.lblCID_.AutoSize = true;
+            this.lblCID_.Location = new System.Drawing.Point(6, 118);
+            this.lblCID_.Name = "lblCID_";
+            this.lblCID_.Size = new System.Drawing.Size(30, 17);
+            this.lblCID_.TabIndex = 19;
+            this.lblCID_.Text = "CID";
+            // 
             // lblAID
             // 
             this.lblAID.AutoSize = true;
@@ -636,6 +656,7 @@
             // tabCEApplication
             // 
             this.tabCEApplication.BackColor = System.Drawing.SystemColors.Window;
+            this.tabCEApplication.Controls.Add(this.label1);
             this.tabCEApplication.Location = new System.Drawing.Point(4, 4);
             this.tabCEApplication.Name = "tabCEApplication";
             this.tabCEApplication.Padding = new System.Windows.Forms.Padding(3);
@@ -703,23 +724,14 @@
             this.tmrFormRefresh.Interval = 250;
             this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
-            // lblCID
+            // label1
             // 
-            this.lblCID.AutoSize = true;
-            this.lblCID.Location = new System.Drawing.Point(112, 118);
-            this.lblCID.Name = "lblCID";
-            this.lblCID.Size = new System.Drawing.Size(16, 17);
-            this.lblCID.TabIndex = 20;
-            this.lblCID.Text = "0";
-            // 
-            // lblCID_
-            // 
-            this.lblCID_.AutoSize = true;
-            this.lblCID_.Location = new System.Drawing.Point(6, 118);
-            this.lblCID_.Name = "lblCID_";
-            this.lblCID_.Size = new System.Drawing.Size(30, 17);
-            this.lblCID_.TabIndex = 19;
-            this.lblCID_.Text = "CID";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(166, 287);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 17);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "label1";
             // 
             // KripteksVMB
             // 
@@ -757,6 +769,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvVariables)).EndInit();
             this.gbControllerComm.ResumeLayout(false);
             this.gbControllerComm.PerformLayout();
+            this.tabCEApplication.ResumeLayout(false);
+            this.tabCEApplication.PerformLayout();
             this.tabCEServer.ResumeLayout(false);
             this.gbSignalRComm.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserList)).EndInit();
@@ -831,5 +845,6 @@
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
         private System.Windows.Forms.Label lblCID;
         private System.Windows.Forms.Label lblCID_;
+        private System.Windows.Forms.Label label1;
     }
 }
