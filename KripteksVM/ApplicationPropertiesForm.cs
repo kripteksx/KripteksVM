@@ -176,6 +176,10 @@ namespace KripteksVM
                 tbboWA[i].Text = stKVM.stCA.sboCAComments[i];
                 tbboAW[i].Text = stKVM.stAC.sboACComments[i];
             }
+
+            lblAID.Text = stKVM.stApp.sAID;
+            lblName.Text = stKVM.stApp.sName;
+            lblInfo.Text = stKVM.stApp.sInfo;
         }
         private void fbFormToVar()
         {

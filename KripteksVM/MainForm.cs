@@ -369,7 +369,7 @@ namespace KripteksVM
                 // web refresh
                 if (clControlBrowser.boMainFrameLoaded)
                 {
-                    clControlBrowser.browser.ExecuteScriptAsync("wAppLive=" + clController.stKVM.stStatus.iLiveCounter);
+                    clControlBrowser.browser.ExecuteScriptAsync("wAppLive=" + clController.stKVM.stStatus.wLiveCounter);
                     clControlBrowser.browser.ExecuteScriptAsync("wRecLive=" + "0");
 
                     string[] sBoolStatus = { "false", "true" };
@@ -418,7 +418,18 @@ namespace KripteksVM
 
                 clController.fbControllerBeckhoffGetComments();
                 PropertiesApplicationForm.stKVM = clController.stKVM;
+
+                this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = clController.stKVM.stApp.sAID; ; });
+                this.lblATName.BeginInvoke((MethodInvoker)delegate () { this.lblATName.Text = clController.stKVM.stApp.sName; ; });
+                this.lblATInfo.BeginInvoke((MethodInvoker)delegate () { this.lblATInfo.Text = clController.stKVM.stApp.sInfo; ; });
+
+                /*lblATAID.Text = clController.stKVM.stApp.sAID;
+                lblATName.Text = clController.stKVM.stApp.sName;
+                lblATInfo.Text = clController.stKVM.stApp.sInfo;*/
+                
             }
+
+            this.lblATElapsedTime.BeginInvoke((MethodInvoker)delegate () { this.lblATElapsedTime.Text = clController.stKVM.stStatus.dElapsedTimeSec.ToString(); ; });
         }
 
         private void tmrFormRefresh_Tick(object sender, EventArgs e)
@@ -816,13 +827,11 @@ namespace KripteksVM
             PropertiesApplicationForm.Show();
             PropertiesApplicationForm.lblAID.Text = clController.stKVM.stApp.sAID;
             fbFormApplicationPropertiesInit();
-            //clController.fbControllerBeckhoffGetComments();
-            //PropertiesApplicationForm.stKVM = clController.stKVM;
         }
-        private void applicationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnmsMenuApplication_Click(object sender, EventArgs e)
         {
-            //clController.fbControllerBeckhoffGetComments();
-           // PropertiesApplicationForm.stKVM = clController.stKVM;
+            clController.fbControllerBeckhoffGetComments();
+            PropertiesApplicationForm.stKVM = clController.stKVM;
         }
         #endregion
 

@@ -70,15 +70,21 @@ namespace KripteksVM.Controls
                     else
                         colorControllerStatus = Color.Red;
 
+                    int ihdElapsedTime = adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.lrElapsedTimeSec");
+                    stKVM.stStatus.dElapsedTimeSec = fbFloatingPoint((double)adsClient.ReadAny(ihdElapsedTime, typeof(double)),2);
+                    
+
                     // session id
                     int ihwControllerToApiSID = adsClient.CreateVariableHandle("KVM.gstKVM.stApp.wSID");
                     stKVM.stApp.sSID = ((UInt16)adsClient.ReadAny(ihwControllerToApiSID, typeof(UInt16))).ToString();
-                    //sSID = stKVM.stApp.wSID.ToString();
 
                     // application id
                     int ihwControllerToApiAID = adsClient.CreateVariableHandle("KVM.gstKVM.stApp.wAID");
                     stKVM.stApp.sAID = ((UInt16)adsClient.ReadAny(ihwControllerToApiAID, typeof(UInt16))).ToString();
-                    //sAID = stKVM.stApp.wAID.ToString();
+
+                    // controller id
+                    int ihwApiToControllerCID = adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sCID");
+                    adsClient.WriteAny(ihwApiToControllerCID, stKVM.stApp.sCID, new int[] { 8 });
 
                     // degiskenler guncelleniyor
                     // word
@@ -104,8 +110,8 @@ namespace KripteksVM.Controls
                 }
 
                 // controller live degiskenleri
-                stKVM.stStatus.iLiveCounter++;
-                if (stKVM.stStatus.iLiveCounter > 99) stKVM.stStatus.iLiveCounter = 0;
+                stKVM.stStatus.wLiveCounter++;
+                if (stKVM.stStatus.wLiveCounter > 99) stKVM.stStatus.wLiveCounter = 0;
 
             }
             catch
@@ -151,47 +157,62 @@ namespace KripteksVM.Controls
         }
         public void fbControllerBeckhoffGetComments()
         {
-            // Beckhoff bagli ise degiskenleri guncelle
-            if (adsClient.IsConnected)
+            try
             {
-                // double
-                int[] ihsdCA = new int[ControlClass.iDoubleSize];
-                int[] ihsdAC = new int[ControlClass.iDoubleSize];
-
-                for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                // Beckhoff bagli ise degiskenleri guncelle
+                if (adsClient.IsConnected)
                 {
-                    ihsdCA[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.slrCAComments[" + i.ToString() + "]");
-                    stKVM.stCA.sdCAComments[i] = (System.String)adsClient.ReadAny(ihsdCA[i], typeof(System.String), new int[] { 20 }).ToString();
+                    // app info
+                    int ihsName = adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sName");
+                    stKVM.stApp.sName = (System.String)adsClient.ReadAny(ihsName, typeof(System.String), new int[] { 63 }).ToString();
 
-                    ihsdAC[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.slrACComments[" + i.ToString() + "]");
-                    stKVM.stAC.sdACComments[i] = (System.String)adsClient.ReadAny(ihsdAC[i], typeof(System.String), new int[] { 20 }).ToString();
+                    int ihsInfo = adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sInfo");
+                    stKVM.stApp.sInfo = (System.String)adsClient.ReadAny(ihsInfo, typeof(System.String), new int[] { 255 }).ToString();
+
+
+                    // double
+                    int[] ihsdCA = new int[ControlClass.iDoubleSize];
+                    int[] ihsdAC = new int[ControlClass.iDoubleSize];
+
+                    for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                    {
+                        ihsdCA[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.slrCAComments[" + i.ToString() + "]");
+                        stKVM.stCA.sdCAComments[i] = (System.String)adsClient.ReadAny(ihsdCA[i], typeof(System.String), new int[] { 30 }).ToString();
+
+                        ihsdAC[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.slrACComments[" + i.ToString() + "]");
+                        stKVM.stAC.sdACComments[i] = (System.String)adsClient.ReadAny(ihsdAC[i], typeof(System.String), new int[] { 30 }).ToString();
+                    }
+
+                    // word
+                    int[] ihswCA = new int[ControlClass.iWordSize];
+                    int[] ihswAC = new int[ControlClass.iWordSize];
+
+                    for (int i = 0; i < ControlClass.iWordSize; i++)
+                    {
+                        ihswCA[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.swCAComments[" + i.ToString() + "]");
+                        stKVM.stCA.swCAComments[i] = (System.String)adsClient.ReadAny(ihswCA[i], typeof(System.String), new int[] { 30 }).ToString();
+
+                        ihswAC[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.swACComments[" + i.ToString() + "]");
+                        stKVM.stAC.swACComments[i] = (System.String)adsClient.ReadAny(ihswAC[i], typeof(System.String), new int[] { 30 }).ToString();
+                    }
+
+                    // bool
+                    int[] ihsboCA = new int[ControlClass.iBoolSize];
+                    int[] ihsboAC = new int[ControlClass.iBoolSize];
+
+                    for (int i = 0; i < ControlClass.iBoolSize; i++)
+                    {
+                        ihsboCA[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.sboCAComments[" + i.ToString() + "]");
+                        stKVM.stCA.sboCAComments[i] = (System.String)adsClient.ReadAny(ihsboCA[i], typeof(System.String), new int[] { 30 }).ToString();
+
+                        ihsboAC[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.sboACComments[" + i.ToString() + "]");
+                        stKVM.stAC.sboACComments[i] = (System.String)adsClient.ReadAny(ihsboAC[i], typeof(System.String), new int[] { 30 }).ToString();
+                    }
                 }
+            }
+            catch
+            {
 
-                // word
-                int[] ihswCA = new int[ControlClass.iWordSize];
-                int[] ihswAC = new int[ControlClass.iWordSize];
-
-                for (int i = 0; i < ControlClass.iWordSize; i++)
-                {
-                    ihswCA[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.swCAComments[" + i.ToString() + "]");
-                    stKVM.stCA.swCAComments[i] = (System.String)adsClient.ReadAny(ihswCA[i], typeof(System.String), new int[] { 20 }).ToString();
-
-                    ihswAC[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.swACComments[" + i.ToString() + "]");
-                    stKVM.stAC.swACComments[i] = (System.String)adsClient.ReadAny(ihswAC[i], typeof(System.String), new int[] { 20 }).ToString();
-                }
-
-                // bool
-                int[] ihsboCA = new int[ControlClass.iBoolSize];
-                int[] ihsboAC = new int[ControlClass.iBoolSize];
-
-                for (int i = 0; i < ControlClass.iBoolSize; i++)
-                {
-                    ihsboCA[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.sboCAComments[" + i.ToString() + "]");
-                    stKVM.stCA.sboCAComments[i] = (System.String)adsClient.ReadAny(ihsboCA[i], typeof(System.String), new int[] { 20 }).ToString();
-
-                    ihsboAC[i] = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.sboACComments[" + i.ToString() + "]");
-                    stKVM.stAC.sboACComments[i] = (System.String)adsClient.ReadAny(ihsboAC[i], typeof(System.String), new int[] { 20 }).ToString();
-                }
             }
         }
 

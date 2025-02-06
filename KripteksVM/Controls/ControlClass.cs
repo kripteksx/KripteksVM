@@ -83,22 +83,32 @@ namespace KripteksVM.Controls
             public string sCID = "";
             public string sSID = "0";
             public string sAID = "0";
+            public string sName = "";
+            public string sInfo = "";
             public ST_KVM_App()
             {
                 this.sCID = "";
                 this.sSID = "";
                 this.sAID = "";
+                this.sName = "";
+                this.sInfo = "";
             }
         }
         public class ST_KVM_Status
         {
             public bool boLive;
-            public int iLiveCounter;
+            public bool boAppLive;
+            public bool boWebLive;
+            public double dElapsedTimeSec;
+            public UInt16 wLiveCounter;
 
             public ST_KVM_Status()
             {
                 this.boLive = false;
-                this.iLiveCounter = 0;
+                this.boAppLive = false;
+                this.boWebLive = false;
+                this.dElapsedTimeSec = 0;
+                this.wLiveCounter = 0;
             }
         }
 

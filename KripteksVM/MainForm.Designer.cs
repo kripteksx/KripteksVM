@@ -55,7 +55,7 @@
             this.btnmsMenuRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuDevTools = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuShareLink = new System.Windows.Forms.ToolStripMenuItem();
-            this.applicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnmsMenuApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuApplicationProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.controllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuControllerProperties = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +95,15 @@
             this.ConnectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblServerStatus_ = new System.Windows.Forms.Label();
             this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblATInfo = new System.Windows.Forms.Label();
+            this.lblATInfo_ = new System.Windows.Forms.Label();
+            this.lblATName = new System.Windows.Forms.Label();
+            this.lblATName_ = new System.Windows.Forms.Label();
+            this.lblATAID = new System.Windows.Forms.Label();
+            this.lblATAID_ = new System.Windows.Forms.Label();
+            this.lblATElapsedTime = new System.Windows.Forms.Label();
+            this.lblATElapsedTime_ = new System.Windows.Forms.Label();
+            this.lblATElapsedTimeUnit = new System.Windows.Forms.Label();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -253,7 +261,7 @@
             this.fileToolStripMenuItem,
             this.userToolStripMenuItem,
             this.browserToolStripMenuItem,
-            this.applicationToolStripMenuItem,
+            this.btnmsMenuApplication,
             this.controllerToolStripMenuItem,
             this.cameraToolStripMenuItem,
             this.helpToolStripMenuItem});
@@ -341,19 +349,19 @@
             this.btnmsMenuShareLink.Text = "Share Link [F10]";
             this.btnmsMenuShareLink.Click += new System.EventHandler(this.btnmsMenuShareLink_Click);
             // 
-            // applicationToolStripMenuItem
+            // btnmsMenuApplication
             // 
-            this.applicationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnmsMenuApplication.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnmsMenuApplicationProperties});
-            this.applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            this.applicationToolStripMenuItem.Size = new System.Drawing.Size(98, 23);
-            this.applicationToolStripMenuItem.Text = "Application";
-            this.applicationToolStripMenuItem.Click += new System.EventHandler(this.applicationToolStripMenuItem_Click);
+            this.btnmsMenuApplication.Name = "btnmsMenuApplication";
+            this.btnmsMenuApplication.Size = new System.Drawing.Size(98, 23);
+            this.btnmsMenuApplication.Text = "Application";
+            this.btnmsMenuApplication.Click += new System.EventHandler(this.btnmsMenuApplication_Click);
             // 
             // btnmsMenuApplicationProperties
             // 
             this.btnmsMenuApplicationProperties.Name = "btnmsMenuApplicationProperties";
-            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(151, 26);
+            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuApplicationProperties.Text = "Properties";
             this.btnmsMenuApplicationProperties.Click += new System.EventHandler(this.btnmsMenuApplicationProperties_Click);
             // 
@@ -656,7 +664,15 @@
             // tabCEApplication
             // 
             this.tabCEApplication.BackColor = System.Drawing.SystemColors.Window;
-            this.tabCEApplication.Controls.Add(this.label1);
+            this.tabCEApplication.Controls.Add(this.lblATElapsedTimeUnit);
+            this.tabCEApplication.Controls.Add(this.lblATElapsedTime);
+            this.tabCEApplication.Controls.Add(this.lblATElapsedTime_);
+            this.tabCEApplication.Controls.Add(this.lblATInfo);
+            this.tabCEApplication.Controls.Add(this.lblATInfo_);
+            this.tabCEApplication.Controls.Add(this.lblATName);
+            this.tabCEApplication.Controls.Add(this.lblATName_);
+            this.tabCEApplication.Controls.Add(this.lblATAID);
+            this.tabCEApplication.Controls.Add(this.lblATAID_);
             this.tabCEApplication.Location = new System.Drawing.Point(4, 4);
             this.tabCEApplication.Name = "tabCEApplication";
             this.tabCEApplication.Padding = new System.Windows.Forms.Padding(3);
@@ -724,14 +740,82 @@
             this.tmrFormRefresh.Interval = 250;
             this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
-            // label1
+            // lblATInfo
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(166, 287);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.lblATInfo.Location = new System.Drawing.Point(68, 81);
+            this.lblATInfo.Name = "lblATInfo";
+            this.lblATInfo.Size = new System.Drawing.Size(200, 372);
+            this.lblATInfo.TabIndex = 14;
+            this.lblATInfo.Text = "    ";
+            // 
+            // lblATInfo_
+            // 
+            this.lblATInfo_.AutoSize = true;
+            this.lblATInfo_.Location = new System.Drawing.Point(9, 81);
+            this.lblATInfo_.Name = "lblATInfo_";
+            this.lblATInfo_.Size = new System.Drawing.Size(39, 17);
+            this.lblATInfo_.TabIndex = 13;
+            this.lblATInfo_.Text = "Info :";
+            // 
+            // lblATName
+            // 
+            this.lblATName.Location = new System.Drawing.Point(68, 46);
+            this.lblATName.Name = "lblATName";
+            this.lblATName.Size = new System.Drawing.Size(200, 23);
+            this.lblATName.TabIndex = 12;
+            this.lblATName.Text = "    ";
+            // 
+            // lblATName_
+            // 
+            this.lblATName_.AutoSize = true;
+            this.lblATName_.Location = new System.Drawing.Point(9, 49);
+            this.lblATName_.Name = "lblATName_";
+            this.lblATName_.Size = new System.Drawing.Size(53, 17);
+            this.lblATName_.TabIndex = 11;
+            this.lblATName_.Text = "Name :";
+            // 
+            // lblATAID
+            // 
+            this.lblATAID.Location = new System.Drawing.Point(68, 13);
+            this.lblATAID.Name = "lblATAID";
+            this.lblATAID.Size = new System.Drawing.Size(33, 23);
+            this.lblATAID.TabIndex = 10;
+            this.lblATAID.Text = "    ";
+            // 
+            // lblATAID_
+            // 
+            this.lblATAID_.AutoSize = true;
+            this.lblATAID_.Location = new System.Drawing.Point(9, 16);
+            this.lblATAID_.Name = "lblATAID_";
+            this.lblATAID_.Size = new System.Drawing.Size(38, 17);
+            this.lblATAID_.TabIndex = 9;
+            this.lblATAID_.Text = "AID :";
+            // 
+            // lblATElapsedTime
+            // 
+            this.lblATElapsedTime.Location = new System.Drawing.Point(68, 453);
+            this.lblATElapsedTime.Name = "lblATElapsedTime";
+            this.lblATElapsedTime.Size = new System.Drawing.Size(60, 20);
+            this.lblATElapsedTime.TabIndex = 16;
+            this.lblATElapsedTime.Text = "    ";
+            // 
+            // lblATElapsedTime_
+            // 
+            this.lblATElapsedTime_.AutoSize = true;
+            this.lblATElapsedTime_.Location = new System.Drawing.Point(9, 453);
+            this.lblATElapsedTime_.Name = "lblATElapsedTime_";
+            this.lblATElapsedTime_.Size = new System.Drawing.Size(47, 17);
+            this.lblATElapsedTime_.TabIndex = 15;
+            this.lblATElapsedTime_.Text = "Time :";
+            // 
+            // lblATElapsedTimeUnit
+            // 
+            this.lblATElapsedTimeUnit.AutoSize = true;
+            this.lblATElapsedTimeUnit.Location = new System.Drawing.Point(134, 453);
+            this.lblATElapsedTimeUnit.Name = "lblATElapsedTimeUnit";
+            this.lblATElapsedTimeUnit.Size = new System.Drawing.Size(34, 17);
+            this.lblATElapsedTimeUnit.TabIndex = 17;
+            this.lblATElapsedTimeUnit.Text = "sec.";
             // 
             // KripteksVMB
             // 
@@ -839,12 +923,20 @@
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFreeCam;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFirstPersonCam;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuGoFullScreen;
-        private System.Windows.Forms.ToolStripMenuItem applicationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem btnmsMenuApplication;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuApplicationProperties;
         private System.Windows.Forms.ToolStripMenuItem controllerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
         private System.Windows.Forms.Label lblCID;
         private System.Windows.Forms.Label lblCID_;
-        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Label lblATInfo;
+        private System.Windows.Forms.Label lblATInfo_;
+        public System.Windows.Forms.Label lblATName;
+        private System.Windows.Forms.Label lblATName_;
+        public System.Windows.Forms.Label lblATAID;
+        private System.Windows.Forms.Label lblATAID_;
+        public System.Windows.Forms.Label lblATElapsedTime;
+        private System.Windows.Forms.Label lblATElapsedTime_;
+        private System.Windows.Forms.Label lblATElapsedTimeUnit;
     }
 }
