@@ -129,8 +129,8 @@ namespace KripteksVM
             fbTimerInit();
 
             // chromium
-            //clControlBrowser.sHost = "http://www.kripteks.net";
-            clControlBrowser.sHost = "http://localhost:56436";
+            clControlBrowser.sHost = "http://www.kripteks.net";
+            //clControlBrowser.sHost = "http://localhost:56436";
             clControlBrowser.fbInit(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID);
             scMain.Panel1.Controls.Add(clControlBrowser.browser);
 
