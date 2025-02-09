@@ -33,6 +33,10 @@ namespace KripteksVM
         private int iscMainSplitterDistance = 0;
         private int iFormWidthOld = 0;
 
+        // screen center point
+        public int iCenterPointX = 0;
+        public int iCenterPointY = 0;
+
         // guncellenen degiskenler
         private int iVariablesSourceIndex = 0;
         private int iVariablesTypeIndex = 0;
@@ -125,8 +129,8 @@ namespace KripteksVM
             fbTimerInit();
 
             // chromium
-            clControlBrowser.sHost = "http://www.kripteks.net";
-            //clControlBrowser.sHost = "http://localhost:56436";
+            //clControlBrowser.sHost = "http://www.kripteks.net";
+            clControlBrowser.sHost = "http://localhost:56436";
             clControlBrowser.fbInit(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID);
             scMain.Panel1.Controls.Add(clControlBrowser.browser);
 
@@ -225,8 +229,6 @@ namespace KripteksVM
 
 
             // ekran cozunurlugu
-            int iCenterPointX = 0;
-            int iCenterPointY = 0;
             if (boFullScreen)
             {
                 iCenterPointX = FullScreenForm.Width / 2;
@@ -234,8 +236,8 @@ namespace KripteksVM
             }
             else
             {
-                iCenterPointX = this.Location.X +16 + scMain.Panel1.Width / 2;
-                iCenterPointY = this.Location.Y +80+ scMain.Panel1.Height / 2;
+                iCenterPointX = this.Location.X + 16 + scMain.Panel1.Width / 2;
+                iCenterPointY = this.Location.Y + 80 + scMain.Panel1.Height / 2;
             }
             if (sActiveWindowTitle == "KripteksVM")
             {
@@ -279,21 +281,6 @@ namespace KripteksVM
             }
 
 
-            if (!boCursorVisible)
-            {
-                iCursorPosXFark = Cursor.Position.X - (iCenterPointX);
-                iCursorPosYFark = Cursor.Position.Y - (iCenterPointY);
-                Cursor.Position = new Point(iCenterPointX, iCenterPointY);
-
-                if (iCursorPosXFark > 50) iCursorPosXFark = 50;
-                else if (iCursorPosXFark < -50) iCursorPosXFark = -50;
-                if (iCursorPosYFark > 50) iCursorPosYFark = 50;
-                else if (iCursorPosYFark < -50) iCursorPosYFark = -50;
-                iCursorPosXTop = iCursorPosXTop + iCursorPosXFark;
-                iCursorPosYTop = iCursorPosYTop + iCursorPosYFark;
-                
-
-            }
 
         }
         private void tmrCamRefresh_Tick(object sender, EventArgs e)
@@ -318,7 +305,22 @@ namespace KripteksVM
                         if (boFreeCam) clControlBrowser.browser.ExecuteScriptAsync("boFreeCam=true");
                         else clControlBrowser.browser.ExecuteScriptAsync("boFreeCam=false");
                     }
-                    
+
+                    if (!boCursorVisible)
+                    {
+                        iCursorPosXFark = Cursor.Position.X - (iCenterPointX);
+                        iCursorPosYFark = Cursor.Position.Y - (iCenterPointY);
+                        Cursor.Position = new Point(iCenterPointX, iCenterPointY);
+
+                        /*if (iCursorPosXFark > 20) iCursorPosXFark = 20;
+                        else if (iCursorPosXFark < -20) iCursorPosXFark = -20;
+                        if (iCursorPosYFark > 20) iCursorPosYFark = 20;
+                        else if (iCursorPosYFark < -20) iCursorPosYFark = -20;*/
+                        iCursorPosXTop = iCursorPosXTop + iCursorPosXFark/2;
+                        iCursorPosYTop = iCursorPosYTop + iCursorPosYFark/2;
+
+
+                    }
                     clControlBrowser.browser.ExecuteScriptAsync("boBrowserActive=false");
                     clControlBrowser.browser.ExecuteScriptAsync("PointerLockX=" + iCursorPosXTop.ToString());
                     clControlBrowser.browser.ExecuteScriptAsync("PointerLockY=" + iCursorPosYTop.ToString());
