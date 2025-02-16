@@ -70,6 +70,9 @@ namespace KripteksVM
         public int iCursorPosXTop = 0;
         public int iCursorPosYTop = 0;
 
+        public string sForDoubleFloatCharOld = "";
+        public string sForDoubleFloatCharNew = "";
+
         //public Form FullScreenForm;
         SplashForm SplashForm = new SplashForm();
         FullScreenForm FullScreenForm = new FullScreenForm();
@@ -103,6 +106,18 @@ namespace KripteksVM
 
         public KripteksVMB()
         {
+            string sDouble = "10.0";
+            if (Convert.ToDouble(sDouble) == 10)
+            {
+                sForDoubleFloatCharOld = ",";
+                sForDoubleFloatCharNew = ".";
+            }
+            else
+            {
+                sForDoubleFloatCharOld = ".";
+                sForDoubleFloatCharNew = ",";
+            }
+
             // loading 
             SplashForm.Show();
             this.Hide();
@@ -391,13 +406,13 @@ namespace KripteksVM
                     }
 
 
-                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(",",".") + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
+                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
 
                     string sdWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "dWA");
                     string[] arrsdWA = sdWA.Split(':');
                     for (int i = 0; i < ControlClass.iDoubleSize; i++)
                     {
-                        if (arrsdWA[i] != "") dWA[i] = Convert.ToDouble(arrsdWA[i].Replace(",", "."));
+                        if (arrsdWA[i] != "") dWA[i] = Convert.ToDouble(arrsdWA[i].Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew));
                     }
 
                     clControlBrowser.browser.ExecuteScriptAsync("wAW=[" + wAW[0].ToString() + "," + wAW[1].ToString() + "," + wAW[2].ToString() + "," + wAW[3].ToString() + "," + wAW[4].ToString() + "," + wAW[5].ToString() + "," + wAW[6].ToString() + "," + wAW[7].ToString() + "]");
