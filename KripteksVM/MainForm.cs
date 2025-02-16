@@ -391,13 +391,13 @@ namespace KripteksVM
                     }
 
 
-                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString() + "," + dAW[1].ToString() + "," + dAW[2].ToString() + "," + dAW[3].ToString() + "," + dAW[4].ToString() + "," + dAW[5].ToString() + "," + dAW[6].ToString() + "," + dAW[7].ToString() + "]");
+                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(",",".") + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
 
                     string sdWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "dWA");
                     string[] arrsdWA = sdWA.Split(':');
                     for (int i = 0; i < ControlClass.iDoubleSize; i++)
                     {
-                        if (arrsdWA[i] != "") dWA[i] = Convert.ToDouble(arrsdWA[i]);
+                        if (arrsdWA[i] != "") dWA[i] = Convert.ToDouble(arrsdWA[i].Replace(",", "."));
                     }
 
                     clControlBrowser.browser.ExecuteScriptAsync("wAW=[" + wAW[0].ToString() + "," + wAW[1].ToString() + "," + wAW[2].ToString() + "," + wAW[3].ToString() + "," + wAW[4].ToString() + "," + wAW[5].ToString() + "," + wAW[6].ToString() + "," + wAW[7].ToString() + "]");
