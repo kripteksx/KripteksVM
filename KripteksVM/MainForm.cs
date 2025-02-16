@@ -406,7 +406,7 @@ namespace KripteksVM
                     }
 
 
-                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
+                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[1].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[2].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[3].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[4].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[5].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[6].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "," + dAW[7].ToString().Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew) + "]");
 
                     string sdWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "dWA");
                     string[] arrsdWA = sdWA.Split(':');
