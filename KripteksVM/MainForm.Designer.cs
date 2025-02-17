@@ -88,6 +88,15 @@
             this.lblSID_ = new System.Windows.Forms.Label();
             this.btnDisconnectController = new System.Windows.Forms.Button();
             this.tabCEApplication = new System.Windows.Forms.TabPage();
+            this.lblATElapsedTimeUnit = new System.Windows.Forms.Label();
+            this.lblATElapsedTime = new System.Windows.Forms.Label();
+            this.lblATElapsedTime_ = new System.Windows.Forms.Label();
+            this.lblATInfo = new System.Windows.Forms.Label();
+            this.lblATInfo_ = new System.Windows.Forms.Label();
+            this.lblATName = new System.Windows.Forms.Label();
+            this.lblATName_ = new System.Windows.Forms.Label();
+            this.lblATAID = new System.Windows.Forms.Label();
+            this.lblATAID_ = new System.Windows.Forms.Label();
             this.tabCEServer = new System.Windows.Forms.TabPage();
             this.gbSignalRComm = new System.Windows.Forms.GroupBox();
             this.dgvUserList = new System.Windows.Forms.DataGridView();
@@ -95,15 +104,10 @@
             this.ConnectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblServerStatus_ = new System.Windows.Forms.Label();
             this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
-            this.lblATInfo = new System.Windows.Forms.Label();
-            this.lblATInfo_ = new System.Windows.Forms.Label();
-            this.lblATName = new System.Windows.Forms.Label();
-            this.lblATName_ = new System.Windows.Forms.Label();
-            this.lblATAID = new System.Windows.Forms.Label();
-            this.lblATAID_ = new System.Windows.Forms.Label();
-            this.lblATElapsedTime = new System.Windows.Forms.Label();
-            this.lblATElapsedTime_ = new System.Windows.Forms.Label();
-            this.lblATElapsedTimeUnit = new System.Windows.Forms.Label();
+            this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
+            this.lblBeckhoffPortNo_ = new System.Windows.Forms.Label();
+            this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
+            this.lblBeckhoffAMSNetID_ = new System.Windows.Forms.Label();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -361,7 +365,7 @@
             // btnmsMenuApplicationProperties
             // 
             this.btnmsMenuApplicationProperties.Name = "btnmsMenuApplicationProperties";
-            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(151, 26);
             this.btnmsMenuApplicationProperties.Text = "Properties";
             this.btnmsMenuApplicationProperties.Click += new System.EventHandler(this.btnmsMenuApplicationProperties_Click);
             // 
@@ -474,7 +478,7 @@
             this.gbControllerVariables.Controls.Add(this.cbVariablesSource);
             this.gbControllerVariables.Controls.Add(this.cbVariablesType);
             this.gbControllerVariables.Controls.Add(this.dgvVariables);
-            this.gbControllerVariables.Location = new System.Drawing.Point(6, 164);
+            this.gbControllerVariables.Location = new System.Drawing.Point(6, 250);
             this.gbControllerVariables.Name = "gbControllerVariables";
             this.gbControllerVariables.Size = new System.Drawing.Size(267, 338);
             this.gbControllerVariables.TabIndex = 18;
@@ -563,6 +567,10 @@
             // 
             // gbControllerComm
             // 
+            this.gbControllerComm.Controls.Add(this.lblBeckhoffAMSNetID);
+            this.gbControllerComm.Controls.Add(this.lblBeckhoffAMSNetID_);
+            this.gbControllerComm.Controls.Add(this.lblBeckhoffPortNo);
+            this.gbControllerComm.Controls.Add(this.lblBeckhoffPortNo_);
             this.gbControllerComm.Controls.Add(this.lblCID);
             this.gbControllerComm.Controls.Add(this.lblCID_);
             this.gbControllerComm.Controls.Add(this.lblAID);
@@ -574,7 +582,7 @@
             this.gbControllerComm.Controls.Add(this.btnDisconnectController);
             this.gbControllerComm.Location = new System.Drawing.Point(6, 6);
             this.gbControllerComm.Name = "gbControllerComm";
-            this.gbControllerComm.Size = new System.Drawing.Size(267, 152);
+            this.gbControllerComm.Size = new System.Drawing.Size(267, 225);
             this.gbControllerComm.TabIndex = 17;
             this.gbControllerComm.TabStop = false;
             this.gbControllerComm.Text = "Communication";
@@ -582,7 +590,7 @@
             // lblCID
             // 
             this.lblCID.AutoSize = true;
-            this.lblCID.Location = new System.Drawing.Point(112, 118);
+            this.lblCID.Location = new System.Drawing.Point(112, 180);
             this.lblCID.Name = "lblCID";
             this.lblCID.Size = new System.Drawing.Size(16, 17);
             this.lblCID.TabIndex = 20;
@@ -591,7 +599,7 @@
             // lblCID_
             // 
             this.lblCID_.AutoSize = true;
-            this.lblCID_.Location = new System.Drawing.Point(6, 118);
+            this.lblCID_.Location = new System.Drawing.Point(6, 180);
             this.lblCID_.Name = "lblCID_";
             this.lblCID_.Size = new System.Drawing.Size(30, 17);
             this.lblCID_.TabIndex = 19;
@@ -600,7 +608,7 @@
             // lblAID
             // 
             this.lblAID.AutoSize = true;
-            this.lblAID.Location = new System.Drawing.Point(112, 92);
+            this.lblAID.Location = new System.Drawing.Point(112, 155);
             this.lblAID.Name = "lblAID";
             this.lblAID.Size = new System.Drawing.Size(16, 17);
             this.lblAID.TabIndex = 18;
@@ -609,7 +617,7 @@
             // lblSID
             // 
             this.lblSID.AutoSize = true;
-            this.lblSID.Location = new System.Drawing.Point(112, 66);
+            this.lblSID.Location = new System.Drawing.Point(112, 130);
             this.lblSID.Name = "lblSID";
             this.lblSID.Size = new System.Drawing.Size(16, 17);
             this.lblSID.TabIndex = 17;
@@ -628,7 +636,7 @@
             // lblAID_
             // 
             this.lblAID_.AutoSize = true;
-            this.lblAID_.Location = new System.Drawing.Point(6, 92);
+            this.lblAID_.Location = new System.Drawing.Point(6, 155);
             this.lblAID_.Name = "lblAID_";
             this.lblAID_.Size = new System.Drawing.Size(30, 17);
             this.lblAID_.TabIndex = 16;
@@ -645,7 +653,7 @@
             // lblSID_
             // 
             this.lblSID_.AutoSize = true;
-            this.lblSID_.Location = new System.Drawing.Point(6, 66);
+            this.lblSID_.Location = new System.Drawing.Point(6, 130);
             this.lblSID_.Name = "lblSID_";
             this.lblSID_.Size = new System.Drawing.Size(30, 17);
             this.lblSID_.TabIndex = 15;
@@ -679,6 +687,83 @@
             this.tabCEApplication.Size = new System.Drawing.Size(288, 552);
             this.tabCEApplication.TabIndex = 1;
             this.tabCEApplication.Text = "Application";
+            // 
+            // lblATElapsedTimeUnit
+            // 
+            this.lblATElapsedTimeUnit.AutoSize = true;
+            this.lblATElapsedTimeUnit.Location = new System.Drawing.Point(134, 453);
+            this.lblATElapsedTimeUnit.Name = "lblATElapsedTimeUnit";
+            this.lblATElapsedTimeUnit.Size = new System.Drawing.Size(34, 17);
+            this.lblATElapsedTimeUnit.TabIndex = 17;
+            this.lblATElapsedTimeUnit.Text = "sec.";
+            // 
+            // lblATElapsedTime
+            // 
+            this.lblATElapsedTime.Location = new System.Drawing.Point(68, 453);
+            this.lblATElapsedTime.Name = "lblATElapsedTime";
+            this.lblATElapsedTime.Size = new System.Drawing.Size(60, 20);
+            this.lblATElapsedTime.TabIndex = 16;
+            this.lblATElapsedTime.Text = "    ";
+            // 
+            // lblATElapsedTime_
+            // 
+            this.lblATElapsedTime_.AutoSize = true;
+            this.lblATElapsedTime_.Location = new System.Drawing.Point(9, 453);
+            this.lblATElapsedTime_.Name = "lblATElapsedTime_";
+            this.lblATElapsedTime_.Size = new System.Drawing.Size(47, 17);
+            this.lblATElapsedTime_.TabIndex = 15;
+            this.lblATElapsedTime_.Text = "Time :";
+            // 
+            // lblATInfo
+            // 
+            this.lblATInfo.Location = new System.Drawing.Point(68, 81);
+            this.lblATInfo.Name = "lblATInfo";
+            this.lblATInfo.Size = new System.Drawing.Size(200, 372);
+            this.lblATInfo.TabIndex = 14;
+            this.lblATInfo.Text = "    ";
+            // 
+            // lblATInfo_
+            // 
+            this.lblATInfo_.AutoSize = true;
+            this.lblATInfo_.Location = new System.Drawing.Point(9, 81);
+            this.lblATInfo_.Name = "lblATInfo_";
+            this.lblATInfo_.Size = new System.Drawing.Size(39, 17);
+            this.lblATInfo_.TabIndex = 13;
+            this.lblATInfo_.Text = "Info :";
+            // 
+            // lblATName
+            // 
+            this.lblATName.Location = new System.Drawing.Point(68, 46);
+            this.lblATName.Name = "lblATName";
+            this.lblATName.Size = new System.Drawing.Size(200, 23);
+            this.lblATName.TabIndex = 12;
+            this.lblATName.Text = "    ";
+            // 
+            // lblATName_
+            // 
+            this.lblATName_.AutoSize = true;
+            this.lblATName_.Location = new System.Drawing.Point(9, 49);
+            this.lblATName_.Name = "lblATName_";
+            this.lblATName_.Size = new System.Drawing.Size(53, 17);
+            this.lblATName_.TabIndex = 11;
+            this.lblATName_.Text = "Name :";
+            // 
+            // lblATAID
+            // 
+            this.lblATAID.Location = new System.Drawing.Point(68, 13);
+            this.lblATAID.Name = "lblATAID";
+            this.lblATAID.Size = new System.Drawing.Size(33, 23);
+            this.lblATAID.TabIndex = 10;
+            this.lblATAID.Text = "    ";
+            // 
+            // lblATAID_
+            // 
+            this.lblATAID_.AutoSize = true;
+            this.lblATAID_.Location = new System.Drawing.Point(9, 16);
+            this.lblATAID_.Name = "lblATAID_";
+            this.lblATAID_.Size = new System.Drawing.Size(38, 17);
+            this.lblATAID_.TabIndex = 9;
+            this.lblATAID_.Text = "AID :";
             // 
             // tabCEServer
             // 
@@ -740,82 +825,41 @@
             this.tmrFormRefresh.Interval = 250;
             this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
-            // lblATInfo
+            // lblBeckhoffPortNo
             // 
-            this.lblATInfo.Location = new System.Drawing.Point(68, 81);
-            this.lblATInfo.Name = "lblATInfo";
-            this.lblATInfo.Size = new System.Drawing.Size(200, 372);
-            this.lblATInfo.TabIndex = 14;
-            this.lblATInfo.Text = "    ";
+            this.lblBeckhoffPortNo.AutoSize = true;
+            this.lblBeckhoffPortNo.Location = new System.Drawing.Point(112, 105);
+            this.lblBeckhoffPortNo.Name = "lblBeckhoffPortNo";
+            this.lblBeckhoffPortNo.Size = new System.Drawing.Size(16, 17);
+            this.lblBeckhoffPortNo.TabIndex = 22;
+            this.lblBeckhoffPortNo.Text = "0";
             // 
-            // lblATInfo_
+            // lblBeckhoffPortNo_
             // 
-            this.lblATInfo_.AutoSize = true;
-            this.lblATInfo_.Location = new System.Drawing.Point(9, 81);
-            this.lblATInfo_.Name = "lblATInfo_";
-            this.lblATInfo_.Size = new System.Drawing.Size(39, 17);
-            this.lblATInfo_.TabIndex = 13;
-            this.lblATInfo_.Text = "Info :";
+            this.lblBeckhoffPortNo_.AutoSize = true;
+            this.lblBeckhoffPortNo_.Location = new System.Drawing.Point(6, 105);
+            this.lblBeckhoffPortNo_.Name = "lblBeckhoffPortNo_";
+            this.lblBeckhoffPortNo_.Size = new System.Drawing.Size(34, 17);
+            this.lblBeckhoffPortNo_.TabIndex = 21;
+            this.lblBeckhoffPortNo_.Text = "Port";
             // 
-            // lblATName
+            // lblBeckhoffAMSNetID
             // 
-            this.lblATName.Location = new System.Drawing.Point(68, 46);
-            this.lblATName.Name = "lblATName";
-            this.lblATName.Size = new System.Drawing.Size(200, 23);
-            this.lblATName.TabIndex = 12;
-            this.lblATName.Text = "    ";
+            this.lblBeckhoffAMSNetID.AutoSize = true;
+            this.lblBeckhoffAMSNetID.Location = new System.Drawing.Point(112, 80);
+            this.lblBeckhoffAMSNetID.Name = "lblBeckhoffAMSNetID";
+            this.lblBeckhoffAMSNetID.Size = new System.Drawing.Size(16, 17);
+            this.lblBeckhoffAMSNetID.TabIndex = 24;
+            this.lblBeckhoffAMSNetID.Text = "0";
             // 
-            // lblATName_
+            // lblBeckhoffAMSNetID_
             // 
-            this.lblATName_.AutoSize = true;
-            this.lblATName_.Location = new System.Drawing.Point(9, 49);
-            this.lblATName_.Name = "lblATName_";
-            this.lblATName_.Size = new System.Drawing.Size(53, 17);
-            this.lblATName_.TabIndex = 11;
-            this.lblATName_.Text = "Name :";
-            // 
-            // lblATAID
-            // 
-            this.lblATAID.Location = new System.Drawing.Point(68, 13);
-            this.lblATAID.Name = "lblATAID";
-            this.lblATAID.Size = new System.Drawing.Size(33, 23);
-            this.lblATAID.TabIndex = 10;
-            this.lblATAID.Text = "    ";
-            // 
-            // lblATAID_
-            // 
-            this.lblATAID_.AutoSize = true;
-            this.lblATAID_.Location = new System.Drawing.Point(9, 16);
-            this.lblATAID_.Name = "lblATAID_";
-            this.lblATAID_.Size = new System.Drawing.Size(38, 17);
-            this.lblATAID_.TabIndex = 9;
-            this.lblATAID_.Text = "AID :";
-            // 
-            // lblATElapsedTime
-            // 
-            this.lblATElapsedTime.Location = new System.Drawing.Point(68, 453);
-            this.lblATElapsedTime.Name = "lblATElapsedTime";
-            this.lblATElapsedTime.Size = new System.Drawing.Size(60, 20);
-            this.lblATElapsedTime.TabIndex = 16;
-            this.lblATElapsedTime.Text = "    ";
-            // 
-            // lblATElapsedTime_
-            // 
-            this.lblATElapsedTime_.AutoSize = true;
-            this.lblATElapsedTime_.Location = new System.Drawing.Point(9, 453);
-            this.lblATElapsedTime_.Name = "lblATElapsedTime_";
-            this.lblATElapsedTime_.Size = new System.Drawing.Size(47, 17);
-            this.lblATElapsedTime_.TabIndex = 15;
-            this.lblATElapsedTime_.Text = "Time :";
-            // 
-            // lblATElapsedTimeUnit
-            // 
-            this.lblATElapsedTimeUnit.AutoSize = true;
-            this.lblATElapsedTimeUnit.Location = new System.Drawing.Point(134, 453);
-            this.lblATElapsedTimeUnit.Name = "lblATElapsedTimeUnit";
-            this.lblATElapsedTimeUnit.Size = new System.Drawing.Size(34, 17);
-            this.lblATElapsedTimeUnit.TabIndex = 17;
-            this.lblATElapsedTimeUnit.Text = "sec.";
+            this.lblBeckhoffAMSNetID_.AutoSize = true;
+            this.lblBeckhoffAMSNetID_.Location = new System.Drawing.Point(6, 80);
+            this.lblBeckhoffAMSNetID_.Name = "lblBeckhoffAMSNetID_";
+            this.lblBeckhoffAMSNetID_.Size = new System.Drawing.Size(76, 17);
+            this.lblBeckhoffAMSNetID_.TabIndex = 23;
+            this.lblBeckhoffAMSNetID_.Text = "AmsNETID";
             // 
             // KripteksVMB
             // 
@@ -938,5 +982,9 @@
         public System.Windows.Forms.Label lblATElapsedTime;
         private System.Windows.Forms.Label lblATElapsedTime_;
         private System.Windows.Forms.Label lblATElapsedTimeUnit;
+        private System.Windows.Forms.Label lblBeckhoffAMSNetID;
+        private System.Windows.Forms.Label lblBeckhoffAMSNetID_;
+        private System.Windows.Forms.Label lblBeckhoffPortNo;
+        private System.Windows.Forms.Label lblBeckhoffPortNo_;
     }
 }

@@ -28,7 +28,7 @@ namespace KripteksVM
 #endif
 
             string LocalCachePath = Application.StartupPath + "\\Cache";
-            Directory.Delete(LocalCachePath, true);
+            if(Directory.Exists(LocalCachePath)) Directory.Delete(LocalCachePath, true);
             Directory.CreateDirectory(LocalCachePath);
 
             // Programmatically enable DPI Aweness

@@ -11,7 +11,9 @@ namespace KripteksVM.Controls
 {
     public class Controller
     {
-        
+        // controllerden cek
+        public bool boFirstCycle = false;
+
         // guncellenen degiskenler
         public ControlClass.ST_KVM stKVM = new ControlClass.ST_KVM();
 
@@ -70,6 +72,10 @@ namespace KripteksVM.Controls
                     else
                         colorControllerStatus = Color.Red;
 
+
+                    int ihboApiToControllerLive = adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.boAppLive");
+                    adsClient.WriteAny(ihboApiToControllerLive, stKVM.stStatus.boLive);
+
                     int ihdElapsedTime = adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.lrElapsedTimeSec");
                     stKVM.stStatus.dElapsedTimeSec = fbFloatingPoint((double)adsClient.ReadAny(ihdElapsedTime, typeof(double)),2);
                     
@@ -92,21 +98,26 @@ namespace KripteksVM.Controls
                     stKVM.stCA.wCA = (UInt16[])adsClient.ReadAny(ihwCAx, typeof(UInt16[]), new int[] { ControlClass.iWordSize });
 
                     int ihwACx = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.wAC");
-                    adsClient.WriteAny(ihwACx, stKVM.stAC.wAC);
+                    if (boFirstCycle) stKVM.stAC.wAC = (UInt16[])adsClient.ReadAny(ihwACx, typeof(UInt16[]), new int[] { ControlClass.iWordSize });
+                    else adsClient.WriteAny(ihwACx, stKVM.stAC.wAC);
 
                     // double
                     int ihdCAx = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.lrCA");
                     stKVM.stCA.dCA = (double[])adsClient.ReadAny(ihdCAx, typeof(double[]), new int[] { ControlClass.iDoubleSize });
 
                     int ihdACx = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.lrAC");
-                    adsClient.WriteAny(ihdACx, stKVM.stAC.dAC);
+                    if (boFirstCycle) stKVM.stAC.dAC = (double[])adsClient.ReadAny(ihdACx, typeof(double[]), new int[] { ControlClass.iDoubleSize });
+                    else    adsClient.WriteAny(ihdACx, stKVM.stAC.dAC);
                     
                     // bool
                     int ihboCAx = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.boCA");
                     stKVM.stCA.boCA = (System.Boolean[])adsClient.ReadAny(ihboCAx, typeof(System.Boolean[]), new int[] { ControlClass.iBoolSize });
 
                     int ihboACx = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.boAC");
-                    adsClient.WriteAny(ihboACx, stKVM.stAC.boAC);
+                    if (boFirstCycle) adsClient.WriteAny(ihboACx, stKVM.stAC.boAC);
+                    else stKVM.stAC.boAC = (System.Boolean[])adsClient.ReadAny(ihboACx, typeof(System.Boolean[]), new int[] { ControlClass.iBoolSize });
+                    
+                    boFirstCycle = true;
                 }
 
                 // controller live degiskenleri

@@ -28,7 +28,7 @@ namespace KripteksVM
         private static System.Timers.Timer tmrCamRefresh = new System.Timers.Timer();
         private static System.Timers.Timer tmrVarRefresh = new System.Timers.Timer();
         private static System.Timers.Timer tmrInputRefresh = new System.Timers.Timer();
-
+        
         private int iscMainPanel2Width = 300;
         private int iscMainSplitterDistance = 0;
         private int iFormWidthOld = 0;
@@ -126,6 +126,8 @@ namespace KripteksVM
 
             // Config okunuyor
             clControlConfig.fbGetControllerProperties();
+            lblBeckhoffAMSNetID.Text = clControlConfig.stControllerProperties.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clControlConfig.stControllerProperties.sBeckhoffPortNo;
 
             // kayitli degerler Controllere aktarilior
             clController.stControllerProperties = clControlConfig.stControllerProperties;
@@ -378,6 +380,7 @@ namespace KripteksVM
             {
                 if (!boboAWForce[i]) boAW[i] = clController.stKVM.stCA.boCA[i];
                 if (!boboWAForce[i]) clController.stKVM.stAC.boAC[i] = boWA[i];
+                
             }
 
 
@@ -398,12 +401,14 @@ namespace KripteksVM
                     sboAWString += "]";
                     clControlBrowser.browser.ExecuteScriptAsync(sboAWString);
 
+                   
                     string sboWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "boWA");
                     string[] arrsboWA = sboWA.Split(':');
                     for (int i = 0; i < ControlClass.iBoolSize; i++)
                     {
                         if (arrsboWA[i] != "") boWA[i] = Convert.ToBoolean(arrsboWA[i]);
                     }
+                    
 
 
                     clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(",", ".") + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
@@ -731,6 +736,16 @@ namespace KripteksVM
         private void fbFormControllerPropertiesInit()
         {
             PropertiesControllerForm = new ControllerPropertiesForm();
+
+            PropertiesControllerForm.fbRefreshControllerPropertiesCallBack = new ControllerPropertiesForm.fbRefreshControllerProperties(this.fbRefreshControllerPropertiesfb);
+
+        }
+
+        private void fbRefreshControllerPropertiesfb()
+        {
+            clControlConfig.fbGetControllerProperties();
+            lblBeckhoffAMSNetID.Text = clControlConfig.stControllerProperties.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clControlConfig.stControllerProperties.sBeckhoffPortNo;
         }
 
         private void GoFullscreen()

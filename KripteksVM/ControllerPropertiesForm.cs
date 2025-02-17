@@ -16,6 +16,10 @@ namespace KripteksVM
 
         private ControlConfig clControlConfig = new ControlConfig();
 
+        public delegate void fbRefreshControllerProperties();
+        public fbRefreshControllerProperties fbRefreshControllerPropertiesCallBack;
+
+
         public ControllerPropertiesForm()
         {
             InitializeComponent();
@@ -25,6 +29,7 @@ namespace KripteksVM
         
         private void fbReadControllerProperties()
         {
+
             clControlConfig.fbGetControllerProperties();
 
             for (int i = 0; i < cbControllerType.Items.Count; i++)
@@ -43,11 +48,18 @@ namespace KripteksVM
             clControlConfig.stControllerProperties.sBeckhoffPortNo = tbBeckhoffPortNo.Text;
             clControlConfig.stControllerProperties.sControllerType = cbControllerType.SelectedItem.ToString();
             clControlConfig.fbSetControllerProperties();
+
+            fbRefreshControllerPropertiesCallBack();// diger form u tetikle
         }
 
         private void btnControllerPropertiesCancel_Click(object sender, EventArgs e)
         {
             this.Hide();
+        }
+
+        private void ControllerPropertiesForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            fbRefreshControllerPropertiesCallBack();
         }
     }
 }

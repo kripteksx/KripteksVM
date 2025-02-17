@@ -141,7 +141,7 @@
             this.tabControllerPropertiesArduino.Text = "Arduino";
             this.tabControllerPropertiesArduino.UseVisualStyleBackColor = true;
             // 
-            // PropertiesControllerForm
+            // ControllerPropertiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -151,8 +151,9 @@
             this.Controls.Add(this.btnControllerPropertiesSave);
             this.Controls.Add(this.cbControllerType);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "PropertiesControllerForm";
+            this.Name = "ControllerPropertiesForm";
             this.Text = "Controller Properties";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControllerPropertiesForm_FormClosing);
             this.tabControllerProperties.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.PerformLayout();

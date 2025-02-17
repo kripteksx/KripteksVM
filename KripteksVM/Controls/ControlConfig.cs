@@ -35,7 +35,6 @@ namespace KripteksVM.Controls
                     if (values[0] == "BeckhoffPortNo") stControllerProperties.sBeckhoffPortNo = values[1];
 
 
-
                     yazi = sw.ReadLine();
                 }
 
@@ -53,18 +52,24 @@ namespace KripteksVM.Controls
             string dosya_yolu = path + "\\Config\\ControllerProperties.ini";
 
             if (File.Exists(dosya_yolu)) File.Delete(dosya_yolu);
-            FileStream fs = new FileStream(dosya_yolu, FileMode.OpenOrCreate, FileAccess.Write);
-            StreamWriter sw = new StreamWriter(fs);
 
+            try
+            {
+                FileStream fs = new FileStream(dosya_yolu, FileMode.OpenOrCreate, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
 
-            sw.WriteLine("ControllerType" + "=" + stControllerProperties.sControllerType);
-            sw.WriteLine("BeckhoffAMSNetID" + "=" + stControllerProperties.sBeckhoffAMSNetID);
-            sw.WriteLine("BeckhoffPortNo" + "=" + stControllerProperties.sBeckhoffPortNo);
+                sw.WriteLine("ControllerType" + "=" + stControllerProperties.sControllerType);
+                sw.WriteLine("BeckhoffAMSNetID" + "=" + stControllerProperties.sBeckhoffAMSNetID);
+                sw.WriteLine("BeckhoffPortNo" + "=" + stControllerProperties.sBeckhoffPortNo);
 
-            sw.Flush();
-            sw.Close();
-            fs.Close();
-            
+                sw.Flush();
+                sw.Close();
+                fs.Close();
+            }
+            catch
+            {
+
+            }
 
         }
 
