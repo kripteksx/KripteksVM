@@ -78,6 +78,10 @@
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbControllerComm = new System.Windows.Forms.GroupBox();
+            this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
+            this.lblBeckhoffAMSNetID_ = new System.Windows.Forms.Label();
+            this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
+            this.lblBeckhoffPortNo_ = new System.Windows.Forms.Label();
             this.lblCID = new System.Windows.Forms.Label();
             this.lblCID_ = new System.Windows.Forms.Label();
             this.lblAID = new System.Windows.Forms.Label();
@@ -104,10 +108,9 @@
             this.ConnectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblServerStatus_ = new System.Windows.Forms.Label();
             this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
-            this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
-            this.lblBeckhoffPortNo_ = new System.Windows.Forms.Label();
-            this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
-            this.lblBeckhoffAMSNetID_ = new System.Windows.Forms.Label();
+            this.tabCELog = new System.Windows.Forms.TabPage();
+            this.rtbLog = new System.Windows.Forms.RichTextBox();
+            this.btnLogClear = new System.Windows.Forms.Button();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -124,6 +127,7 @@
             this.tabCEServer.SuspendLayout();
             this.gbSignalRComm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserList)).BeginInit();
+            this.tabCELog.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer
@@ -451,6 +455,7 @@
             this.tabComExplorer.Controls.Add(this.tabCEController);
             this.tabComExplorer.Controls.Add(this.tabCEApplication);
             this.tabComExplorer.Controls.Add(this.tabCEServer);
+            this.tabComExplorer.Controls.Add(this.tabCELog);
             this.tabComExplorer.Dock = System.Windows.Forms.DockStyle.Top;
             this.tabComExplorer.Location = new System.Drawing.Point(0, 0);
             this.tabComExplorer.Margin = new System.Windows.Forms.Padding(0);
@@ -587,6 +592,42 @@
             this.gbControllerComm.TabStop = false;
             this.gbControllerComm.Text = "Communication";
             // 
+            // lblBeckhoffAMSNetID
+            // 
+            this.lblBeckhoffAMSNetID.AutoSize = true;
+            this.lblBeckhoffAMSNetID.Location = new System.Drawing.Point(112, 80);
+            this.lblBeckhoffAMSNetID.Name = "lblBeckhoffAMSNetID";
+            this.lblBeckhoffAMSNetID.Size = new System.Drawing.Size(16, 17);
+            this.lblBeckhoffAMSNetID.TabIndex = 24;
+            this.lblBeckhoffAMSNetID.Text = "0";
+            // 
+            // lblBeckhoffAMSNetID_
+            // 
+            this.lblBeckhoffAMSNetID_.AutoSize = true;
+            this.lblBeckhoffAMSNetID_.Location = new System.Drawing.Point(6, 80);
+            this.lblBeckhoffAMSNetID_.Name = "lblBeckhoffAMSNetID_";
+            this.lblBeckhoffAMSNetID_.Size = new System.Drawing.Size(76, 17);
+            this.lblBeckhoffAMSNetID_.TabIndex = 23;
+            this.lblBeckhoffAMSNetID_.Text = "AmsNETID";
+            // 
+            // lblBeckhoffPortNo
+            // 
+            this.lblBeckhoffPortNo.AutoSize = true;
+            this.lblBeckhoffPortNo.Location = new System.Drawing.Point(112, 105);
+            this.lblBeckhoffPortNo.Name = "lblBeckhoffPortNo";
+            this.lblBeckhoffPortNo.Size = new System.Drawing.Size(16, 17);
+            this.lblBeckhoffPortNo.TabIndex = 22;
+            this.lblBeckhoffPortNo.Text = "0";
+            // 
+            // lblBeckhoffPortNo_
+            // 
+            this.lblBeckhoffPortNo_.AutoSize = true;
+            this.lblBeckhoffPortNo_.Location = new System.Drawing.Point(6, 105);
+            this.lblBeckhoffPortNo_.Name = "lblBeckhoffPortNo_";
+            this.lblBeckhoffPortNo_.Size = new System.Drawing.Size(34, 17);
+            this.lblBeckhoffPortNo_.TabIndex = 21;
+            this.lblBeckhoffPortNo_.Text = "Port";
+            // 
             // lblCID
             // 
             this.lblCID.AutoSize = true;
@@ -649,6 +690,7 @@
             this.lblControllerStatus_.Size = new System.Drawing.Size(30, 30);
             this.lblControllerStatus_.TabIndex = 7;
             this.lblControllerStatus_.Text = "  ";
+            this.lblControllerStatus_.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblSID_
             // 
@@ -825,41 +867,34 @@
             this.tmrFormRefresh.Interval = 250;
             this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
-            // lblBeckhoffPortNo
+            // tabCELog
             // 
-            this.lblBeckhoffPortNo.AutoSize = true;
-            this.lblBeckhoffPortNo.Location = new System.Drawing.Point(112, 105);
-            this.lblBeckhoffPortNo.Name = "lblBeckhoffPortNo";
-            this.lblBeckhoffPortNo.Size = new System.Drawing.Size(16, 17);
-            this.lblBeckhoffPortNo.TabIndex = 22;
-            this.lblBeckhoffPortNo.Text = "0";
+            this.tabCELog.Controls.Add(this.btnLogClear);
+            this.tabCELog.Controls.Add(this.rtbLog);
+            this.tabCELog.Location = new System.Drawing.Point(4, 4);
+            this.tabCELog.Name = "tabCELog";
+            this.tabCELog.Size = new System.Drawing.Size(288, 552);
+            this.tabCELog.TabIndex = 3;
+            this.tabCELog.Text = "Log";
+            this.tabCELog.UseVisualStyleBackColor = true;
             // 
-            // lblBeckhoffPortNo_
+            // rtbLog
             // 
-            this.lblBeckhoffPortNo_.AutoSize = true;
-            this.lblBeckhoffPortNo_.Location = new System.Drawing.Point(6, 105);
-            this.lblBeckhoffPortNo_.Name = "lblBeckhoffPortNo_";
-            this.lblBeckhoffPortNo_.Size = new System.Drawing.Size(34, 17);
-            this.lblBeckhoffPortNo_.TabIndex = 21;
-            this.lblBeckhoffPortNo_.Text = "Port";
+            this.rtbLog.Enabled = false;
+            this.rtbLog.Location = new System.Drawing.Point(3, 3);
+            this.rtbLog.Name = "rtbLog";
+            this.rtbLog.Size = new System.Drawing.Size(282, 472);
+            this.rtbLog.TabIndex = 0;
+            this.rtbLog.Text = "KripteksVM V1.0";
             // 
-            // lblBeckhoffAMSNetID
+            // btnLogClear
             // 
-            this.lblBeckhoffAMSNetID.AutoSize = true;
-            this.lblBeckhoffAMSNetID.Location = new System.Drawing.Point(112, 80);
-            this.lblBeckhoffAMSNetID.Name = "lblBeckhoffAMSNetID";
-            this.lblBeckhoffAMSNetID.Size = new System.Drawing.Size(16, 17);
-            this.lblBeckhoffAMSNetID.TabIndex = 24;
-            this.lblBeckhoffAMSNetID.Text = "0";
-            // 
-            // lblBeckhoffAMSNetID_
-            // 
-            this.lblBeckhoffAMSNetID_.AutoSize = true;
-            this.lblBeckhoffAMSNetID_.Location = new System.Drawing.Point(6, 80);
-            this.lblBeckhoffAMSNetID_.Name = "lblBeckhoffAMSNetID_";
-            this.lblBeckhoffAMSNetID_.Size = new System.Drawing.Size(76, 17);
-            this.lblBeckhoffAMSNetID_.TabIndex = 23;
-            this.lblBeckhoffAMSNetID_.Text = "AmsNETID";
+            this.btnLogClear.Location = new System.Drawing.Point(12, 514);
+            this.btnLogClear.Name = "btnLogClear";
+            this.btnLogClear.Size = new System.Drawing.Size(75, 25);
+            this.btnLogClear.TabIndex = 1;
+            this.btnLogClear.Text = "Clear";
+            this.btnLogClear.UseVisualStyleBackColor = true;
             // 
             // KripteksVMB
             // 
@@ -902,6 +937,7 @@
             this.tabCEServer.ResumeLayout(false);
             this.gbSignalRComm.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserList)).EndInit();
+            this.tabCELog.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -986,5 +1022,8 @@
         private System.Windows.Forms.Label lblBeckhoffAMSNetID_;
         private System.Windows.Forms.Label lblBeckhoffPortNo;
         private System.Windows.Forms.Label lblBeckhoffPortNo_;
+        private System.Windows.Forms.TabPage tabCELog;
+        private System.Windows.Forms.RichTextBox rtbLog;
+        private System.Windows.Forms.Button btnLogClear;
     }
 }

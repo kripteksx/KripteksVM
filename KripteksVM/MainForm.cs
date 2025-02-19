@@ -24,6 +24,7 @@ namespace KripteksVM
         private Controller clController = new Controller();
         private ControlBrowser clControlBrowser = new ControlBrowser();
         private ControlConfig clControlConfig = new ControlConfig();
+        private bool boControllerFirstConnectAck = false;
         
         private static System.Timers.Timer tmrCamRefresh = new System.Timers.Timer();
         private static System.Timers.Timer tmrVarRefresh = new System.Timers.Timer();
@@ -125,29 +126,35 @@ namespace KripteksVM
             InitializeComponent();
 
             // Config okunuyor
-            clControlConfig.fbGetControllerProperties();
-            lblBeckhoffAMSNetID.Text = clControlConfig.stControllerProperties.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clControlConfig.stControllerProperties.sBeckhoffPortNo;
+            clController.stControllerProperties = clControlConfig.fbGetControllerProperties();
+            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clController.stControllerProperties.sBeckhoffPortNo;
 
-            // kayitli degerler Controllere aktarilior
-            clController.stControllerProperties = clControlConfig.stControllerProperties;
+            fbLogger("Controller " + clController.stControllerProperties.sControllerType + " | " + lblBeckhoffAMSNetID.Text + ":" + lblBeckhoffPortNo.Text);
+            
+            // kayitli degerler Controllere aktariliyor
+            //clController.stControllerProperties = clControlConfig.stControllerProperties;
 
             // Connect controller
             clController.fbInit();
-            
+            fbLogger("Connecting to Controller.");
+
             // formda gosterilen variable list olustruluyor
             fbVariablesInit();
-            
+            fbLogger("Variable list is created.");
+
             // fullscreen
             WindowState = FormWindowState.Maximized;
             fbscMainResize();
 
             // refresh
             fbTimerInit();
+            fbLogger("Timers started.");
 
             // chromium
             clControlBrowser.sHost = "http://www.kripteks.net";
             //clControlBrowser.sHost = "http://localhost:56436";
+            fbLogger("Host is "+ clControlBrowser.sHost);
             clControlBrowser.fbInit(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID);
             scMain.Panel1.Controls.Add(clControlBrowser.browser);
 
@@ -362,7 +369,7 @@ namespace KripteksVM
                 clControlBrowser.fbRefresh(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
             }
 
-            clController.stControllerProperties = clControlConfig.stControllerProperties;
+            //clController.stControllerProperties = clControlConfig.fbGetControllerProperties(); 
 
             // controller -> api -> web
             for (int i = 0; i < ControlClass.iDoubleSize; i++)
@@ -444,10 +451,6 @@ namespace KripteksVM
                 this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = clController.stKVM.stApp.sAID; ; });
                 this.lblATName.BeginInvoke((MethodInvoker)delegate () { this.lblATName.Text = clController.stKVM.stApp.sName; ; });
                 this.lblATInfo.BeginInvoke((MethodInvoker)delegate () { this.lblATInfo.Text = clController.stKVM.stApp.sInfo; ; });
-
-                /*lblATAID.Text = clController.stKVM.stApp.sAID;
-                lblATName.Text = clController.stKVM.stApp.sName;
-                lblATInfo.Text = clController.stKVM.stApp.sInfo;*/
                 
             }
 
@@ -461,12 +464,27 @@ namespace KripteksVM
             btnConnectController.Visible = clController.boConnectControllerVisible;
             btnDisconnectController.Visible = clController.boDisconnectControllerVisible;
             lblControllerStatus_.BackColor = clController.colorControllerStatus;
+            lblControllerStatus_.Text = clController.stKVM.stStatus.wLiveCounter.ToString();
             lblAID.Text = clController.stKVM.stApp.sAID;
             lblSID.Text = clController.stKVM.stApp.sSID;
             lblCID.Text = clController.stKVM.stApp.sCID;
 
-            if (clController.boDisconnectControllerVisible) tslControllerStatus.Text = "Connected";
-            else tslControllerStatus.Text = "Disconnected";
+            if (clController.boDisconnectControllerVisible) {
+                tslControllerStatus.Text = "Connected";
+                if (!boControllerFirstConnectAck)
+                {
+                    boControllerFirstConnectAck = true;
+                    fbLogger("Controller is connected.");
+                }
+            }
+            else {
+                tslControllerStatus.Text = "Disconnected";
+                if (boControllerFirstConnectAck)
+                {
+                    boControllerFirstConnectAck = false;
+                    fbLogger("Controller is disconnected.");
+                }
+            }
             
             tslElapsedTime.Text = (DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()).ToString().Substring(0,8);
 
@@ -632,6 +650,9 @@ namespace KripteksVM
             dgvVariables.Size= new Size(scMain.Panel2.Width - 48, dgvVariables.Height);
             gbControllerComm.Size = new Size(scMain.Panel2.Width - 33, gbControllerComm.Height);
             gbControllerVariables.Size = new Size(scMain.Panel2.Width - 33, gbControllerVariables.Height);
+
+            rtbLog.Size = new Size(scMain.Panel2.Width - 15, scMain.Panel2.Height - 110);
+            btnLogClear.Location = new Point(10, scMain.Panel2.Height - 100);
         }
         private void scMain_SplitterMoved(object sender, SplitterEventArgs e)
         {
@@ -750,9 +771,10 @@ namespace KripteksVM
 
         private void fbRefreshControllerPropertiesfb()
         {
-            clControlConfig.fbGetControllerProperties();
-            lblBeckhoffAMSNetID.Text = clControlConfig.stControllerProperties.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clControlConfig.stControllerProperties.sBeckhoffPortNo;
+            clController.stControllerProperties= clControlConfig.fbGetControllerProperties();
+            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clController.stControllerProperties.sBeckhoffPortNo;
+            clController.fbDisconnect();
         }
 
         private void GoFullscreen()
@@ -875,6 +897,10 @@ namespace KripteksVM
         #endregion
 
         #region Form General
+        private void fbLogger(string sLog)
+        {
+            rtbLog.Text = sLog + Environment.NewLine + rtbLog.Text;
+        }
         private void KripteksVMB_FormClosing(object sender, FormClosingEventArgs e)
         {
             tmrVarRefresh.Enabled = false;

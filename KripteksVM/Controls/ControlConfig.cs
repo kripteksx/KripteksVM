@@ -11,12 +11,11 @@ namespace KripteksVM.Controls
 {
     public class ControlConfig
     {
-        public string path = Application.StartupPath;
-        public ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
-
-
-        public void fbGetControllerProperties()
+        public  ST_CONTROLLER_PROPERTIES fbGetControllerProperties()
         {
+            ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
+
+            string path = Application.StartupPath;
             string dosya_yolu = path + "\\Config\\ControllerProperties.ini";
             if (File.Exists(dosya_yolu))
             {
@@ -40,15 +39,17 @@ namespace KripteksVM.Controls
 
                 sw.Close();
                 fs.Close();
-                
+
             }
             else
             {
-                fbSetControllerProperties();
+                fbSetControllerProperties(stControllerProperties);
             }
+            return stControllerProperties;
         }
-        public void fbSetControllerProperties()
+        public void fbSetControllerProperties(ST_CONTROLLER_PROPERTIES stControllerProperties)
         {
+            string path = Application.StartupPath;
             string dosya_yolu = path + "\\Config\\ControllerProperties.ini";
 
             if (File.Exists(dosya_yolu)) File.Delete(dosya_yolu);

@@ -30,29 +30,32 @@ namespace KripteksVM
         private void fbReadControllerProperties()
         {
 
-            clControlConfig.fbGetControllerProperties();
+            ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
+            stControllerProperties = clControlConfig.fbGetControllerProperties();
 
             for (int i = 0; i < cbControllerType.Items.Count; i++)
             {
-                if (cbControllerType.Items[i].ToString() == clControlConfig.stControllerProperties.sControllerType)
+                if (cbControllerType.Items[i].ToString() == stControllerProperties.sControllerType)
                     cbControllerType.SelectedIndex = i;
             }
 
-            tbBeckhoffAMSNetID.Text = clControlConfig.stControllerProperties.sBeckhoffAMSNetID;
-            tbBeckhoffPortNo.Text = clControlConfig.stControllerProperties.sBeckhoffPortNo;
+            tbBeckhoffAMSNetID.Text = stControllerProperties.sBeckhoffAMSNetID;
+            tbBeckhoffPortNo.Text = stControllerProperties.sBeckhoffPortNo;
         }
 
         private void btnControllerPropertiesSave_Click(object sender, EventArgs e)
         {
-            clControlConfig.stControllerProperties.sBeckhoffAMSNetID = tbBeckhoffAMSNetID.Text;
-            clControlConfig.stControllerProperties.sBeckhoffPortNo = tbBeckhoffPortNo.Text;
-            clControlConfig.stControllerProperties.sControllerType = cbControllerType.SelectedItem.ToString();
-            clControlConfig.fbSetControllerProperties();
+            ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
+
+            stControllerProperties.sBeckhoffAMSNetID = tbBeckhoffAMSNetID.Text;
+            stControllerProperties.sBeckhoffPortNo = tbBeckhoffPortNo.Text;
+            stControllerProperties.sControllerType = cbControllerType.SelectedItem.ToString();
+            clControlConfig.fbSetControllerProperties(stControllerProperties);
 
             fbRefreshControllerPropertiesCallBack();// diger form u tetikle
         }
 
-        private void btnControllerPropertiesCancel_Click(object sender, EventArgs e)
+        private void btnControllerPropertiesClose_Click(object sender, EventArgs e)
         {
             this.Hide();
         }

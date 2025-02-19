@@ -13,6 +13,7 @@ namespace KripteksVM.Controls
     {
         // controllerden cek
         public bool boFirstCycle = false;
+        public int iRetryCount = 0;
 
         // guncellenen degiskenler
         public ControlClass.ST_KVM stKVM = new ControlClass.ST_KVM();
@@ -26,7 +27,7 @@ namespace KripteksVM.Controls
 
 
         // ilgili buton ve labeller
-        public bool boConnectControllerVisible = false;
+        public bool boConnectControllerVisible = true;
         public bool boDisconnectControllerVisible = false;
         public Color colorControllerStatus = Color.Red;
         
@@ -77,8 +78,8 @@ namespace KripteksVM.Controls
                     adsClient.WriteAny(ihboApiToControllerLive, stKVM.stStatus.boLive);
 
                     int ihdElapsedTime = adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.lrElapsedTimeSec");
-                    stKVM.stStatus.dElapsedTimeSec = fbFloatingPoint((double)adsClient.ReadAny(ihdElapsedTime, typeof(double)),2);
-                    
+                    stKVM.stStatus.dElapsedTimeSec = fbFloatingPoint((double)adsClient.ReadAny(ihdElapsedTime, typeof(double)), 2);
+
 
                     // session id
                     int ihwControllerToApiSID = adsClient.CreateVariableHandle("KVM.gstKVM.stApp.wSID");
@@ -107,8 +108,8 @@ namespace KripteksVM.Controls
 
                     int ihdACx = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.lrAC");
                     if (boFirstCycle) stKVM.stAC.dAC = (double[])adsClient.ReadAny(ihdACx, typeof(double[]), new int[] { ControlClass.iDoubleSize });
-                    else    adsClient.WriteAny(ihdACx, stKVM.stAC.dAC);
-                    
+                    else adsClient.WriteAny(ihdACx, stKVM.stAC.dAC);
+
                     // bool
                     int ihboCAx = adsClient.CreateVariableHandle("KVM.gstKVM.stCA.boCA");
                     stKVM.stCA.boCA = (System.Boolean[])adsClient.ReadAny(ihboCAx, typeof(System.Boolean[]), new int[] { ControlClass.iBoolSize });
@@ -116,34 +117,41 @@ namespace KripteksVM.Controls
                     int ihboACx = adsClient.CreateVariableHandle("KVM.gstKVM.stAC.boAC");
                     if (boFirstCycle) adsClient.WriteAny(ihboACx, stKVM.stAC.boAC);
                     else stKVM.stAC.boAC = (System.Boolean[])adsClient.ReadAny(ihboACx, typeof(System.Boolean[]), new int[] { ControlClass.iBoolSize });
-                    
+
                     boFirstCycle = true;
+
+
+                    boConnectControllerVisible = false;
+                    boDisconnectControllerVisible = true;
+                    if (colorControllerStatus == Color.Green) colorControllerStatus = Color.Red;
+                    else colorControllerStatus = Color.Green;
+
+                    // controller live degiskenleri
+                    stKVM.stStatus.wLiveCounter++;
+                    if (stKVM.stStatus.wLiveCounter > 99) stKVM.stStatus.wLiveCounter = 0;
+                }
+                else
+                {
+
+                    boConnectControllerVisible = true;
+                    boDisconnectControllerVisible = false;
+                    colorControllerStatus = Color.Red;
+
+                    stKVM.stStatus.wLiveCounter = 0;
                 }
 
-                // controller live degiskenleri
-                stKVM.stStatus.wLiveCounter++;
-                if (stKVM.stStatus.wLiveCounter > 99) stKVM.stStatus.wLiveCounter = 0;
 
+                // ilk seferde baglantiyi koparmasin
+                iRetryCount = 0;
             }
             catch
             {
-                // Deger guncellemede hata olusursa baglantiyi kopar
-                
-            }
-
-            if (adsClient.IsConnected)
-            {
-                boConnectControllerVisible = false;
-                boDisconnectControllerVisible = true;
-                if (colorControllerStatus == Color.Green) colorControllerStatus = Color.Red;
-                else colorControllerStatus = Color.Green;
-                
-            }
-            else
-            {
-                boConnectControllerVisible = true;
-                boDisconnectControllerVisible = false;
-                colorControllerStatus = Color.Red;
+                iRetryCount++;
+                if (iRetryCount > 100)
+                {
+                    // Deger guncellemede hata olusursa baglantiyi kopar
+                    fbControllerBeckhoffDisconnect();
+                }
             }
         }
         private void fbControllerBeckhoffConnect()

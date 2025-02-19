@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControllerPropertiesForm));
             this.btnControllerPropertiesSave = new System.Windows.Forms.Button();
-            this.btnControllerPropertiesCancel = new System.Windows.Forms.Button();
+            this.btnControllerPropertiesClose = new System.Windows.Forms.Button();
             this.cbControllerType = new System.Windows.Forms.ComboBox();
             this.tabControllerProperties = new System.Windows.Forms.TabControl();
             this.tabControllerPropertiesBeckhoff = new System.Windows.Forms.TabPage();
@@ -53,15 +53,15 @@
             this.btnControllerPropertiesSave.UseVisualStyleBackColor = true;
             this.btnControllerPropertiesSave.Click += new System.EventHandler(this.btnControllerPropertiesSave_Click);
             // 
-            // btnControllerPropertiesCancel
+            // btnControllerPropertiesClose
             // 
-            this.btnControllerPropertiesCancel.Location = new System.Drawing.Point(666, 511);
-            this.btnControllerPropertiesCancel.Name = "btnControllerPropertiesCancel";
-            this.btnControllerPropertiesCancel.Size = new System.Drawing.Size(100, 30);
-            this.btnControllerPropertiesCancel.TabIndex = 3;
-            this.btnControllerPropertiesCancel.Text = "Cancel";
-            this.btnControllerPropertiesCancel.UseVisualStyleBackColor = true;
-            this.btnControllerPropertiesCancel.Click += new System.EventHandler(this.btnControllerPropertiesCancel_Click);
+            this.btnControllerPropertiesClose.Location = new System.Drawing.Point(666, 511);
+            this.btnControllerPropertiesClose.Name = "btnControllerPropertiesClose";
+            this.btnControllerPropertiesClose.Size = new System.Drawing.Size(100, 30);
+            this.btnControllerPropertiesClose.TabIndex = 3;
+            this.btnControllerPropertiesClose.Text = "Close";
+            this.btnControllerPropertiesClose.UseVisualStyleBackColor = true;
+            this.btnControllerPropertiesClose.Click += new System.EventHandler(this.btnControllerPropertiesClose_Click);
             // 
             // cbControllerType
             // 
@@ -147,7 +147,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 553);
             this.Controls.Add(this.tabControllerProperties);
-            this.Controls.Add(this.btnControllerPropertiesCancel);
+            this.Controls.Add(this.btnControllerPropertiesClose);
             this.Controls.Add(this.btnControllerPropertiesSave);
             this.Controls.Add(this.cbControllerType);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -163,7 +163,7 @@
 
         #endregion
         private System.Windows.Forms.Button btnControllerPropertiesSave;
-        private System.Windows.Forms.Button btnControllerPropertiesCancel;
+        private System.Windows.Forms.Button btnControllerPropertiesClose;
         private System.Windows.Forms.ComboBox cbControllerType;
         private System.Windows.Forms.TabControl tabControllerProperties;
         private System.Windows.Forms.TabPage tabControllerPropertiesBeckhoff;
