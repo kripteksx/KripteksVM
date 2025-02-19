@@ -727,18 +727,25 @@ namespace KripteksVM
         private void fbFullScreenInit()
         {
             FullScreenForm = new FullScreenForm();
+            FullScreenForm.ButtonWasClicked += new FullScreenForm.ClickButton(formB_ButtonWasClicked);
+            // Properties form closing
+        }
+        void formB_ButtonWasClicked()
+        {
+            GoFullscreen();
         }
 
         private void fbFormApplicationPropertiesInit()
         {
             PropertiesApplicationForm = new ApplicationPropertiesForm();
         }
+
         private void fbFormControllerPropertiesInit()
         {
             PropertiesControllerForm = new ControllerPropertiesForm();
 
+            // Properties form closing
             PropertiesControllerForm.fbRefreshControllerPropertiesCallBack = new ControllerPropertiesForm.fbRefreshControllerProperties(this.fbRefreshControllerPropertiesfb);
-
         }
 
         private void fbRefreshControllerPropertiesfb()
