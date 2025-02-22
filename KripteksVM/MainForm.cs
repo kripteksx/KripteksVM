@@ -23,7 +23,7 @@ namespace KripteksVM
     {
         private Controller clController = new Controller();
         private ControlBrowser clControlBrowser = new ControlBrowser();
-        private ControlConfig clControlConfig = new ControlConfig();
+        private ControlFile clControlFile = new ControlFile();
         private bool boControllerFirstConnectAck = false;
         
         private static System.Timers.Timer tmrCamRefresh = new System.Timers.Timer();
@@ -126,9 +126,9 @@ namespace KripteksVM
             InitializeComponent();
 
             // Config okunuyor
-            clController.stControllerProperties = clControlConfig.fbGetControllerProperties();
-            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clController.stControllerProperties.sBeckhoffPortNo;
+            clController.stControllerProperties = clControlFile.fbGetControllerProperties();
+            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
 
             fbLogger("Controller " + clController.stControllerProperties.sControllerType + " | " + lblBeckhoffAMSNetID.Text + ":" + lblBeckhoffPortNo.Text);
             
@@ -222,17 +222,13 @@ namespace KripteksVM
             tmrVarRefresh.Enabled = true;
             tmrVarRefresh.AutoReset = true;
           
-            // mouse, keyboard
-            tmrInputRefresh.Elapsed += new System.Timers.ElapsedEventHandler(tmrInputRefresh_Tick);
-            tmrInputRefresh.Interval = 20;
-            tmrInputRefresh.Enabled = true;
-            tmrInputRefresh.AutoReset = true;
         }
 
 
 
-        private void tmrInputRefresh_Tick(object sender, EventArgs e)
+        private void tmrCamRefresh_Tick(object sender, EventArgs e)
         {
+            // klavye ve mouse 
             for (int i = 0; i < 255; i++)
             {
                 int state = GetAsyncKeyState(i);
@@ -249,14 +245,14 @@ namespace KripteksVM
 
             // Active program ismi
             string sActiveWindowTitle = "";
-            if (GetActiveWindowTitle() != null)  sActiveWindowTitle = GetActiveWindowTitle();
+            if (GetActiveWindowTitle() != null) sActiveWindowTitle = GetActiveWindowTitle();
 
 
             // ekran cozunurlugu
             if (boFullScreen)
             {
                 iCenterPointX = FullScreenForm.Width / 2;
-                iCenterPointY = (FullScreenForm.Height / 2)+5;
+                iCenterPointY = (FullScreenForm.Height / 2) + 5;
             }
             else
             {
@@ -286,7 +282,7 @@ namespace KripteksVM
             if (boKey[116] & !boKeyHelp[116]) // F5
             {
                 boKeyHelp[116] = true;
-                clControlBrowser.fbRefresh(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID,"1");
+                clControlBrowser.fbRefresh(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
             }
             if (boKey[121] & !boKeyHelp[121]) // F10
             {
@@ -296,19 +292,16 @@ namespace KripteksVM
             if (boKey[122] & !boKeyHelp[122]) // F11
             {
                 boKeyHelp[122] = true;
-                lblTrigValue.Invoke((MethodInvoker)(() => lblTrigValue.Text = lblTrigValue.Text+" "));
+                lblTrigValue.Invoke((MethodInvoker)(() => lblTrigValue.Text = lblTrigValue.Text + " "));
             }
             if (boKey[123] & !boKeyHelp[123]) // F12
             {
                 boKeyHelp[123] = true;
                 clControlBrowser.browser.ShowDevTools();
             }
+            // klavye ve mouse 
 
-
-
-        }
-        private void tmrCamRefresh_Tick(object sender, EventArgs e)
-        {
+            
             if (clControlBrowser.boMainFrameLoaded)
             {
                 try
@@ -599,10 +592,10 @@ namespace KripteksVM
                             boboWAForce[i] = true;
                             dgvVariables.Rows[i].Cells[1].Style.BackColor = Color.Red;
 
-                            if(dgvVariables.Rows[i].Cells[1].Value.ToString() =="0"| dgvVariables.Rows[i].Cells[1].Value.ToString() == "1")
+                            if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "0" | dgvVariables.Rows[i].Cells[1].Value.ToString() == "1")
                             {
                                 if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "1") clController.stKVM.stAC.boAC[i] = true;
-                                else if(dgvVariables.Rows[i].Cells[1].Value.ToString() == "0") clController.stKVM.stAC.boAC[i] = false;
+                                else if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "0") clController.stKVM.stAC.boAC[i] = false;
                             }
                             else
                             {
@@ -771,9 +764,9 @@ namespace KripteksVM
 
         private void fbRefreshControllerPropertiesfb()
         {
-            clController.stControllerProperties= clControlConfig.fbGetControllerProperties();
-            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clController.stControllerProperties.sBeckhoffPortNo;
+            clController.stControllerProperties= clControlFile.fbGetControllerProperties();
+            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
             clController.fbDisconnect();
         }
 
@@ -928,8 +921,7 @@ namespace KripteksVM
             clController.fbDisconnect();
         }
 
-        #endregion
-        
 
+        #endregion
     }
 }

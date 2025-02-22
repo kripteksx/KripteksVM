@@ -9,7 +9,7 @@ using KripteksVM.Controls;
 
 namespace KripteksVM.Controls
 {
-    public class ControlConfig
+    public class ControlFile
     {
         public  ST_CONTROLLER_PROPERTIES fbGetControllerProperties()
         {
@@ -30,8 +30,8 @@ namespace KripteksVM.Controls
 
                     // controller
                     if (values[0] == "ControllerType") stControllerProperties.sControllerType = values[1];
-                    if (values[0] == "BeckhoffAMSNetID") stControllerProperties.sBeckhoffAMSNetID = values[1];
-                    if (values[0] == "BeckhoffPortNo") stControllerProperties.sBeckhoffPortNo = values[1];
+                    if (values[0] == "BeckhoffAMSNetID") stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID = values[1];
+                    if (values[0] == "BeckhoffPortNo") stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo = values[1];
 
 
                     yazi = sw.ReadLine();
@@ -60,8 +60,8 @@ namespace KripteksVM.Controls
                 StreamWriter sw = new StreamWriter(fs);
 
                 sw.WriteLine("ControllerType" + "=" + stControllerProperties.sControllerType);
-                sw.WriteLine("BeckhoffAMSNetID" + "=" + stControllerProperties.sBeckhoffAMSNetID);
-                sw.WriteLine("BeckhoffPortNo" + "=" + stControllerProperties.sBeckhoffPortNo);
+                sw.WriteLine("BeckhoffAMSNetID" + "=" + stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID);
+                sw.WriteLine("BeckhoffPortNo" + "=" + stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo);
 
                 sw.Flush();
                 sw.Close();

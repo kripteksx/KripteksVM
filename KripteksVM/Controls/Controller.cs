@@ -159,7 +159,7 @@ namespace KripteksVM.Controls
             try
             {
                 // Connect to local PLC - Runtime 1 - TwinCAT2 Port=801, TwinCAT3 Port=851
-                adsClient.Connect(stControllerProperties.sBeckhoffAMSNetID, int.Parse(stControllerProperties.sBeckhoffPortNo));
+                adsClient.Connect(stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID, int.Parse(stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo));
                 //adsClient.Connect("192.168.1.102.1.1", 851);
                 adsClient.ReadState();
             }

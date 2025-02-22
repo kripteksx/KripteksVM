@@ -57,8 +57,6 @@
             this.btnmsMenuShareLink = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuApplicationProperties = new System.Windows.Forms.ToolStripMenuItem();
-            this.controllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnmsMenuControllerProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuFocusCam = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuFreeCam = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,10 +105,11 @@
             this.UserID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ConnectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblServerStatus_ = new System.Windows.Forms.Label();
-            this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
             this.tabCELog = new System.Windows.Forms.TabPage();
-            this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.btnLogClear = new System.Windows.Forms.Button();
+            this.rtbLog = new System.Windows.Forms.RichTextBox();
+            this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
+            this.btnmsMenuControllerProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -270,7 +269,6 @@
             this.userToolStripMenuItem,
             this.browserToolStripMenuItem,
             this.btnmsMenuApplication,
-            this.controllerToolStripMenuItem,
             this.cameraToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.msMenu.Location = new System.Drawing.Point(0, 0);
@@ -360,33 +358,19 @@
             // btnmsMenuApplication
             // 
             this.btnmsMenuApplication.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnmsMenuApplicationProperties});
+            this.btnmsMenuApplicationProperties,
+            this.btnmsMenuControllerProperties});
             this.btnmsMenuApplication.Name = "btnmsMenuApplication";
-            this.btnmsMenuApplication.Size = new System.Drawing.Size(98, 23);
-            this.btnmsMenuApplication.Text = "Application";
+            this.btnmsMenuApplication.Size = new System.Drawing.Size(74, 23);
+            this.btnmsMenuApplication.Text = "Settings";
             this.btnmsMenuApplication.Click += new System.EventHandler(this.btnmsMenuApplication_Click);
             // 
             // btnmsMenuApplicationProperties
             // 
             this.btnmsMenuApplicationProperties.Name = "btnmsMenuApplicationProperties";
-            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(151, 26);
-            this.btnmsMenuApplicationProperties.Text = "Properties";
+            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuApplicationProperties.Text = "Application";
             this.btnmsMenuApplicationProperties.Click += new System.EventHandler(this.btnmsMenuApplicationProperties_Click);
-            // 
-            // controllerToolStripMenuItem
-            // 
-            this.controllerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnmsMenuControllerProperties});
-            this.controllerToolStripMenuItem.Name = "controllerToolStripMenuItem";
-            this.controllerToolStripMenuItem.Size = new System.Drawing.Size(87, 23);
-            this.controllerToolStripMenuItem.Text = "Controller";
-            // 
-            // btnmsMenuControllerProperties
-            // 
-            this.btnmsMenuControllerProperties.Name = "btnmsMenuControllerProperties";
-            this.btnmsMenuControllerProperties.Size = new System.Drawing.Size(151, 26);
-            this.btnmsMenuControllerProperties.Text = "Properties";
-            this.btnmsMenuControllerProperties.Click += new System.EventHandler(this.btnmsMenuControllerProperties_Click);
             // 
             // cameraToolStripMenuItem
             // 
@@ -402,28 +386,28 @@
             // btnmsMenuFocusCam
             // 
             this.btnmsMenuFocusCam.Name = "btnmsMenuFocusCam";
-            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuFocusCam.Text = "Focus [ESC]";
             this.btnmsMenuFocusCam.Click += new System.EventHandler(this.btnmsMenuFocusCam_Click);
             // 
             // btnmsMenuFreeCam
             // 
             this.btnmsMenuFreeCam.Name = "btnmsMenuFreeCam";
-            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuFreeCam.Text = "Free [O]";
             this.btnmsMenuFreeCam.Click += new System.EventHandler(this.btnmsMenuFreeCam_Click);
             // 
             // btnmsMenuFirstPersonCam
             // 
             this.btnmsMenuFirstPersonCam.Name = "btnmsMenuFirstPersonCam";
-            this.btnmsMenuFirstPersonCam.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuFirstPersonCam.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuFirstPersonCam.Text = "First Person [P]";
             this.btnmsMenuFirstPersonCam.Click += new System.EventHandler(this.btnmsMenuFirstPersonCam_Click);
             // 
             // btnmsMenuGoFullScreen
             // 
             this.btnmsMenuGoFullScreen.Name = "btnmsMenuGoFullScreen";
-            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuGoFullScreen.Text = "Full Screen [F11]";
             this.btnmsMenuGoFullScreen.Click += new System.EventHandler(this.btnmsMenuGoFullScreen_Click);
             // 
@@ -861,12 +845,6 @@
             this.lblServerStatus_.TabIndex = 2;
             this.lblServerStatus_.Text = " ";
             // 
-            // tmrFormRefresh
-            // 
-            this.tmrFormRefresh.Enabled = true;
-            this.tmrFormRefresh.Interval = 250;
-            this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
-            // 
             // tabCELog
             // 
             this.tabCELog.Controls.Add(this.btnLogClear);
@@ -878,6 +856,15 @@
             this.tabCELog.Text = "Log";
             this.tabCELog.UseVisualStyleBackColor = true;
             // 
+            // btnLogClear
+            // 
+            this.btnLogClear.Location = new System.Drawing.Point(12, 514);
+            this.btnLogClear.Name = "btnLogClear";
+            this.btnLogClear.Size = new System.Drawing.Size(75, 25);
+            this.btnLogClear.TabIndex = 1;
+            this.btnLogClear.Text = "Clear";
+            this.btnLogClear.UseVisualStyleBackColor = true;
+            // 
             // rtbLog
             // 
             this.rtbLog.Enabled = false;
@@ -887,14 +874,18 @@
             this.rtbLog.TabIndex = 0;
             this.rtbLog.Text = "KripteksVM V1.0";
             // 
-            // btnLogClear
+            // tmrFormRefresh
             // 
-            this.btnLogClear.Location = new System.Drawing.Point(12, 514);
-            this.btnLogClear.Name = "btnLogClear";
-            this.btnLogClear.Size = new System.Drawing.Size(75, 25);
-            this.btnLogClear.TabIndex = 1;
-            this.btnLogClear.Text = "Clear";
-            this.btnLogClear.UseVisualStyleBackColor = true;
+            this.tmrFormRefresh.Enabled = true;
+            this.tmrFormRefresh.Interval = 250;
+            this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
+            // 
+            // btnmsMenuControllerProperties
+            // 
+            this.btnmsMenuControllerProperties.Name = "btnmsMenuControllerProperties";
+            this.btnmsMenuControllerProperties.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuControllerProperties.Text = "Controller";
+            this.btnmsMenuControllerProperties.Click += new System.EventHandler(this.btnmsMenuControllerProperties_Click);
             // 
             // KripteksVMB
             // 
@@ -1005,8 +996,6 @@
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuGoFullScreen;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuApplication;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuApplicationProperties;
-        private System.Windows.Forms.ToolStripMenuItem controllerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
         private System.Windows.Forms.Label lblCID;
         private System.Windows.Forms.Label lblCID_;
         public System.Windows.Forms.Label lblATInfo;
@@ -1025,5 +1014,6 @@
         private System.Windows.Forms.TabPage tabCELog;
         private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.Button btnLogClear;
+        private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
     }
 }

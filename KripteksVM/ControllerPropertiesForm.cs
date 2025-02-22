@@ -14,7 +14,7 @@ namespace KripteksVM
     public partial class ControllerPropertiesForm : Form
     {
 
-        private ControlConfig clControlConfig = new ControlConfig();
+        private ControlFile clControlFile = new ControlFile();
 
         public delegate void fbRefreshControllerProperties();
         public fbRefreshControllerProperties fbRefreshControllerPropertiesCallBack;
@@ -31,7 +31,7 @@ namespace KripteksVM
         {
 
             ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
-            stControllerProperties = clControlConfig.fbGetControllerProperties();
+            stControllerProperties = clControlFile.fbGetControllerProperties();
 
             for (int i = 0; i < cbControllerType.Items.Count; i++)
             {
@@ -39,18 +39,18 @@ namespace KripteksVM
                     cbControllerType.SelectedIndex = i;
             }
 
-            tbBeckhoffAMSNetID.Text = stControllerProperties.sBeckhoffAMSNetID;
-            tbBeckhoffPortNo.Text = stControllerProperties.sBeckhoffPortNo;
+            tbBeckhoffAMSNetID.Text = stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
+            tbBeckhoffPortNo.Text = stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
         }
 
         private void btnControllerPropertiesSave_Click(object sender, EventArgs e)
         {
             ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
 
-            stControllerProperties.sBeckhoffAMSNetID = tbBeckhoffAMSNetID.Text;
-            stControllerProperties.sBeckhoffPortNo = tbBeckhoffPortNo.Text;
+            stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID = tbBeckhoffAMSNetID.Text;
+            stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo = tbBeckhoffPortNo.Text;
             stControllerProperties.sControllerType = cbControllerType.SelectedItem.ToString();
-            clControlConfig.fbSetControllerProperties(stControllerProperties);
+            clControlFile.fbSetControllerProperties(stControllerProperties);
 
             fbRefreshControllerPropertiesCallBack();// diger form u tetikle
         }

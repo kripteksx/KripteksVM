@@ -132,7 +132,7 @@
     </Compile>
     <Compile Include="Controls\ControlBrowser.cs" />
     <Compile Include="Controls\ControlClass.cs" />
-    <Compile Include="Controls\ControlConfig.cs" />
+    <Compile Include="Controls\ControlFile.cs" />
     <Compile Include="Controls\Controller.cs" />
     <Compile Include="Definition.cs" />
     <Compile Include="FullScreenForm.cs">

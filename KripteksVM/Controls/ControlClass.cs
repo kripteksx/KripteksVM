@@ -116,14 +116,23 @@ namespace KripteksVM.Controls
     public class ST_CONTROLLER_PROPERTIES
     {
         public string sControllerType;
-        public string sBeckhoffAMSNetID;
-        public string sBeckhoffPortNo;
+        public ST_CONTROLLER_BECKHOFF stControllerBeckhoff;
         public ST_CONTROLLER_PROPERTIES()
         {
             this.sControllerType = "Beckhoff";
+            this.stControllerBeckhoff = new ST_CONTROLLER_BECKHOFF();
+        }
+    }
+    public class ST_CONTROLLER_BECKHOFF
+    {
+        public string sBeckhoffAMSNetID;
+        public string sBeckhoffPortNo;
+        public ST_CONTROLLER_BECKHOFF()
+        {
             this.sBeckhoffAMSNetID = "local";
             this.sBeckhoffPortNo = "851";
         }
+
     }
 
 }
