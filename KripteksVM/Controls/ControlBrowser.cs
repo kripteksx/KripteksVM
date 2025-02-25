@@ -19,11 +19,11 @@ namespace KripteksVM.Controls
 
         public bool boMainFrameLoaded = false;
 
-        public string sHost = "";
+        //public string sHost = "";
 
-        public void fbInit(string sCID, string sSID, string sAID)
+        public void fbInit(string sHost, string sCID, string sSID, string sAID, string sHID)
         {
-            browser = new ChromiumWebBrowser(sHost+"/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID);
+            browser = new ChromiumWebBrowser(sHost + "/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
             
             
             browser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged;
@@ -101,9 +101,9 @@ namespace KripteksVM.Controls
         {
             //this.InvokeOnUiThreadIfRequired(() => outputLabel.Text = output);
         }
-        public void fbRefresh(string sCID, string sSID, string sAID, string sHID)
+        public void fbRefresh(string sHost, string sCID, string sSID, string sAID, string sHID)
         {
-            LoadUrl(sHost+"/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
+            LoadUrl(sHost + "/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
         }
         private void LoadUrl(string urlString)
         {

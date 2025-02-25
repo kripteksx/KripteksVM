@@ -57,6 +57,7 @@
             this.btnmsMenuShareLink = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuApplicationProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnmsMenuControllerProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuFocusCam = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuFreeCam = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,6 +77,9 @@
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbControllerComm = new System.Windows.Forms.GroupBox();
+            this.lblTimerCycleTimeMs = new System.Windows.Forms.Label();
+            this.lblControllerCycleTimeMs = new System.Windows.Forms.Label();
+            this.lblControllerElapsedTimeMs = new System.Windows.Forms.Label();
             this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
             this.lblBeckhoffAMSNetID_ = new System.Windows.Forms.Label();
             this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
@@ -109,7 +113,7 @@
             this.btnLogClear = new System.Windows.Forms.Button();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
-            this.btnmsMenuControllerProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -368,9 +372,16 @@
             // btnmsMenuApplicationProperties
             // 
             this.btnmsMenuApplicationProperties.Name = "btnmsMenuApplicationProperties";
-            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(161, 26);
             this.btnmsMenuApplicationProperties.Text = "Application";
             this.btnmsMenuApplicationProperties.Click += new System.EventHandler(this.btnmsMenuApplicationProperties_Click);
+            // 
+            // btnmsMenuControllerProperties
+            // 
+            this.btnmsMenuControllerProperties.Name = "btnmsMenuControllerProperties";
+            this.btnmsMenuControllerProperties.Size = new System.Drawing.Size(161, 26);
+            this.btnmsMenuControllerProperties.Text = "Controller";
+            this.btnmsMenuControllerProperties.Click += new System.EventHandler(this.btnmsMenuControllerProperties_Click);
             // 
             // cameraToolStripMenuItem
             // 
@@ -386,28 +397,28 @@
             // btnmsMenuFocusCam
             // 
             this.btnmsMenuFocusCam.Name = "btnmsMenuFocusCam";
-            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(192, 26);
             this.btnmsMenuFocusCam.Text = "Focus [ESC]";
             this.btnmsMenuFocusCam.Click += new System.EventHandler(this.btnmsMenuFocusCam_Click);
             // 
             // btnmsMenuFreeCam
             // 
             this.btnmsMenuFreeCam.Name = "btnmsMenuFreeCam";
-            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(192, 26);
             this.btnmsMenuFreeCam.Text = "Free [O]";
             this.btnmsMenuFreeCam.Click += new System.EventHandler(this.btnmsMenuFreeCam_Click);
             // 
             // btnmsMenuFirstPersonCam
             // 
             this.btnmsMenuFirstPersonCam.Name = "btnmsMenuFirstPersonCam";
-            this.btnmsMenuFirstPersonCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuFirstPersonCam.Size = new System.Drawing.Size(192, 26);
             this.btnmsMenuFirstPersonCam.Text = "First Person [P]";
             this.btnmsMenuFirstPersonCam.Click += new System.EventHandler(this.btnmsMenuFirstPersonCam_Click);
             // 
             // btnmsMenuGoFullScreen
             // 
             this.btnmsMenuGoFullScreen.Name = "btnmsMenuGoFullScreen";
-            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(192, 26);
             this.btnmsMenuGoFullScreen.Text = "Full Screen [F11]";
             this.btnmsMenuGoFullScreen.Click += new System.EventHandler(this.btnmsMenuGoFullScreen_Click);
             // 
@@ -556,6 +567,10 @@
             // 
             // gbControllerComm
             // 
+            this.gbControllerComm.Controls.Add(this.label1);
+            this.gbControllerComm.Controls.Add(this.lblTimerCycleTimeMs);
+            this.gbControllerComm.Controls.Add(this.lblControllerCycleTimeMs);
+            this.gbControllerComm.Controls.Add(this.lblControllerElapsedTimeMs);
             this.gbControllerComm.Controls.Add(this.lblBeckhoffAMSNetID);
             this.gbControllerComm.Controls.Add(this.lblBeckhoffAMSNetID_);
             this.gbControllerComm.Controls.Add(this.lblBeckhoffPortNo);
@@ -575,6 +590,33 @@
             this.gbControllerComm.TabIndex = 17;
             this.gbControllerComm.TabStop = false;
             this.gbControllerComm.Text = "Communication";
+            // 
+            // lblTimerCycleTimeMs
+            // 
+            this.lblTimerCycleTimeMs.AutoSize = true;
+            this.lblTimerCycleTimeMs.Location = new System.Drawing.Point(220, 57);
+            this.lblTimerCycleTimeMs.Name = "lblTimerCycleTimeMs";
+            this.lblTimerCycleTimeMs.Size = new System.Drawing.Size(16, 17);
+            this.lblTimerCycleTimeMs.TabIndex = 27;
+            this.lblTimerCycleTimeMs.Text = "0";
+            // 
+            // lblControllerCycleTimeMs
+            // 
+            this.lblControllerCycleTimeMs.AutoSize = true;
+            this.lblControllerCycleTimeMs.Location = new System.Drawing.Point(220, 28);
+            this.lblControllerCycleTimeMs.Name = "lblControllerCycleTimeMs";
+            this.lblControllerCycleTimeMs.Size = new System.Drawing.Size(16, 17);
+            this.lblControllerCycleTimeMs.TabIndex = 26;
+            this.lblControllerCycleTimeMs.Text = "0";
+            // 
+            // lblControllerElapsedTimeMs
+            // 
+            this.lblControllerElapsedTimeMs.AutoSize = true;
+            this.lblControllerElapsedTimeMs.Location = new System.Drawing.Point(176, 28);
+            this.lblControllerElapsedTimeMs.Name = "lblControllerElapsedTimeMs";
+            this.lblControllerElapsedTimeMs.Size = new System.Drawing.Size(16, 17);
+            this.lblControllerElapsedTimeMs.TabIndex = 25;
+            this.lblControllerElapsedTimeMs.Text = "0";
             // 
             // lblBeckhoffAMSNetID
             // 
@@ -669,6 +711,7 @@
             // 
             // lblControllerStatus_
             // 
+            this.lblControllerStatus_.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.lblControllerStatus_.Location = new System.Drawing.Point(112, 21);
             this.lblControllerStatus_.Name = "lblControllerStatus_";
             this.lblControllerStatus_.Size = new System.Drawing.Size(30, 30);
@@ -880,12 +923,14 @@
             this.tmrFormRefresh.Interval = 250;
             this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
-            // btnmsMenuControllerProperties
+            // label1
             // 
-            this.btnmsMenuControllerProperties.Name = "btnmsMenuControllerProperties";
-            this.btnmsMenuControllerProperties.Size = new System.Drawing.Size(216, 26);
-            this.btnmsMenuControllerProperties.Text = "Controller";
-            this.btnmsMenuControllerProperties.Click += new System.EventHandler(this.btnmsMenuControllerProperties_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(189, 105);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 17);
+            this.label1.TabIndex = 28;
+            this.label1.Text = "label1";
             // 
             // KripteksVMB
             // 
@@ -1015,5 +1060,9 @@
         private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.Button btnLogClear;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
+        private System.Windows.Forms.Label lblControllerCycleTimeMs;
+        private System.Windows.Forms.Label lblControllerElapsedTimeMs;
+        private System.Windows.Forms.Label lblTimerCycleTimeMs;
+        private System.Windows.Forms.Label label1;
     }
 }

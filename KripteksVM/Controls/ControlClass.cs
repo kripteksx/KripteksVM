@@ -116,10 +116,12 @@ namespace KripteksVM.Controls
     public class ST_CONTROLLER_PROPERTIES
     {
         public string sControllerType;
+        public int iControllerCycleMs;
         public ST_CONTROLLER_BECKHOFF stControllerBeckhoff;
         public ST_CONTROLLER_PROPERTIES()
         {
             this.sControllerType = "Beckhoff";
+            this.iControllerCycleMs = 100;
             this.stControllerBeckhoff = new ST_CONTROLLER_BECKHOFF();
         }
     }

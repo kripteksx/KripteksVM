@@ -124,6 +124,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ControlGPU.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

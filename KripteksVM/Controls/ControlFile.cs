@@ -30,6 +30,7 @@ namespace KripteksVM.Controls
 
                     // controller
                     if (values[0] == "ControllerType") stControllerProperties.sControllerType = values[1];
+                    if (values[0] == "ControllerCycleMs") stControllerProperties.iControllerCycleMs = int.Parse(values[1]);
                     if (values[0] == "BeckhoffAMSNetID") stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID = values[1];
                     if (values[0] == "BeckhoffPortNo") stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo = values[1];
 
@@ -60,6 +61,7 @@ namespace KripteksVM.Controls
                 StreamWriter sw = new StreamWriter(fs);
 
                 sw.WriteLine("ControllerType" + "=" + stControllerProperties.sControllerType);
+                sw.WriteLine("ControllerCycleMs" + "=" + stControllerProperties.iControllerCycleMs);
                 sw.WriteLine("BeckhoffAMSNetID" + "=" + stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID);
                 sw.WriteLine("BeckhoffPortNo" + "=" + stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo);
 

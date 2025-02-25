@@ -21,15 +21,21 @@ namespace KripteksVM
 {
     public partial class KripteksVMB : Form
     {
+        private int iControllerElapsedTimeMs = 0;
+        private int iTimerCycleTimeMs = 0;
         private Controller clController = new Controller();
         private ControlBrowser clControlBrowser = new ControlBrowser();
         private ControlFile clControlFile = new ControlFile();
-        private bool boControllerFirstConnectAck = false;
-        
+        private ControlGPU clControlGPU = new ControlGPU();
+        //private bool boControllerFirstConnectAck = false;
+        private string sHost = "http://www.kripteks.net";
+        //private string sHost = "http://localhost:56436";
+
         private static System.Timers.Timer tmrCamRefresh = new System.Timers.Timer();
         private static System.Timers.Timer tmrVarRefresh = new System.Timers.Timer();
-        private static System.Timers.Timer tmrInputRefresh = new System.Timers.Timer();
-        
+
+        private Stopwatch swVarCycle = new Stopwatch();
+
         private int iscMainPanel2Width = 300;
         private int iscMainSplitterDistance = 0;
         private int iFormWidthOld = 0;
@@ -42,9 +48,9 @@ namespace KripteksVM
         private int iVariablesSourceIndex = 0;
         private int iVariablesTypeIndex = 0;
 
-        private int iInitCount = 0;
+        private int iBrowserInitCount = 0;
+        private bool boBrowserInitAck = false;
         private int iCommentsCount = 0;
-        private bool boInitAck = false;
 
         private bool[] bodAWForce = new bool[8];
         private bool[] bodWAForce = new bool[8];
@@ -73,6 +79,9 @@ namespace KripteksVM
 
         public string sForDoubleFloatCharOld = "";
         public string sForDoubleFloatCharNew = "";
+
+        private string sLoggerBuffer = "";
+        private string sLoggerBufferHelp = "";
 
         //public Form FullScreenForm;
         SplashForm SplashForm = new SplashForm();
@@ -127,21 +136,14 @@ namespace KripteksVM
 
             // Config okunuyor
             clController.stControllerProperties = clControlFile.fbGetControllerProperties();
-            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
-
-            fbLogger("Controller " + clController.stControllerProperties.sControllerType + " | " + lblBeckhoffAMSNetID.Text + ":" + lblBeckhoffPortNo.Text);
             
-            // kayitli degerler Controllere aktariliyor
-            //clController.stControllerProperties = clControlConfig.stControllerProperties;
-
             // Connect controller
-            clController.fbInit();
-            fbLogger("Connecting to Controller.");
+            fbLogger(clController.fbInit());
+
+            fbLogger(clController.fbConnect());
 
             // formda gosterilen variable list olustruluyor
             fbVariablesInit();
-            fbLogger("Variable list is created.");
 
             // fullscreen
             WindowState = FormWindowState.Maximized;
@@ -149,13 +151,12 @@ namespace KripteksVM
 
             // refresh
             fbTimerInit();
-            fbLogger("Timers started.");
 
             // chromium
-            clControlBrowser.sHost = "http://www.kripteks.net";
+            //clControlBrowser.sHost = "http://www.kripteks.net";
             //clControlBrowser.sHost = "http://localhost:56436";
-            fbLogger("Host is "+ clControlBrowser.sHost);
-            clControlBrowser.fbInit(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID);
+            fbLogger("Host is "+ sHost);
+            clControlBrowser.fbInit(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
             scMain.Panel1.Controls.Add(clControlBrowser.browser);
 
             // diger formdan bu forma click
@@ -199,7 +200,7 @@ namespace KripteksVM
         
         private void fbGetShareLink()
         {
-            Thread thread = new Thread(() => Clipboard.SetText(clControlBrowser.sHost + "/application.aspx?CID=" + clController.stKVM.stApp.sCID + "&SID=" + clController.stKVM.stApp.sSID + "&AID=" + clController.stKVM.stApp.sAID));
+            Thread thread = new Thread(() => Clipboard.SetText(sHost + "/application.aspx?CID=" + clController.stKVM.stApp.sCID + "&SID=" + clController.stKVM.stApp.sSID + "&AID=" + clController.stKVM.stApp.sAID));
             thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
             thread.Start();
             thread.Join(); //Wait for the thread to end
@@ -221,7 +222,8 @@ namespace KripteksVM
             tmrVarRefresh.Interval = 100;
             tmrVarRefresh.Enabled = true;
             tmrVarRefresh.AutoReset = true;
-          
+
+            fbLogger("Timers started.");
         }
 
 
@@ -282,7 +284,7 @@ namespace KripteksVM
             if (boKey[116] & !boKeyHelp[116]) // F5
             {
                 boKeyHelp[116] = true;
-                clControlBrowser.fbRefresh(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
+                clControlBrowser.fbRefresh(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
             }
             if (boKey[121] & !boKeyHelp[121]) // F10
             {
@@ -301,8 +303,25 @@ namespace KripteksVM
             }
             // klavye ve mouse 
 
-            
-            if (clControlBrowser.boMainFrameLoaded)
+
+            // gecikmeli refresh
+            if (iBrowserInitCount > 100)
+            {
+                // program acildiktan sonra refresh
+                if (!boBrowserInitAck)
+                {
+                    boBrowserInitAck = true;
+                    clControlBrowser.fbRefresh(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
+                    fbLogger("Browser refreshed.");
+                }
+            }
+            else
+            {
+                iBrowserInitCount++;
+            }
+
+
+            if (clControlBrowser.boMainFrameLoaded & boBrowserInitAck)
             {
                 try
                 {
@@ -328,15 +347,9 @@ namespace KripteksVM
                         iCursorPosXFark = Cursor.Position.X - (iCenterPointX);
                         iCursorPosYFark = Cursor.Position.Y - (iCenterPointY);
                         Cursor.Position = new Point(iCenterPointX, iCenterPointY);
-
-                        /*if (iCursorPosXFark > 20) iCursorPosXFark = 20;
-                        else if (iCursorPosXFark < -20) iCursorPosXFark = -20;
-                        if (iCursorPosYFark > 20) iCursorPosYFark = 20;
-                        else if (iCursorPosYFark < -20) iCursorPosYFark = -20;*/
+                        
                         iCursorPosXTop = iCursorPosXTop + iCursorPosXFark/2;
                         iCursorPosYTop = iCursorPosYTop + iCursorPosYFark/2;
-
-
                     }
                     clControlBrowser.browser.ExecuteScriptAsync("boBrowserActive=false");
                     clControlBrowser.browser.ExecuteScriptAsync("PointerLockX=" + iCursorPosXTop.ToString());
@@ -354,39 +367,31 @@ namespace KripteksVM
         
         private void tmrVarRefresh_Tick(object sender, EventArgs e)
         {
-            // program acildiktan sonra refresh
-            iInitCount++;
-            if (iInitCount > 25 & !boInitAck)
+            if (swVarCycle.IsRunning)
             {
-                boInitAck = true;
-                clControlBrowser.fbRefresh(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
-            }
-
-            //clController.stControllerProperties = clControlConfig.fbGetControllerProperties(); 
-
-            // controller -> api -> web
-            for (int i = 0; i < ControlClass.iDoubleSize; i++)
-            {
-                if (!bodWAForce[i]) clController.stKVM.stAC.dAC[i] = dWA[i];
-                if (!bodAWForce[i]) dAW[i] = clController.stKVM.stCA.dCA[i];
-            }
-            for (int i = 0; i < ControlClass.iWordSize; i++)
-            {
-                if (!bowAWForce[i]) wAW[i] = clController.stKVM.stCA.wCA[i];
-                if (!bowWAForce[i]) clController.stKVM.stAC.wAC[i] = wWA[i];
-            }
-
-            for (int i = 0; i < ControlClass.iBoolSize; i++)
-            {
-                if (!boboAWForce[i]) boAW[i] = clController.stKVM.stCA.boCA[i];
-                if (!boboWAForce[i]) clController.stKVM.stAC.boAC[i] = boWA[i];
+                TimeSpan ts2 = swVarCycle.Elapsed;
+                iTimerCycleTimeMs = ts2.Milliseconds;
                 
+                swVarCycle.Stop();
+                swVarCycle.Reset();
             }
+            swVarCycle.Start();
+            
+
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            
+
+            // cycle time guncelle
+            tmrVarRefresh.Interval = clController.stControllerProperties.iControllerCycleMs;
+
+            // refresh controller variable
+            clController.fbRefreshVar();
 
 
             try
             {
-                // web refresh
+                // web -> api | api -> web
                 if (clControlBrowser.boMainFrameLoaded)
                 {
                     clControlBrowser.browser.ExecuteScriptAsync("wAppLive=" + clController.stKVM.stStatus.wLiveCounter);
@@ -401,14 +406,13 @@ namespace KripteksVM
                     sboAWString += "]";
                     clControlBrowser.browser.ExecuteScriptAsync(sboAWString);
 
-                   
+
                     string sboWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "boWA");
                     string[] arrsboWA = sboWA.Split(':');
                     for (int i = 0; i < ControlClass.iBoolSize; i++)
                     {
                         if (arrsboWA[i] != "") boWA[i] = Convert.ToBoolean(arrsboWA[i]);
                     }
-                    
 
 
                     clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(",", ".") + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
@@ -428,30 +432,59 @@ namespace KripteksVM
                         if (arrswWA[i] != "") wWA[i] = Convert.ToUInt16(arrswWA[i]);
                     }
                 }
+                
+                // controller -> api | api -> controller
+                for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                {
+                    if (!bodWAForce[i]) clController.stKVM.stAC.dAC[i] = dWA[i];
+                    if (!bodAWForce[i]) dAW[i] = clController.stKVM.stCA.dCA[i];
+                }
+                for (int i = 0; i < ControlClass.iWordSize; i++)
+                {
+                    if (!bowAWForce[i]) wAW[i] = clController.stKVM.stCA.wCA[i];
+                    if (!bowWAForce[i]) clController.stKVM.stAC.wAC[i] = wWA[i];
+                }
+                for (int i = 0; i < ControlClass.iBoolSize; i++)
+                {
+                    if (!boboAWForce[i]) boAW[i] = clController.stKVM.stCA.boCA[i];
+                    if (!boboWAForce[i]) clController.stKVM.stAC.boAC[i] = boWA[i];
+                }
             }
             catch
             {
 
             }
-            iCommentsCount++;
-            if (iCommentsCount >= 100)
-            {
-                iCommentsCount = 0;
 
-                clController.fbControllerBeckhoffGetComments();
-                PropertiesApplicationForm.stKVM = clController.stKVM;
-
-                this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = clController.stKVM.stApp.sAID; ; });
-                this.lblATName.BeginInvoke((MethodInvoker)delegate () { this.lblATName.Text = clController.stKVM.stApp.sName; ; });
-                this.lblATInfo.BeginInvoke((MethodInvoker)delegate () { this.lblATInfo.Text = clController.stKVM.stApp.sInfo; ; });
-                
-            }
-
-            this.lblATElapsedTime.BeginInvoke((MethodInvoker)delegate () { this.lblATElapsedTime.Text = clController.stKVM.stStatus.dElapsedTimeSec.ToString(); ; });
+            TimeSpan ts = stopWatch.Elapsed;
+            iControllerElapsedTimeMs = ts.Milliseconds;
+            stopWatch.Stop();
         }
 
         private void tmrFormRefresh_Tick(object sender, EventArgs e)
         {
+            iCommentsCount++;
+            if (iCommentsCount >= 10)
+            {
+                iCommentsCount = 0;
+
+                clController.fbGetComments();
+                PropertiesApplicationForm.stKVM = clController.stKVM;
+
+                this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = clController.stKVM.stApp.sAID; });
+                this.lblATName.BeginInvoke((MethodInvoker)delegate () { this.lblATName.Text = clController.stKVM.stApp.sName; });
+                this.lblATInfo.BeginInvoke((MethodInvoker)delegate () { this.lblATInfo.Text = clController.stKVM.stApp.sInfo; });
+
+            }
+
+            this.lblATElapsedTime.BeginInvoke((MethodInvoker)delegate () { this.lblATElapsedTime.Text = clController.stKVM.stStatus.dElapsedTimeSec.ToString(); });
+
+            label1.Text = clControlGPU.fbGetGPUUsage().ToString();
+
+            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
+            lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
+            lblControllerCycleTimeMs.Text = clController.stControllerProperties.iControllerCycleMs.ToString();
+            lblControllerElapsedTimeMs.Text = iControllerElapsedTimeMs.ToString();
+            lblTimerCycleTimeMs.Text = iTimerCycleTimeMs.ToString();
 
             // form update
             btnConnectController.Visible = clController.boConnectControllerVisible;
@@ -461,7 +494,7 @@ namespace KripteksVM
             lblAID.Text = clController.stKVM.stApp.sAID;
             lblSID.Text = clController.stKVM.stApp.sSID;
             lblCID.Text = clController.stKVM.stApp.sCID;
-
+/*
             if (clController.boDisconnectControllerVisible) {
                 tslControllerStatus.Text = "Connected";
                 if (!boControllerFirstConnectAck)
@@ -478,7 +511,7 @@ namespace KripteksVM
                     fbLogger("Controller is disconnected.");
                 }
             }
-            
+            */
             tslElapsedTime.Text = (DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()).ToString().Substring(0,8);
 
             if (iVariablesSourceIndex == 1)
@@ -678,21 +711,21 @@ namespace KripteksVM
                 {
                     for (int i = 0; i < ControlClass.iWordSize; i++)
                     {
-                        dgvVariables.Rows.Add("wAW[" + i + "]", "0", bowAWForce[i], "word", clController.stKVM.stAC.swACComments[i]);
+                        dgvVariables.Rows.Add("wAW[" + i + "]", "0", bowAWForce[i], "word", clController.stKVM.stCA.swCAComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 2)
                 {
                     for (int i = 0; i < ControlClass.iDoubleSize; i++)
                     {
-                        dgvVariables.Rows.Add("dAW[" + i + "]", "0", bodAWForce[i], "double", clController.stKVM.stAC.sdACComments[i]);
+                        dgvVariables.Rows.Add("dAW[" + i + "]", "0", bodAWForce[i], "double", clController.stKVM.stCA.sdCAComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 3)
                 {
                     for (int i = 0; i < ControlClass.iBoolSize; i++)
                     {
-                        dgvVariables.Rows.Add("boAW[" + i + "]", "0", boboAWForce[i], "bool", clController.stKVM.stAC.sboACComments[i]);
+                        dgvVariables.Rows.Add("boAW[" + i + "]", "0", boboAWForce[i], "bool", clController.stKVM.stCA.sboCAComments[i]);
                     }
                 }
             }
@@ -702,21 +735,21 @@ namespace KripteksVM
                 {
                     for (int i = 0; i < ControlClass.iWordSize; i++)
                     {
-                        dgvVariables.Rows.Add("wWA[" + i + "]", "0", bowWAForce[i], "word", clController.stKVM.stCA.swCAComments[i]);
+                        dgvVariables.Rows.Add("wWA[" + i + "]", "0", bowWAForce[i], "word", clController.stKVM.stAC.swACComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 2)
                 {
                     for (int i = 0; i < ControlClass.iDoubleSize; i++)
                     {
-                        dgvVariables.Rows.Add("dWA[" + i + "]", "0", bodWAForce[i], "double", clController.stKVM.stCA.sdCAComments[i]);
+                        dgvVariables.Rows.Add("dWA[" + i + "]", "0", bodWAForce[i], "double", clController.stKVM.stAC.sdACComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 3)
                 {
                     for (int i = 0; i < ControlClass.iBoolSize; i++)
                     {
-                        dgvVariables.Rows.Add("boWA[" + i + "]", "0", boboWAForce[i], "bool", clController.stKVM.stCA.sboCAComments[i]);
+                        dgvVariables.Rows.Add("boWA[" + i + "]", "0", boboWAForce[i], "bool", clController.stKVM.stAC.sboACComments[i]);
                     }
                 }
             }
@@ -765,9 +798,10 @@ namespace KripteksVM
         private void fbRefreshControllerPropertiesfb()
         {
             clController.stControllerProperties= clControlFile.fbGetControllerProperties();
-            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
-            clController.fbDisconnect();
+            fbLogger(clController.fbDisconnect());
+            fbLogger(clController.fbConnect());
+            boBrowserInitAck = false;
+            iBrowserInitCount = 0;
         }
 
         private void GoFullscreen()
@@ -865,7 +899,7 @@ namespace KripteksVM
         }
         private void btnmsMenuRefresh_Click(object sender, EventArgs e)
         {
-            clControlBrowser.fbRefresh(clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
+            clControlBrowser.fbRefresh(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
         }
         private void btnmsMenuShareLink_Click(object sender, EventArgs e)
         {
@@ -884,7 +918,7 @@ namespace KripteksVM
         }
         private void btnmsMenuApplication_Click(object sender, EventArgs e)
         {
-            clController.fbControllerBeckhoffGetComments();
+            clController.fbGetComments();
             PropertiesApplicationForm.stKVM = clController.stKVM;
         }
         #endregion
@@ -892,14 +926,34 @@ namespace KripteksVM
         #region Form General
         private void fbLogger(string sLog)
         {
-            rtbLog.Text = sLog + Environment.NewLine + rtbLog.Text;
+            bool boBuffered = false;
+            try
+            {
+                if (sLoggerBuffer != "")
+                {
+                    sLoggerBuffer = sLog + Environment.NewLine + sLoggerBuffer;
+                    sLoggerBufferHelp = sLoggerBuffer;
+                    boBuffered = true;
+                    this.rtbLog.BeginInvoke((MethodInvoker)delegate () { this.rtbLog.Text = sLoggerBufferHelp + Environment.NewLine + this.rtbLog.Text; });
+
+                    sLoggerBuffer = "";
+                }
+                else
+                {
+                    this.rtbLog.BeginInvoke((MethodInvoker)delegate () { this.rtbLog.Text = sLog + Environment.NewLine + this.rtbLog.Text; });
+                }
+            }
+            catch
+            {
+                if(!boBuffered) sLoggerBuffer= sLog + Environment.NewLine + sLoggerBuffer;
+            }
+            //rtbLog.Text = sLog + Environment.NewLine + rtbLog.Text;
         }
         private void KripteksVMB_FormClosing(object sender, FormClosingEventArgs e)
         {
             tmrVarRefresh.Enabled = false;
             tmrCamRefresh.Enabled = false;
             tmrFormRefresh.Enabled = false;
-            tmrInputRefresh.Enabled = false;
             clControlBrowser.browser.Dispose();
             clController.fbDisconnect();
             Cef.Shutdown();
@@ -913,15 +967,16 @@ namespace KripteksVM
         #region Controller
         private void btnConnectController_Click(object sender, EventArgs e)
         {
-            clController.fbConnect();
+            fbLogger(clController.fbConnect());
         }
 
         private void btnDisconnectController_Click(object sender, EventArgs e)
         {
-            clController.fbDisconnect();
+            fbLogger(clController.fbDisconnect());
         }
 
 
         #endregion
+
     }
 }

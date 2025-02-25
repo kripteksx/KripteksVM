@@ -27,5 +27,10 @@ namespace KripteksVM
 
 
         }
+
+        private void lblKripteksVM_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

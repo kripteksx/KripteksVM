@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControllerPropertiesForm));
-            this.btnControllerPropertiesSave = new System.Windows.Forms.Button();
+            this.btnControllerPropertiesApply = new System.Windows.Forms.Button();
             this.btnControllerPropertiesClose = new System.Windows.Forms.Button();
             this.cbControllerType = new System.Windows.Forms.ComboBox();
             this.tabControllerProperties = new System.Windows.Forms.TabControl();
@@ -39,19 +39,21 @@
             this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
             this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
             this.tabControllerPropertiesArduino = new System.Windows.Forms.TabPage();
+            this.tbControllerCycleMs = new System.Windows.Forms.TextBox();
+            this.lblControllerCycleMs_ = new System.Windows.Forms.Label();
             this.tabControllerProperties.SuspendLayout();
             this.tabControllerPropertiesBeckhoff.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnControllerPropertiesSave
+            // btnControllerPropertiesApply
             // 
-            this.btnControllerPropertiesSave.Location = new System.Drawing.Point(12, 511);
-            this.btnControllerPropertiesSave.Name = "btnControllerPropertiesSave";
-            this.btnControllerPropertiesSave.Size = new System.Drawing.Size(100, 30);
-            this.btnControllerPropertiesSave.TabIndex = 4;
-            this.btnControllerPropertiesSave.Text = "Save";
-            this.btnControllerPropertiesSave.UseVisualStyleBackColor = true;
-            this.btnControllerPropertiesSave.Click += new System.EventHandler(this.btnControllerPropertiesSave_Click);
+            this.btnControllerPropertiesApply.Location = new System.Drawing.Point(12, 511);
+            this.btnControllerPropertiesApply.Name = "btnControllerPropertiesApply";
+            this.btnControllerPropertiesApply.Size = new System.Drawing.Size(100, 30);
+            this.btnControllerPropertiesApply.TabIndex = 4;
+            this.btnControllerPropertiesApply.Text = "Apply";
+            this.btnControllerPropertiesApply.UseVisualStyleBackColor = true;
+            this.btnControllerPropertiesApply.Click += new System.EventHandler(this.btnControllerPropertiesApply_Click);
             // 
             // btnControllerPropertiesClose
             // 
@@ -141,14 +143,32 @@
             this.tabControllerPropertiesArduino.Text = "Arduino";
             this.tabControllerPropertiesArduino.UseVisualStyleBackColor = true;
             // 
+            // tbControllerCycleMs
+            // 
+            this.tbControllerCycleMs.Location = new System.Drawing.Point(246, 12);
+            this.tbControllerCycleMs.Name = "tbControllerCycleMs";
+            this.tbControllerCycleMs.Size = new System.Drawing.Size(50, 22);
+            this.tbControllerCycleMs.TabIndex = 6;
+            // 
+            // lblControllerCycleMs_
+            // 
+            this.lblControllerCycleMs_.AutoSize = true;
+            this.lblControllerCycleMs_.Location = new System.Drawing.Point(166, 15);
+            this.lblControllerCycleMs_.Name = "lblControllerCycleMs_";
+            this.lblControllerCycleMs_.Size = new System.Drawing.Size(74, 17);
+            this.lblControllerCycleMs_.TabIndex = 3;
+            this.lblControllerCycleMs_.Text = "Cycle (ms)";
+            // 
             // ControllerPropertiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 553);
+            this.Controls.Add(this.lblControllerCycleMs_);
+            this.Controls.Add(this.tbControllerCycleMs);
             this.Controls.Add(this.tabControllerProperties);
             this.Controls.Add(this.btnControllerPropertiesClose);
-            this.Controls.Add(this.btnControllerPropertiesSave);
+            this.Controls.Add(this.btnControllerPropertiesApply);
             this.Controls.Add(this.cbControllerType);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ControllerPropertiesForm";
@@ -158,11 +178,12 @@
             this.tabControllerPropertiesBeckhoff.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button btnControllerPropertiesSave;
+        private System.Windows.Forms.Button btnControllerPropertiesApply;
         private System.Windows.Forms.Button btnControllerPropertiesClose;
         private System.Windows.Forms.ComboBox cbControllerType;
         private System.Windows.Forms.TabControl tabControllerProperties;
@@ -172,5 +193,7 @@
         private System.Windows.Forms.Label lblBeckhoffPortNo;
         private System.Windows.Forms.Label lblBeckhoffAMSNetID;
         private System.Windows.Forms.TabPage tabControllerPropertiesArduino;
+        private System.Windows.Forms.TextBox tbControllerCycleMs;
+        private System.Windows.Forms.Label lblControllerCycleMs_;
     }
 }

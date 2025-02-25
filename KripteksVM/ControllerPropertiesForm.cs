@@ -29,7 +29,6 @@ namespace KripteksVM
         
         private void fbReadControllerProperties()
         {
-
             ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
             stControllerProperties = clControlFile.fbGetControllerProperties();
 
@@ -41,15 +40,17 @@ namespace KripteksVM
 
             tbBeckhoffAMSNetID.Text = stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
             tbBeckhoffPortNo.Text = stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
+            tbControllerCycleMs.Text = stControllerProperties.iControllerCycleMs.ToString(); 
         }
 
-        private void btnControllerPropertiesSave_Click(object sender, EventArgs e)
+        private void btnControllerPropertiesApply_Click(object sender, EventArgs e)
         {
             ST_CONTROLLER_PROPERTIES stControllerProperties = new ST_CONTROLLER_PROPERTIES();
 
             stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID = tbBeckhoffAMSNetID.Text;
             stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo = tbBeckhoffPortNo.Text;
             stControllerProperties.sControllerType = cbControllerType.SelectedItem.ToString();
+            stControllerProperties.iControllerCycleMs = int.Parse(tbControllerCycleMs.Text);
             clControlFile.fbSetControllerProperties(stControllerProperties);
 
             fbRefreshControllerPropertiesCallBack();// diger form u tetikle
@@ -62,7 +63,7 @@ namespace KripteksVM
 
         private void ControllerPropertiesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            fbRefreshControllerPropertiesCallBack();
+            //fbRefreshControllerPropertiesCallBack();
         }
     }
 }
