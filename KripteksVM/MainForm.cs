@@ -21,18 +21,22 @@ namespace KripteksVM
 {
     public partial class KripteksVMB : Form
     {
-        private int iControllerElapsedTimeMs = 0;
-        private int iTimerCycleTimeMs = 0;
+        private int iPerformanceControllerElapsedTimeMs = 0;
+        private int iPerformanceVarRefreshTickMs = 0;
+        private int iPerformanceVarRefreshAliveCount = 0;
+        private TimeSpan tsswVarCycleElapsed;
         private Controller clController = new Controller();
         private ControlBrowser clControlBrowser = new ControlBrowser();
         private ControlFile clControlFile = new ControlFile();
         private ControlGPU clControlGPU = new ControlGPU();
+        private float fGPUUsage = 0;
         //private bool boControllerFirstConnectAck = false;
         private string sHost = "http://www.kripteks.net";
         //private string sHost = "http://localhost:56436";
 
         private static System.Timers.Timer tmrCamRefresh = new System.Timers.Timer();
         private static System.Timers.Timer tmrVarRefresh = new System.Timers.Timer();
+        private static System.Timers.Timer tmrSlowRefresh = new System.Timers.Timer();
 
         private Stopwatch swVarCycle = new Stopwatch();
 
@@ -223,10 +227,20 @@ namespace KripteksVM
             tmrVarRefresh.Enabled = true;
             tmrVarRefresh.AutoReset = true;
 
+            // slow refresh
+            tmrSlowRefresh.Elapsed += new System.Timers.ElapsedEventHandler(tmrSlowRefresh_Tick);
+            tmrSlowRefresh.Interval = 1000;
+            tmrSlowRefresh.Enabled = true;
+            tmrSlowRefresh.AutoReset = true;
+
             fbLogger("Timers started.");
         }
 
 
+        private void tmrSlowRefresh_Tick(object sender, EventArgs e)
+        {
+            fGPUUsage = clControlGPU.fbGetGPUUsage();
+        }
 
         private void tmrCamRefresh_Tick(object sender, EventArgs e)
         {
@@ -367,22 +381,27 @@ namespace KripteksVM
         
         private void tmrVarRefresh_Tick(object sender, EventArgs e)
         {
-            if (swVarCycle.IsRunning)
-            {
-                TimeSpan ts2 = swVarCycle.Elapsed;
-                iTimerCycleTimeMs = ts2.Milliseconds;
-                
-                swVarCycle.Stop();
-                swVarCycle.Reset();
-            }
-            swVarCycle.Start();
-            
+            // Alive timer count
+            iPerformanceVarRefreshAliveCount++;
 
+            // islem suresi
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            
 
-            // cycle time guncelle
+
+            // timer cycle time
+            if (swVarCycle.IsRunning)
+            {
+                iPerformanceVarRefreshTickMs = (swVarCycle.Elapsed - tsswVarCycleElapsed).Milliseconds;
+                tsswVarCycleElapsed = swVarCycle.Elapsed;
+            }
+            else
+            {
+                swVarCycle.Start();
+            }
+
+            
+            // cycle time guncelle / buradan alinmali
             tmrVarRefresh.Interval = clController.stControllerProperties.iControllerCycleMs;
 
             // refresh controller variable
@@ -452,12 +471,16 @@ namespace KripteksVM
             }
             catch
             {
-
+                // Alive timer count
+                //iPerformanceVarRefreshAliveCount--;
             }
 
-            TimeSpan ts = stopWatch.Elapsed;
-            iControllerElapsedTimeMs = ts.Milliseconds;
+            // islem suresi
+            iPerformanceControllerElapsedTimeMs = stopWatch.Elapsed.Milliseconds;
             stopWatch.Stop();
+
+            // Alive timer count
+            iPerformanceVarRefreshAliveCount--;
         }
 
         private void tmrFormRefresh_Tick(object sender, EventArgs e)
@@ -478,13 +501,14 @@ namespace KripteksVM
 
             this.lblATElapsedTime.BeginInvoke((MethodInvoker)delegate () { this.lblATElapsedTime.Text = clController.stKVM.stStatus.dElapsedTimeSec.ToString(); });
 
-            label1.Text = clControlGPU.fbGetGPUUsage().ToString();
 
             lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
             lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
-            lblControllerCycleTimeMs.Text = clController.stControllerProperties.iControllerCycleMs.ToString();
-            lblControllerElapsedTimeMs.Text = iControllerElapsedTimeMs.ToString();
-            lblTimerCycleTimeMs.Text = iTimerCycleTimeMs.ToString();
+            lblPerformanceControllerCycleTickMs.Text = clController.stControllerProperties.iControllerCycleMs.ToString();
+            lblPerformanceControllerElapsedTimeMs.Text = iPerformanceControllerElapsedTimeMs.ToString();
+            lblPerformanceVarRefreshTickMs.Text = iPerformanceVarRefreshTickMs.ToString();
+            lblPerformanceGPUUsage.Text = fGPUUsage.ToString("0.00");
+            lblPerformanceVarRefreshAliveCount.Text = iPerformanceVarRefreshAliveCount.ToString();
 
             // form update
             btnConnectController.Visible = clController.boConnectControllerVisible;
