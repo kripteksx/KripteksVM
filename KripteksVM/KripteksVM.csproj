@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ControlGPU.cs" />
+    <Compile Include="Interface\IController.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,7 +135,7 @@
     <Compile Include="Controls\ControlBrowser.cs" />
     <Compile Include="Controls\ControlClass.cs" />
     <Compile Include="Controls\ControlFile.cs" />
-    <Compile Include="Controls\Controller.cs" />
+    <Compile Include="Controls\ControllerBeckhoff.cs" />
     <Compile Include="Definition.cs" />
     <Compile Include="FullScreenForm.cs">
       <SubType>Form</SubType>

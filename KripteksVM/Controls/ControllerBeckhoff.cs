@@ -9,11 +9,10 @@ using KripteksVM.Controls;
 
 namespace KripteksVM.Controls
 {
-    public class Controller
+    public class ControllerBeckhoff : IController
     {
         // controllerden cek
-        //public bool boFirstCycle = false;
-        public int iRetryCount = 0;
+        private int iRetryCount = 0;
 
         // guncellenen degiskenler
         public ControlClass.ST_KVM stKVM = new ControlClass.ST_KVM();
@@ -29,19 +28,80 @@ namespace KripteksVM.Controls
         public bool boConnectControllerVisible = true;
         public bool boDisconnectControllerVisible = false;
         public Color colorControllerStatus = Color.Red;
-        
-        public string fbInit()
+
+
+        #region public class
+        public string Init()
         {
             string sReturn = "";
-            fbCID();
-            
+            _CID();
+
             sReturn = "CID : " + stKVM.stApp.sCID;
 
             return sReturn;
         }
 
-        #region function
-        private void fbCID()
+        public string Connect()
+        {
+            string sReturn = "";
+            if (stControllerProperties.sControllerType == "Beckhoff")
+            {
+                _ControllerBeckhoffConnect();
+                sReturn = "Controller " + stControllerProperties.sControllerType + " | " + stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID + ":" + stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo + " is connected.";
+            }
+            else if (stControllerProperties.sControllerType == "Arduino")
+            {
+
+            }
+            return sReturn;
+        }
+
+        public string Disconnect()
+        {
+            string sReturn = "";
+            if (stControllerProperties.sControllerType == "Beckhoff")
+            {
+                _ControllerBeckhoffDisconnect();
+
+            }
+            else if (stControllerProperties.sControllerType == "Arduino")
+            {
+
+            }
+            sReturn = "Controller is disconnected.";
+            return sReturn;
+        }
+        
+        public void RefreshVar()
+        {
+
+            if (stControllerProperties.sControllerType == "Beckhoff")
+            {
+                _ControllerBeckhoffRefresh();
+            }
+            else if (stControllerProperties.sControllerType == "Arduino")
+            {
+
+            }
+        }
+        public string GetComments()
+        {
+            string sReturn = "";
+            if (stControllerProperties.sControllerType == "Beckhoff")
+            {
+                _ControllerBeckhoffGetComments();
+            }
+            else if (stControllerProperties.sControllerType == "Arduino")
+            {
+
+            }
+            sReturn = "Comments have been updated.";
+            return sReturn;
+        }
+        #endregion
+
+        #region beckhoff
+        private void _CID()
         {
             Random rndNo = new Random();
             for (int i = 0; i <= 7; i++)
@@ -51,7 +111,8 @@ namespace KripteksVM.Controls
                     stKVM.stApp.sCID = stKVM.stApp.sCID + rndNo.Next(0, 9);
 
         }
-        public double fbFloatingPoint(double dValue, int iFloating)
+
+        private double _FloatingPoint(double dValue, int iFloating)
         {
             double dMul = 0;
             double dReturn = 0;
@@ -64,70 +125,8 @@ namespace KripteksVM.Controls
 
             return dReturn;
         }
-        #endregion
 
-        #region public class
-        public string fbConnect()
-        {
-            string sReturn = "";
-            if (stControllerProperties.sControllerType == "Beckhoff")
-            {
-                fbControllerBeckhoffConnect();
-                sReturn = "Controller " + stControllerProperties.sControllerType + " | " + stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID + ":" + stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo + " is connected.";
-            }
-            else if (stControllerProperties.sControllerType == "Arduino")
-            {
-
-            }
-            return sReturn;
-        }
-
-        public string fbDisconnect()
-        {
-            string sReturn = "";
-            if (stControllerProperties.sControllerType == "Beckhoff")
-            {
-                fbControllerBeckhoffDisconnect();
-
-            }
-            else if (stControllerProperties.sControllerType == "Arduino")
-            {
-
-            }
-            sReturn = "Controller is disconnected.";
-            return sReturn;
-        }
-        
-        public void fbRefreshVar()
-        {
-
-            if (stControllerProperties.sControllerType == "Beckhoff")
-            {
-                fbControllerBeckhoffRefresh();
-            }
-            else if (stControllerProperties.sControllerType == "Arduino")
-            {
-
-            }
-        }
-        public string fbGetComments()
-        {
-            string sReturn = "";
-            if (stControllerProperties.sControllerType == "Beckhoff")
-            {
-                fbControllerBeckhoffGetComments();
-            }
-            else if (stControllerProperties.sControllerType == "Arduino")
-            {
-
-            }
-            sReturn = "Comments have been updated.";
-            return sReturn;
-        }
-        #endregion
-
-        #region beckhoff
-        private void fbControllerBeckhoffRefresh()
+        private void _ControllerBeckhoffRefresh()
         {
             try
             {
@@ -148,7 +147,7 @@ namespace KripteksVM.Controls
                     adsClient.WriteAny(ihboApiToControllerLive, stKVM.stStatus.boLive);
 
                     int ihdElapsedTime = adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.lrElapsedTimeSec");
-                    stKVM.stStatus.dElapsedTimeSec = fbFloatingPoint((double)adsClient.ReadAny(ihdElapsedTime, typeof(double)), 2);
+                    stKVM.stStatus.dElapsedTimeSec = _FloatingPoint((double)adsClient.ReadAny(ihdElapsedTime, typeof(double)), 2);
 
 
                     // session id
@@ -215,13 +214,13 @@ namespace KripteksVM.Controls
                 if (iRetryCount > 100)
                 {
                     // Deger guncellemede hata olusursa baglantiyi kopar
-                    fbControllerBeckhoffDisconnect();
+                    _ControllerBeckhoffDisconnect();
                     stKVM.stApp.sAID = "";
                     stKVM.stApp.sSID = "";
                 }
             }
         }
-        private void fbControllerBeckhoffConnect()
+        private void _ControllerBeckhoffConnect()
         {
             try
             {
@@ -241,14 +240,14 @@ namespace KripteksVM.Controls
                 stKVM.stApp.sSID = "";
             }
         }
-        private void fbControllerBeckhoffDisconnect()
+        private void _ControllerBeckhoffDisconnect()
         {
             if (adsClient.IsConnected)
             {
                 adsClient.Disconnect();
             }
         }
-        private void fbControllerBeckhoffGetComments()
+        private void _ControllerBeckhoffGetComments()
         {
             try
             {

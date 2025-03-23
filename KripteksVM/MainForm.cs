@@ -25,7 +25,7 @@ namespace KripteksVM
         private int iPerformanceVarRefreshTickMs = 0;
         private int iPerformanceVarRefreshAliveCount = 0;
         private TimeSpan tsswVarCycleElapsed;
-        private Controller clController = new Controller();
+        private ControllerBeckhoff clController = new ControllerBeckhoff();
         private ControlBrowser clControlBrowser = new ControlBrowser();
         private ControlFile clControlFile = new ControlFile();
         private ControlGPU clControlGPU = new ControlGPU();
@@ -142,9 +142,9 @@ namespace KripteksVM
             clController.stControllerProperties = clControlFile.fbGetControllerProperties();
             
             // Connect controller
-            fbLogger(clController.fbInit());
+            fbLogger(clController.Init());
 
-            fbLogger(clController.fbConnect());
+            fbLogger(clController.Connect());
 
             // formda gosterilen variable list olustruluyor
             fbVariablesInit();
@@ -405,7 +405,7 @@ namespace KripteksVM
             tmrVarRefresh.Interval = clController.stControllerProperties.iControllerCycleMs;
 
             // refresh controller variable
-            clController.fbRefreshVar();
+            clController.RefreshVar();
 
 
             try
@@ -490,7 +490,7 @@ namespace KripteksVM
             {
                 iCommentsCount = 0;
 
-                clController.fbGetComments();
+                clController.GetComments();
                 PropertiesApplicationForm.stKVM = clController.stKVM;
 
                 this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = clController.stKVM.stApp.sAID; });
@@ -822,8 +822,8 @@ namespace KripteksVM
         private void fbRefreshControllerPropertiesfb()
         {
             clController.stControllerProperties= clControlFile.fbGetControllerProperties();
-            fbLogger(clController.fbDisconnect());
-            fbLogger(clController.fbConnect());
+            fbLogger(clController.Disconnect());
+            fbLogger(clController.Connect());
             boBrowserInitAck = false;
             iBrowserInitCount = 0;
         }
@@ -942,7 +942,7 @@ namespace KripteksVM
         }
         private void btnmsMenuApplication_Click(object sender, EventArgs e)
         {
-            clController.fbGetComments();
+            clController.GetComments();
             PropertiesApplicationForm.stKVM = clController.stKVM;
         }
         #endregion
@@ -979,7 +979,7 @@ namespace KripteksVM
             tmrCamRefresh.Enabled = false;
             tmrFormRefresh.Enabled = false;
             clControlBrowser.browser.Dispose();
-            clController.fbDisconnect();
+            clController.Disconnect();
             Cef.Shutdown();
         }
         private void lblTrigValue_TextChanged(object sender, EventArgs e)
@@ -991,12 +991,12 @@ namespace KripteksVM
         #region Controller
         private void btnConnectController_Click(object sender, EventArgs e)
         {
-            fbLogger(clController.fbConnect());
+            fbLogger(clController.Connect());
         }
 
         private void btnDisconnectController_Click(object sender, EventArgs e)
         {
-            fbLogger(clController.fbDisconnect());
+            fbLogger(clController.Disconnect());
         }
 
 
