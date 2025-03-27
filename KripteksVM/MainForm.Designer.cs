@@ -91,6 +91,16 @@
             this.lblSID_ = new System.Windows.Forms.Label();
             this.btnDisconnectController = new System.Windows.Forms.Button();
             this.tabCEApplication = new System.Windows.Forms.TabPage();
+            this.lblPerformanceGPUUsage_ = new System.Windows.Forms.Label();
+            this.lblPerformanceVarRefreshAliveCount_ = new System.Windows.Forms.Label();
+            this.lblPerformanceVarRefreshTickMs_ = new System.Windows.Forms.Label();
+            this.lblPerformanceControllerCycleTickMs_ = new System.Windows.Forms.Label();
+            this.lblPerformanceControllerElapsedTimeMs_ = new System.Windows.Forms.Label();
+            this.lblPerformanceVarRefreshAliveCount = new System.Windows.Forms.Label();
+            this.lblPerformanceGPUUsage = new System.Windows.Forms.Label();
+            this.lblPerformanceVarRefreshTickMs = new System.Windows.Forms.Label();
+            this.lblPerformanceControllerCycleTickMs = new System.Windows.Forms.Label();
+            this.lblPerformanceControllerElapsedTimeMs = new System.Windows.Forms.Label();
             this.lblATElapsedTimeUnit = new System.Windows.Forms.Label();
             this.lblATElapsedTime = new System.Windows.Forms.Label();
             this.lblATElapsedTime_ = new System.Windows.Forms.Label();
@@ -107,19 +117,9 @@
             this.ConnectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblServerStatus_ = new System.Windows.Forms.Label();
             this.tabCELog = new System.Windows.Forms.TabPage();
+            this.tbLog = new System.Windows.Forms.TextBox();
             this.btnLogClear = new System.Windows.Forms.Button();
-            this.rtbLog = new System.Windows.Forms.RichTextBox();
-            this.tmrFormRefresh = new System.Windows.Forms.Timer(this.components);
-            this.lblPerformanceVarRefreshAliveCount = new System.Windows.Forms.Label();
-            this.lblPerformanceGPUUsage = new System.Windows.Forms.Label();
-            this.lblPerformanceVarRefreshTickMs = new System.Windows.Forms.Label();
-            this.lblPerformanceControllerCycleTickMs = new System.Windows.Forms.Label();
-            this.lblPerformanceControllerElapsedTimeMs = new System.Windows.Forms.Label();
-            this.lblPerformanceControllerElapsedTimeMs_ = new System.Windows.Forms.Label();
-            this.lblPerformanceControllerCycleTickMs_ = new System.Windows.Forms.Label();
-            this.lblPerformanceVarRefreshTickMs_ = new System.Windows.Forms.Label();
-            this.lblPerformanceVarRefreshAliveCount_ = new System.Windows.Forms.Label();
-            this.lblPerformanceGPUUsage_ = new System.Windows.Forms.Label();
+            this.timerForm = new System.Windows.Forms.Timer(this.components);
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -742,10 +742,100 @@
             this.tabCEApplication.TabIndex = 1;
             this.tabCEApplication.Text = "Application";
             // 
+            // lblPerformanceGPUUsage_
+            // 
+            this.lblPerformanceGPUUsage_.AutoSize = true;
+            this.lblPerformanceGPUUsage_.Location = new System.Drawing.Point(9, 486);
+            this.lblPerformanceGPUUsage_.Name = "lblPerformanceGPUUsage_";
+            this.lblPerformanceGPUUsage_.Size = new System.Drawing.Size(89, 17);
+            this.lblPerformanceGPUUsage_.TabIndex = 39;
+            this.lblPerformanceGPUUsage_.Text = "GPU usage :";
+            // 
+            // lblPerformanceVarRefreshAliveCount_
+            // 
+            this.lblPerformanceVarRefreshAliveCount_.AutoSize = true;
+            this.lblPerformanceVarRefreshAliveCount_.Location = new System.Drawing.Point(9, 460);
+            this.lblPerformanceVarRefreshAliveCount_.Name = "lblPerformanceVarRefreshAliveCount_";
+            this.lblPerformanceVarRefreshAliveCount_.Size = new System.Drawing.Size(120, 17);
+            this.lblPerformanceVarRefreshAliveCount_.TabIndex = 38;
+            this.lblPerformanceVarRefreshAliveCount_.Text = "Alive timer count :";
+            // 
+            // lblPerformanceVarRefreshTickMs_
+            // 
+            this.lblPerformanceVarRefreshTickMs_.AutoSize = true;
+            this.lblPerformanceVarRefreshTickMs_.Location = new System.Drawing.Point(9, 434);
+            this.lblPerformanceVarRefreshTickMs_.Name = "lblPerformanceVarRefreshTickMs_";
+            this.lblPerformanceVarRefreshTickMs_.Size = new System.Drawing.Size(162, 17);
+            this.lblPerformanceVarRefreshTickMs_.TabIndex = 37;
+            this.lblPerformanceVarRefreshTickMs_.Text = "Timer tick act time (ms) :";
+            // 
+            // lblPerformanceControllerCycleTickMs_
+            // 
+            this.lblPerformanceControllerCycleTickMs_.AutoSize = true;
+            this.lblPerformanceControllerCycleTickMs_.Location = new System.Drawing.Point(9, 408);
+            this.lblPerformanceControllerCycleTickMs_.Name = "lblPerformanceControllerCycleTickMs_";
+            this.lblPerformanceControllerCycleTickMs_.Size = new System.Drawing.Size(162, 17);
+            this.lblPerformanceControllerCycleTickMs_.TabIndex = 36;
+            this.lblPerformanceControllerCycleTickMs_.Text = "Timer tick set time (ms) :";
+            // 
+            // lblPerformanceControllerElapsedTimeMs_
+            // 
+            this.lblPerformanceControllerElapsedTimeMs_.AutoSize = true;
+            this.lblPerformanceControllerElapsedTimeMs_.Location = new System.Drawing.Point(9, 382);
+            this.lblPerformanceControllerElapsedTimeMs_.Name = "lblPerformanceControllerElapsedTimeMs_";
+            this.lblPerformanceControllerElapsedTimeMs_.Size = new System.Drawing.Size(193, 17);
+            this.lblPerformanceControllerElapsedTimeMs_.TabIndex = 35;
+            this.lblPerformanceControllerElapsedTimeMs_.Text = "Timer tick process time (ms) :";
+            // 
+            // lblPerformanceVarRefreshAliveCount
+            // 
+            this.lblPerformanceVarRefreshAliveCount.AutoSize = true;
+            this.lblPerformanceVarRefreshAliveCount.Location = new System.Drawing.Point(209, 460);
+            this.lblPerformanceVarRefreshAliveCount.Name = "lblPerformanceVarRefreshAliveCount";
+            this.lblPerformanceVarRefreshAliveCount.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceVarRefreshAliveCount.TabIndex = 34;
+            this.lblPerformanceVarRefreshAliveCount.Text = "0";
+            // 
+            // lblPerformanceGPUUsage
+            // 
+            this.lblPerformanceGPUUsage.AutoSize = true;
+            this.lblPerformanceGPUUsage.Location = new System.Drawing.Point(209, 486);
+            this.lblPerformanceGPUUsage.Name = "lblPerformanceGPUUsage";
+            this.lblPerformanceGPUUsage.Size = new System.Drawing.Size(36, 17);
+            this.lblPerformanceGPUUsage.TabIndex = 33;
+            this.lblPerformanceGPUUsage.Text = "0.00";
+            // 
+            // lblPerformanceVarRefreshTickMs
+            // 
+            this.lblPerformanceVarRefreshTickMs.AutoSize = true;
+            this.lblPerformanceVarRefreshTickMs.Location = new System.Drawing.Point(209, 434);
+            this.lblPerformanceVarRefreshTickMs.Name = "lblPerformanceVarRefreshTickMs";
+            this.lblPerformanceVarRefreshTickMs.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceVarRefreshTickMs.TabIndex = 32;
+            this.lblPerformanceVarRefreshTickMs.Text = "0";
+            // 
+            // lblPerformanceControllerCycleTickMs
+            // 
+            this.lblPerformanceControllerCycleTickMs.AutoSize = true;
+            this.lblPerformanceControllerCycleTickMs.Location = new System.Drawing.Point(209, 408);
+            this.lblPerformanceControllerCycleTickMs.Name = "lblPerformanceControllerCycleTickMs";
+            this.lblPerformanceControllerCycleTickMs.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceControllerCycleTickMs.TabIndex = 31;
+            this.lblPerformanceControllerCycleTickMs.Text = "0";
+            // 
+            // lblPerformanceControllerElapsedTimeMs
+            // 
+            this.lblPerformanceControllerElapsedTimeMs.AutoSize = true;
+            this.lblPerformanceControllerElapsedTimeMs.Location = new System.Drawing.Point(209, 382);
+            this.lblPerformanceControllerElapsedTimeMs.Name = "lblPerformanceControllerElapsedTimeMs";
+            this.lblPerformanceControllerElapsedTimeMs.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceControllerElapsedTimeMs.TabIndex = 30;
+            this.lblPerformanceControllerElapsedTimeMs.Text = "0";
+            // 
             // lblATElapsedTimeUnit
             // 
             this.lblATElapsedTimeUnit.AutoSize = true;
-            this.lblATElapsedTimeUnit.Location = new System.Drawing.Point(134, 345);
+            this.lblATElapsedTimeUnit.Location = new System.Drawing.Point(168, 348);
             this.lblATElapsedTimeUnit.Name = "lblATElapsedTimeUnit";
             this.lblATElapsedTimeUnit.Size = new System.Drawing.Size(34, 17);
             this.lblATElapsedTimeUnit.TabIndex = 17;
@@ -755,7 +845,7 @@
             // 
             this.lblATElapsedTime.Location = new System.Drawing.Point(68, 345);
             this.lblATElapsedTime.Name = "lblATElapsedTime";
-            this.lblATElapsedTime.Size = new System.Drawing.Size(60, 20);
+            this.lblATElapsedTime.Size = new System.Drawing.Size(90, 20);
             this.lblATElapsedTime.TabIndex = 16;
             this.lblATElapsedTime.Text = "    ";
             // 
@@ -875,14 +965,26 @@
             // 
             // tabCELog
             // 
+            this.tabCELog.Controls.Add(this.tbLog);
             this.tabCELog.Controls.Add(this.btnLogClear);
-            this.tabCELog.Controls.Add(this.rtbLog);
             this.tabCELog.Location = new System.Drawing.Point(4, 4);
             this.tabCELog.Name = "tabCELog";
             this.tabCELog.Size = new System.Drawing.Size(288, 552);
             this.tabCELog.TabIndex = 3;
             this.tabCELog.Text = "Log";
             this.tabCELog.UseVisualStyleBackColor = true;
+            // 
+            // tbLog
+            // 
+            this.tbLog.AllowDrop = true;
+            this.tbLog.Enabled = false;
+            this.tbLog.Location = new System.Drawing.Point(3, 3);
+            this.tbLog.Multiline = true;
+            this.tbLog.Name = "tbLog";
+            this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbLog.Size = new System.Drawing.Size(282, 474);
+            this.tbLog.TabIndex = 2;
+            this.tbLog.Text = "KripteksVM V1.0";
             // 
             // btnLogClear
             // 
@@ -893,110 +995,11 @@
             this.btnLogClear.Text = "Clear";
             this.btnLogClear.UseVisualStyleBackColor = true;
             // 
-            // rtbLog
+            // timerForm
             // 
-            this.rtbLog.Enabled = false;
-            this.rtbLog.Location = new System.Drawing.Point(3, 3);
-            this.rtbLog.Name = "rtbLog";
-            this.rtbLog.Size = new System.Drawing.Size(282, 472);
-            this.rtbLog.TabIndex = 0;
-            this.rtbLog.Text = "KripteksVM V1.0";
-            // 
-            // tmrFormRefresh
-            // 
-            this.tmrFormRefresh.Enabled = true;
-            this.tmrFormRefresh.Interval = 250;
-            this.tmrFormRefresh.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
-            // 
-            // lblPerformanceVarRefreshAliveCount
-            // 
-            this.lblPerformanceVarRefreshAliveCount.AutoSize = true;
-            this.lblPerformanceVarRefreshAliveCount.Location = new System.Drawing.Point(209, 460);
-            this.lblPerformanceVarRefreshAliveCount.Name = "lblPerformanceVarRefreshAliveCount";
-            this.lblPerformanceVarRefreshAliveCount.Size = new System.Drawing.Size(16, 17);
-            this.lblPerformanceVarRefreshAliveCount.TabIndex = 34;
-            this.lblPerformanceVarRefreshAliveCount.Text = "0";
-            // 
-            // lblPerformanceGPUUsage
-            // 
-            this.lblPerformanceGPUUsage.AutoSize = true;
-            this.lblPerformanceGPUUsage.Location = new System.Drawing.Point(209, 486);
-            this.lblPerformanceGPUUsage.Name = "lblPerformanceGPUUsage";
-            this.lblPerformanceGPUUsage.Size = new System.Drawing.Size(36, 17);
-            this.lblPerformanceGPUUsage.TabIndex = 33;
-            this.lblPerformanceGPUUsage.Text = "0.00";
-            // 
-            // lblPerformanceVarRefreshTickMs
-            // 
-            this.lblPerformanceVarRefreshTickMs.AutoSize = true;
-            this.lblPerformanceVarRefreshTickMs.Location = new System.Drawing.Point(209, 434);
-            this.lblPerformanceVarRefreshTickMs.Name = "lblPerformanceVarRefreshTickMs";
-            this.lblPerformanceVarRefreshTickMs.Size = new System.Drawing.Size(16, 17);
-            this.lblPerformanceVarRefreshTickMs.TabIndex = 32;
-            this.lblPerformanceVarRefreshTickMs.Text = "0";
-            // 
-            // lblPerformanceControllerCycleTickMs
-            // 
-            this.lblPerformanceControllerCycleTickMs.AutoSize = true;
-            this.lblPerformanceControllerCycleTickMs.Location = new System.Drawing.Point(209, 408);
-            this.lblPerformanceControllerCycleTickMs.Name = "lblPerformanceControllerCycleTickMs";
-            this.lblPerformanceControllerCycleTickMs.Size = new System.Drawing.Size(16, 17);
-            this.lblPerformanceControllerCycleTickMs.TabIndex = 31;
-            this.lblPerformanceControllerCycleTickMs.Text = "0";
-            // 
-            // lblPerformanceControllerElapsedTimeMs
-            // 
-            this.lblPerformanceControllerElapsedTimeMs.AutoSize = true;
-            this.lblPerformanceControllerElapsedTimeMs.Location = new System.Drawing.Point(209, 382);
-            this.lblPerformanceControllerElapsedTimeMs.Name = "lblPerformanceControllerElapsedTimeMs";
-            this.lblPerformanceControllerElapsedTimeMs.Size = new System.Drawing.Size(16, 17);
-            this.lblPerformanceControllerElapsedTimeMs.TabIndex = 30;
-            this.lblPerformanceControllerElapsedTimeMs.Text = "0";
-            // 
-            // lblPerformanceControllerElapsedTimeMs_
-            // 
-            this.lblPerformanceControllerElapsedTimeMs_.AutoSize = true;
-            this.lblPerformanceControllerElapsedTimeMs_.Location = new System.Drawing.Point(9, 382);
-            this.lblPerformanceControllerElapsedTimeMs_.Name = "lblPerformanceControllerElapsedTimeMs_";
-            this.lblPerformanceControllerElapsedTimeMs_.Size = new System.Drawing.Size(193, 17);
-            this.lblPerformanceControllerElapsedTimeMs_.TabIndex = 35;
-            this.lblPerformanceControllerElapsedTimeMs_.Text = "Timer tick process time (ms) :";
-            // 
-            // lblPerformanceControllerCycleTickMs_
-            // 
-            this.lblPerformanceControllerCycleTickMs_.AutoSize = true;
-            this.lblPerformanceControllerCycleTickMs_.Location = new System.Drawing.Point(9, 408);
-            this.lblPerformanceControllerCycleTickMs_.Name = "lblPerformanceControllerCycleTickMs_";
-            this.lblPerformanceControllerCycleTickMs_.Size = new System.Drawing.Size(162, 17);
-            this.lblPerformanceControllerCycleTickMs_.TabIndex = 36;
-            this.lblPerformanceControllerCycleTickMs_.Text = "Timer tick set time (ms) :";
-            // 
-            // lblPerformanceVarRefreshTickMs_
-            // 
-            this.lblPerformanceVarRefreshTickMs_.AutoSize = true;
-            this.lblPerformanceVarRefreshTickMs_.Location = new System.Drawing.Point(9, 434);
-            this.lblPerformanceVarRefreshTickMs_.Name = "lblPerformanceVarRefreshTickMs_";
-            this.lblPerformanceVarRefreshTickMs_.Size = new System.Drawing.Size(162, 17);
-            this.lblPerformanceVarRefreshTickMs_.TabIndex = 37;
-            this.lblPerformanceVarRefreshTickMs_.Text = "Timer tick act time (ms) :";
-            // 
-            // lblPerformanceVarRefreshAliveCount_
-            // 
-            this.lblPerformanceVarRefreshAliveCount_.AutoSize = true;
-            this.lblPerformanceVarRefreshAliveCount_.Location = new System.Drawing.Point(9, 460);
-            this.lblPerformanceVarRefreshAliveCount_.Name = "lblPerformanceVarRefreshAliveCount_";
-            this.lblPerformanceVarRefreshAliveCount_.Size = new System.Drawing.Size(120, 17);
-            this.lblPerformanceVarRefreshAliveCount_.TabIndex = 38;
-            this.lblPerformanceVarRefreshAliveCount_.Text = "Alive timer count :";
-            // 
-            // lblPerformanceGPUUsage_
-            // 
-            this.lblPerformanceGPUUsage_.AutoSize = true;
-            this.lblPerformanceGPUUsage_.Location = new System.Drawing.Point(9, 486);
-            this.lblPerformanceGPUUsage_.Name = "lblPerformanceGPUUsage_";
-            this.lblPerformanceGPUUsage_.Size = new System.Drawing.Size(89, 17);
-            this.lblPerformanceGPUUsage_.TabIndex = 39;
-            this.lblPerformanceGPUUsage_.Text = "GPU usage :";
+            this.timerForm.Enabled = true;
+            this.timerForm.Interval = 250;
+            this.timerForm.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
             // KripteksVMB
             // 
@@ -1040,6 +1043,7 @@
             this.gbSignalRComm.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserList)).EndInit();
             this.tabCELog.ResumeLayout(false);
+            this.tabCELog.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1072,7 +1076,7 @@
         private System.Windows.Forms.GroupBox gbControllerVariables;
         private System.Windows.Forms.Label lblAID;
         private System.Windows.Forms.Label lblSID;
-        private System.Windows.Forms.Timer tmrFormRefresh;
+        private System.Windows.Forms.Timer timerForm;
         private System.Windows.Forms.DataGridView dgvUserList;
         private System.Windows.Forms.GroupBox gbSignalRComm;
         private System.Windows.Forms.DataGridViewTextBoxColumn Variable;
@@ -1123,7 +1127,6 @@
         private System.Windows.Forms.Label lblBeckhoffPortNo;
         private System.Windows.Forms.Label lblBeckhoffPortNo_;
         private System.Windows.Forms.TabPage tabCELog;
-        private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.Button btnLogClear;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
         private System.Windows.Forms.Label lblPerformanceGPUUsage_;
@@ -1136,5 +1139,6 @@
         private System.Windows.Forms.Label lblPerformanceVarRefreshTickMs;
         private System.Windows.Forms.Label lblPerformanceControllerCycleTickMs;
         private System.Windows.Forms.Label lblPerformanceControllerElapsedTimeMs;
+        private System.Windows.Forms.TextBox tbLog;
     }
 }

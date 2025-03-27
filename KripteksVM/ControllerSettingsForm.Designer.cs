@@ -1,6 +1,6 @@
 ﻿namespace KripteksVM
 {
-    partial class ControllerPropertiesForm
+    partial class ControllerSettingsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControllerPropertiesForm));
-            this.btnControllerPropertiesApply = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControllerSettingsForm));
+            this.btnControllerSettingsApply = new System.Windows.Forms.Button();
             this.btnControllerPropertiesClose = new System.Windows.Forms.Button();
             this.cbControllerType = new System.Windows.Forms.ComboBox();
             this.tabControllerProperties = new System.Windows.Forms.TabControl();
@@ -45,15 +45,15 @@
             this.tabControllerPropertiesBeckhoff.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnControllerPropertiesApply
+            // btnControllerSettingsApply
             // 
-            this.btnControllerPropertiesApply.Location = new System.Drawing.Point(12, 511);
-            this.btnControllerPropertiesApply.Name = "btnControllerPropertiesApply";
-            this.btnControllerPropertiesApply.Size = new System.Drawing.Size(100, 30);
-            this.btnControllerPropertiesApply.TabIndex = 4;
-            this.btnControllerPropertiesApply.Text = "Apply";
-            this.btnControllerPropertiesApply.UseVisualStyleBackColor = true;
-            this.btnControllerPropertiesApply.Click += new System.EventHandler(this.btnControllerPropertiesApply_Click);
+            this.btnControllerSettingsApply.Location = new System.Drawing.Point(12, 511);
+            this.btnControllerSettingsApply.Name = "btnControllerSettingsApply";
+            this.btnControllerSettingsApply.Size = new System.Drawing.Size(100, 30);
+            this.btnControllerSettingsApply.TabIndex = 4;
+            this.btnControllerSettingsApply.Text = "Apply";
+            this.btnControllerSettingsApply.UseVisualStyleBackColor = true;
+            this.btnControllerSettingsApply.Click += new System.EventHandler(this.btnControllerSettingsApply_Click);
             // 
             // btnControllerPropertiesClose
             // 
@@ -159,7 +159,7 @@
             this.lblControllerCycleMs_.TabIndex = 3;
             this.lblControllerCycleMs_.Text = "Cycle (ms)";
             // 
-            // ControllerPropertiesForm
+            // ControllerSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -168,12 +168,12 @@
             this.Controls.Add(this.tbControllerCycleMs);
             this.Controls.Add(this.tabControllerProperties);
             this.Controls.Add(this.btnControllerPropertiesClose);
-            this.Controls.Add(this.btnControllerPropertiesApply);
+            this.Controls.Add(this.btnControllerSettingsApply);
             this.Controls.Add(this.cbControllerType);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ControllerPropertiesForm";
-            this.Text = "Controller Properties";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControllerPropertiesForm_FormClosing);
+            this.Name = "ControllerSettingsForm";
+            this.Text = "Controller Settings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControllerSettingsForm_FormClosing);
             this.tabControllerProperties.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.PerformLayout();
@@ -183,7 +183,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnControllerPropertiesApply;
+        private System.Windows.Forms.Button btnControllerSettingsApply;
         private System.Windows.Forms.Button btnControllerPropertiesClose;
         private System.Windows.Forms.ComboBox cbControllerType;
         private System.Windows.Forms.TabControl tabControllerProperties;

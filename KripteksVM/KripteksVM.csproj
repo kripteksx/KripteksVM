@@ -124,19 +124,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\ControlGPU.cs" />
-    <Compile Include="Interface\IController.cs" />
+    <Compile Include="Concrete\Constants.cs" />
+    <Compile Include="Concrete\ControllerSettings.cs" />
+    <Compile Include="Concrete\GPUUsage.cs" />
+    <Compile Include="Concrete\General.cs" />
+    <Compile Include="Concrete\VirtrualMachineVariables.cs" />
+    <Compile Include="Concrete\VirtualMachine.cs" />
+    <Compile Include="Abstract\IController.cs" />
+    <Compile Include="Concrete\VirtualMachineApplication.cs" />
+    <Compile Include="Concrete\VirtualMachineStatus.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ControlBrowser.cs" />
-    <Compile Include="Controls\ControlClass.cs" />
-    <Compile Include="Controls\ControlFile.cs" />
-    <Compile Include="Controls\ControllerBeckhoff.cs" />
-    <Compile Include="Definition.cs" />
+    <Compile Include="Concrete\ChromiumBrowser.cs" />
+    <Compile Include="Concrete\ControllerSettingsFile.cs" />
+    <Compile Include="Concrete\ControllerBeckhoff.cs" />
     <Compile Include="FullScreenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,17 +150,17 @@
     </Compile>
     <Compile Include="Program.cs">
     </Compile>
-    <Compile Include="ApplicationPropertiesForm.cs">
+    <Compile Include="ApplicationSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ApplicationPropertiesForm.Designer.cs">
-      <DependentUpon>ApplicationPropertiesForm.cs</DependentUpon>
+    <Compile Include="ApplicationSettingsForm.Designer.cs">
+      <DependentUpon>ApplicationSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ControllerPropertiesForm.cs">
+    <Compile Include="ControllerSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ControllerPropertiesForm.Designer.cs">
-      <DependentUpon>ControllerPropertiesForm.cs</DependentUpon>
+    <Compile Include="ControllerSettingsForm.Designer.cs">
+      <DependentUpon>ControllerSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -178,11 +183,11 @@
     <EmbeddedResource Include="FullScreenForm.resx">
       <DependentUpon>FullScreenForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ApplicationPropertiesForm.resx">
-      <DependentUpon>ApplicationPropertiesForm.cs</DependentUpon>
+    <EmbeddedResource Include="ApplicationSettingsForm.resx">
+      <DependentUpon>ApplicationSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ControllerPropertiesForm.resx">
-      <DependentUpon>ControllerPropertiesForm.cs</DependentUpon>
+    <EmbeddedResource Include="ControllerSettingsForm.resx">
+      <DependentUpon>ControllerSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

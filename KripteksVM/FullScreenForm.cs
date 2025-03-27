@@ -24,13 +24,5 @@ namespace KripteksVM
         {
             ButtonWasClicked();
         }
-        
-
-        private void deneme()
-        {
-            //this.Location = new Point(-1000,-1000);
-            this.WindowState = FormWindowState.Minimized;
-            this.SetBounds(-1000, -500, 500, 500);
-        }
     }
 }

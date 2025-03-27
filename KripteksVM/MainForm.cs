@@ -1,60 +1,53 @@
-﻿// Copyright © 2010-2015 The CefSharp Authors. All rights reserved.
-//
-// Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
-
-using CefSharp.DevTools.IO;
-using CefSharp.WinForms;
-using KripteksVM.Controls;
-using CefSharp;
-using System.Drawing;
-using System;
+﻿using System;
 using System.Net;
 using System.Data;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Text;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
+using System.Windows.Forms;
+using CefSharp;
+using CefSharp.DevTools.IO;
+using CefSharp.WinForms;
+using KripteksVM.Concrete;
 
 namespace KripteksVM
 {
     public partial class KripteksVMB : Form
     {
-        private int iPerformanceControllerElapsedTimeMs = 0;
-        private int iPerformanceVarRefreshTickMs = 0;
-        private int iPerformanceVarRefreshAliveCount = 0;
-        private TimeSpan tsswVarCycleElapsed;
-        private ControllerBeckhoff clController = new ControllerBeckhoff();
-        private ControlBrowser clControlBrowser = new ControlBrowser();
-        private ControlFile clControlFile = new ControlFile();
-        private ControlGPU clControlGPU = new ControlGPU();
-        private float fGPUUsage = 0;
-        //private bool boControllerFirstConnectAck = false;
-        private string sHost = "http://www.kripteks.net";
+        private General _general = General.GetInstance();
+        private VirtualMachine _virtualMachine = new VirtualMachine();
+        private ControllerSettings _controllerSettings = new ControllerSettings();
+        private ControllerBeckhoff _controllerBeckhoff = new ControllerBeckhoff();
+        private IController _controller;
+        private ControllerSettingsFile _controllerSettingsFile = new ControllerSettingsFile();
+        private ChromiumBrowser _chromiumBrowser = new ChromiumBrowser();
+
+        private static System.Timers.Timer s_timerCamera = new System.Timers.Timer();
+        private static System.Timers.Timer s_timerVariables = new System.Timers.Timer();
+        private static System.Timers.Timer s_timerSlow = new System.Timers.Timer();
+
+
+        private int _performanceControllerElapsedTimeMs = 0;
+        private int _performanceVarRefreshTickMs = 0;
+        private int _performanceVarRefreshAliveCount = 0;
+        private float _gpuUsage = 0;
+        private TimeSpan _stopWatchCycleElapsed;
+        private Stopwatch _stopWatchCycleTimer = new Stopwatch();
+        
+        private string _host = "http://www.kripteks.net";
         //private string sHost = "http://localhost:56436";
-
-        private static System.Timers.Timer tmrCamRefresh = new System.Timers.Timer();
-        private static System.Timers.Timer tmrVarRefresh = new System.Timers.Timer();
-        private static System.Timers.Timer tmrSlowRefresh = new System.Timers.Timer();
-
-        private Stopwatch swVarCycle = new Stopwatch();
-
+        
         private int iscMainPanel2Width = 300;
         private int iscMainSplitterDistance = 0;
         private int iFormWidthOld = 0;
-
-        // screen center point
-        public int iCenterPointX = 0;
-        public int iCenterPointY = 0;
-
+        
         // guncellenen degiskenler
-        private int iVariablesSourceIndex = 0;
-        private int iVariablesTypeIndex = 0;
-
-        private int iBrowserInitCount = 0;
-        private bool boBrowserInitAck = false;
-        private int iCommentsCount = 0;
+        private int _browserInitCount = 0;
+        private bool _isBrowserInitAck = false;
+        private int _commentsRefreshCount = 0;
 
         private bool[] bodAWForce = new bool[8];
         private bool[] bodWAForce = new bool[8];
@@ -68,110 +61,107 @@ namespace KripteksVM
 
         private bool[] boboAWForce = new bool[32];
         private bool[] boboWAForce = new bool[32];
-        public bool[] boAW = new bool[32];
-        public bool[] boWA = new bool[32];
+        private bool[] boAW = new bool[32];
+        private bool[] boWA = new bool[32];
         
-        public bool boFullScreen = false;
+        // enum a donecek
+        private bool _isCursorVisible =true;
+        private bool _isFreeCam = false;
+        private bool _isPersonCam = false;
+        private int _cursorPosXTop = 0;
+        private int _cursorPosYTop = 0;
 
-        public bool boCursorVisible =true;
-        public bool boFreeCam = false;
-        public bool boPersonCam = false;
-        public int iCursorPosXFark = 0;
-        public int iCursorPosYFark = 0;
-        public int iCursorPosXTop = 0;
-        public int iCursorPosYTop = 0;
-
-        public string sForDoubleFloatCharOld = "";
-        public string sForDoubleFloatCharNew = "";
-
-        private string sLoggerBuffer = "";
-        private string sLoggerBufferHelp = "";
-
-        //public Form FullScreenForm;
-        SplashForm SplashForm = new SplashForm();
-        FullScreenForm FullScreenForm = new FullScreenForm();
-        ControllerPropertiesForm PropertiesControllerForm = new ControllerPropertiesForm();
-        ApplicationPropertiesForm PropertiesApplicationForm = new ApplicationPropertiesForm();
+        // Formlar 
+        SplashForm splashForm = new SplashForm();
+        FullScreenForm fullScreenForm = new FullScreenForm();
+        ControllerSettingsForm controllerSettingsForm = new ControllerSettingsForm();
+        ApplicationSettingsForm applicationSettingsForm = new ApplicationSettingsForm();
 
         // DLL libraries used to manage hotkeys
         [DllImport("user32.dll")]
         public static extern int GetAsyncKeyState(Int32 i);
-        private bool[] boKeyHelp = new bool[255];
-        private bool[] boKey = new bool[255];
-        private bool boFormFocused = true;
+        private bool[] _keyHelp = new bool[255];
+        private bool[] _key = new bool[255];
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
-
         [DllImport("user32.dll")]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
-        private string GetActiveWindowTitle()
-        {
-            const int nChars = 256;
-            StringBuilder Buff = new StringBuilder(nChars);
-            IntPtr handle = GetForegroundWindow();
-
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                return Buff.ToString();
-            }
-            return null;
-        }
-
+        
         public KripteksVMB()
         {
-            string sDouble = "10.0";
-            if (Convert.ToDouble(sDouble) == 10)
-            {
-                sForDoubleFloatCharOld = ",";
-                sForDoubleFloatCharNew = ".";
-            }
-            else
-            {
-                sForDoubleFloatCharOld = ".";
-                sForDoubleFloatCharNew = ",";
-            }
-
             // loading 
-            SplashForm.Show();
+            splashForm.Show();
             this.Hide();
-            
+
             InitializeComponent();
-
-            // Config okunuyor
-            clController.stControllerProperties = clControlFile.fbGetControllerProperties();
-            
-            // Connect controller
-            fbLogger(clController.Init());
-
-            fbLogger(clController.Connect());
-
-            // formda gosterilen variable list olustruluyor
-            fbVariablesInit();
-
-            // fullscreen
-            WindowState = FormWindowState.Maximized;
-            fbscMainResize();
-
-            // refresh
-            fbTimerInit();
-
-            // chromium
-            //clControlBrowser.sHost = "http://www.kripteks.net";
-            //clControlBrowser.sHost = "http://localhost:56436";
-            fbLogger("Host is "+ sHost);
-            clControlBrowser.fbInit(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
-            scMain.Panel1.Controls.Add(clControlBrowser.browser);
-
-            // diger formdan bu forma click
-            fbFullScreenInit();
 
             // loaded
             this.Show();
-            SplashForm.Hide();
+            splashForm.Hide();
         }
+
+        private void KripteksVMB_Load(object sender, EventArgs e)
+        {
+            // ortak logger
+            _general.txtLog = tbLog;
+
+            // diger controller secimi
+            _controller = _controllerBeckhoff;
+
+            // Config okunuyor
+            _controllerSettings = _controllerSettingsFile.GetControllerSettings();
+
+            // Connect controller
+            _virtualMachine = _controller.Init(_virtualMachine);
+            _controller.Connect(_controllerSettings);
+
+            // formda gosterilen variable list olustruluyor
+            VariablesInit();
+
+            // fullscreen
+            WindowState = FormWindowState.Maximized;
+            MainFormResize();
+
+            // refresh
+            TimerInit();
+
+            // chromium
+            _general.LogText("Host is " + _host);
+            _chromiumBrowser.Init(_host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
+            scMain.Panel1.Controls.Add(_chromiumBrowser.browser);
+
+            // diger formdan bu forma click
+            FullScreenInit();
+        }
+
         #region Genel
-        private Rectangle fbWhichScreen()
+        private string GetActiveWindowTitle()
+        {
+            const int chars = 256;
+            StringBuilder buff = new StringBuilder(chars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, buff, chars) > 0)
+            {
+                return buff.ToString();
+            }
+            return null;
+        }
+        private string FloatingPointChar()
+        {
+            string _floatingPointChar = ".";
+            string _double = "10.0";
+            if (Convert.ToDouble(_double) == 10)
+            {
+                _floatingPointChar = ".";
+            }
+            else
+            {
+                _floatingPointChar = ",";
+            }
+            return _floatingPointChar;
+        }
+        private Rectangle WhichScreen()
         {
             Rectangle recSecreenWorkingArea = new Rectangle();
 
@@ -186,7 +176,7 @@ namespace KripteksVM
             }
             return recSecreenWorkingArea;
         }
-        private void fbGetScreenProperties()
+        private void GetScreenProperties()
         {
             foreach (Screen screen in Screen.AllScreens)
             {
@@ -202,9 +192,9 @@ namespace KripteksVM
             }
         }
         
-        private void fbGetShareLink()
+        private void GetShareLink()
         {
-            Thread thread = new Thread(() => Clipboard.SetText(sHost + "/application.aspx?CID=" + clController.stKVM.stApp.sCID + "&SID=" + clController.stKVM.stApp.sSID + "&AID=" + clController.stKVM.stApp.sAID));
+            Thread thread = new Thread(() => Clipboard.SetText(_host + "/application.aspx?CID=" + _virtualMachine.virtualApplication.CID + "&SID=" + _virtualMachine.virtualApplication.SID + "&AID=" + _virtualMachine.virtualApplication.AID));
             thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
             thread.Start();
             thread.Join(); //Wait for the thread to end
@@ -213,33 +203,33 @@ namespace KripteksVM
         #endregion
 
         #region Timers
-        private void fbTimerInit()
+        private void TimerInit()
         {
             // web java script
-            tmrCamRefresh.Elapsed += new System.Timers.ElapsedEventHandler(tmrCamRefresh_Tick);
-            tmrCamRefresh.Interval = 20;
-            tmrCamRefresh.Enabled = true;
-            tmrCamRefresh.AutoReset = true;
+            s_timerCamera.Elapsed += new System.Timers.ElapsedEventHandler(tmrCamRefresh_Tick);
+            s_timerCamera.Interval = 20;
+            s_timerCamera.Enabled = true;
+            s_timerCamera.AutoReset = true;
 
             // controller refresh
-            tmrVarRefresh.Elapsed += new System.Timers.ElapsedEventHandler(tmrVarRefresh_Tick);
-            tmrVarRefresh.Interval = 100;
-            tmrVarRefresh.Enabled = true;
-            tmrVarRefresh.AutoReset = true;
+            s_timerVariables.Elapsed += new System.Timers.ElapsedEventHandler(tmrVarRefresh_Tick);
+            s_timerVariables.Interval = 100;
+            s_timerVariables.Enabled = true;
+            s_timerVariables.AutoReset = true;
 
             // slow refresh
-            tmrSlowRefresh.Elapsed += new System.Timers.ElapsedEventHandler(tmrSlowRefresh_Tick);
-            tmrSlowRefresh.Interval = 1000;
-            tmrSlowRefresh.Enabled = true;
-            tmrSlowRefresh.AutoReset = true;
+            s_timerSlow.Elapsed += new System.Timers.ElapsedEventHandler(tmrSlowRefresh_Tick);
+            s_timerSlow.Interval = 1000;
+            s_timerSlow.Enabled = true;
+            s_timerSlow.AutoReset = true;
 
-            fbLogger("Timers started.");
+            _general.LogText("Timers started.");
         }
 
 
         private void tmrSlowRefresh_Tick(object sender, EventArgs e)
         {
-            fGPUUsage = clControlGPU.fbGetGPUUsage();
+            _gpuUsage = GPUUsage.GetGPUUsage(GPUUsage.GetGPUCounters());
         }
 
         private void tmrCamRefresh_Tick(object sender, EventArgs e)
@@ -250,92 +240,93 @@ namespace KripteksVM
                 int state = GetAsyncKeyState(i);
                 if (state != 0 & state != 1)
                 {
-                    boKey[i] = true;
+                    _key[i] = true;
                 }
                 else if (state == 0)
                 {
-                    boKey[i] = false;
-                    boKeyHelp[i] = false;
+                    _key[i] = false;
+                    _keyHelp[i] = false;
                 }
             }
 
             // Active program ismi
-            string sActiveWindowTitle = "";
-            if (GetActiveWindowTitle() != null) sActiveWindowTitle = GetActiveWindowTitle();
+            string activeWindowTitle = "";
+            if (GetActiveWindowTitle() != null) activeWindowTitle = GetActiveWindowTitle();
 
-
+            int centerPointX = 0;
+            int centerPointY = 0;
             // ekran cozunurlugu
-            if (boFullScreen)
+            if (fullScreenForm.Visible)
             {
-                iCenterPointX = FullScreenForm.Width / 2;
-                iCenterPointY = (FullScreenForm.Height / 2) + 5;
+                centerPointX = fullScreenForm.Width / 2;
+                centerPointY = (fullScreenForm.Height / 2) + 5;
             }
             else
             {
-                iCenterPointX = this.Location.X + 16 + scMain.Panel1.Width / 2;
-                iCenterPointY = this.Location.Y + 80 + scMain.Panel1.Height / 2;
+                centerPointX = this.Location.X + 16 + scMain.Panel1.Width / 2;
+                centerPointY = this.Location.Y + 80 + scMain.Panel1.Height / 2;
             }
-            if (sActiveWindowTitle == "KripteksVM")
+            if (activeWindowTitle == "KripteksVM")
             {
-                if (boKey[80] & !boKeyHelp[80])
+                if (_key[80] & !_keyHelp[80])
                 {
-                    Cursor.Position = new Point(iCenterPointX, iCenterPointY);
-                    boKeyHelp[80] = true;
-                    fbPersonCam();
+                    Cursor.Position = new Point(centerPointX, centerPointY);
+                    _keyHelp[80] = true;
+                    PersonCam();
                 }
-                if (boKey[79] & !boKeyHelp[79])
+                if (_key[79] & !_keyHelp[79])
                 {
-                    Cursor.Position = new Point(iCenterPointX, iCenterPointY);
-                    boKeyHelp[79] = true;
-                    fbFreeCam();
+                    Cursor.Position = new Point(centerPointX, centerPointY);
+                    _keyHelp[79] = true;
+                    FreeCam();
                 }
             }
-            if (boKey[27] & !boKeyHelp[27]) // ESC
+            if (_key[27] & !_keyHelp[27]) // ESC
             {
-                boKeyHelp[27] = true;
-                fbCancelCam();
+                _keyHelp[27] = true;
+                CancelCam();
             }
-            if (boKey[116] & !boKeyHelp[116]) // F5
+            if (_key[116] & !_keyHelp[116]) // F5
             {
-                boKeyHelp[116] = true;
-                clControlBrowser.fbRefresh(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
+                _keyHelp[116] = true;
+                _chromiumBrowser.Refresh(_host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
             }
-            if (boKey[121] & !boKeyHelp[121]) // F10
+            if (_key[121] & !_keyHelp[121]) // F10
             {
-                boKeyHelp[121] = true;
-                fbGetShareLink();
+                _keyHelp[121] = true;
+                GetShareLink();
             }
-            if (boKey[122] & !boKeyHelp[122]) // F11
+            if (_key[122] & !_keyHelp[122]) // F11
             {
-                boKeyHelp[122] = true;
+                _keyHelp[122] = true;
                 lblTrigValue.Invoke((MethodInvoker)(() => lblTrigValue.Text = lblTrigValue.Text + " "));
             }
-            if (boKey[123] & !boKeyHelp[123]) // F12
+            if (_key[123] & !_keyHelp[123]) // F12
             {
-                boKeyHelp[123] = true;
-                clControlBrowser.browser.ShowDevTools();
+                _keyHelp[123] = true;
+                _chromiumBrowser.browser.ShowDevTools();
             }
             // klavye ve mouse 
 
 
             // gecikmeli refresh
-            if (iBrowserInitCount > 100)
+            if (_browserInitCount > 100)
             {
                 // program acildiktan sonra refresh
-                if (!boBrowserInitAck)
+                if (!_isBrowserInitAck)
                 {
-                    boBrowserInitAck = true;
-                    clControlBrowser.fbRefresh(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
-                    fbLogger("Browser refreshed.");
+                    _isBrowserInitAck = true;
+                    _chromiumBrowser.Refresh(_host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
+                    _general.LogText("Browser refreshed.");
                 }
             }
             else
             {
-                iBrowserInitCount++;
+                _browserInitCount++;
             }
 
 
-            if (clControlBrowser.boMainFrameLoaded & boBrowserInitAck)
+            if (_chromiumBrowser.isMainFrameLoaded & _isBrowserInitAck)
             {
                 try
                 {
@@ -343,31 +334,31 @@ namespace KripteksVM
                     string screenWidth = Screen.PrimaryScreen.Bounds.Width.ToString();
                     string screenHeight = Screen.PrimaryScreen.Bounds.Height.ToString();
 
-                    if (boCursorVisible)
+                    if (_isCursorVisible)
                     {
-                        clControlBrowser.browser.ExecuteScriptAsync("boPersonCam=false");
-                        clControlBrowser.browser.ExecuteScriptAsync("boFreeCam=false");
+                        _chromiumBrowser.browser.ExecuteScriptAsync("boPersonCam=false");
+                        _chromiumBrowser.browser.ExecuteScriptAsync("boFreeCam=false");
                     }
                     else
                     {
-                        if(boPersonCam) clControlBrowser.browser.ExecuteScriptAsync("boPersonCam=true");
-                        else clControlBrowser.browser.ExecuteScriptAsync("boPersonCam=false");
-                        if (boFreeCam) clControlBrowser.browser.ExecuteScriptAsync("boFreeCam=true");
-                        else clControlBrowser.browser.ExecuteScriptAsync("boFreeCam=false");
+                        if(_isPersonCam) _chromiumBrowser.browser.ExecuteScriptAsync("boPersonCam=true");
+                        else _chromiumBrowser.browser.ExecuteScriptAsync("boPersonCam=false");
+                        if (_isFreeCam) _chromiumBrowser.browser.ExecuteScriptAsync("boFreeCam=true");
+                        else _chromiumBrowser.browser.ExecuteScriptAsync("boFreeCam=false");
                     }
 
-                    if (!boCursorVisible)
+                    if (!_isCursorVisible)
                     {
-                        iCursorPosXFark = Cursor.Position.X - (iCenterPointX);
-                        iCursorPosYFark = Cursor.Position.Y - (iCenterPointY);
-                        Cursor.Position = new Point(iCenterPointX, iCenterPointY);
-                        
-                        iCursorPosXTop = iCursorPosXTop + iCursorPosXFark/2;
-                        iCursorPosYTop = iCursorPosYTop + iCursorPosYFark/2;
+                        int cursorPosXFark = Cursor.Position.X - (centerPointX);
+                        int cursorPosYFark = Cursor.Position.Y - (centerPointY);
+                        Cursor.Position = new Point(centerPointX, centerPointY);
+
+                        _cursorPosXTop = _cursorPosXTop + cursorPosXFark / 2;
+                        _cursorPosYTop = _cursorPosYTop + cursorPosYFark / 2;
                     }
-                    clControlBrowser.browser.ExecuteScriptAsync("boBrowserActive=false");
-                    clControlBrowser.browser.ExecuteScriptAsync("PointerLockX=" + iCursorPosXTop.ToString());
-                    clControlBrowser.browser.ExecuteScriptAsync("PointerLockY=" + iCursorPosYTop.ToString());
+                    _chromiumBrowser.browser.ExecuteScriptAsync("boBrowserActive=false");
+                    _chromiumBrowser.browser.ExecuteScriptAsync("PointerLockX=" + _cursorPosXTop.ToString());
+                    _chromiumBrowser.browser.ExecuteScriptAsync("PointerLockY=" + _cursorPosYTop.ToString());
                     // cursor takip
                     
                 }
@@ -382,7 +373,7 @@ namespace KripteksVM
         private void tmrVarRefresh_Tick(object sender, EventArgs e)
         {
             // Alive timer count
-            iPerformanceVarRefreshAliveCount++;
+            _performanceVarRefreshAliveCount++;
 
             // islem suresi
             var stopWatch = new Stopwatch();
@@ -390,83 +381,83 @@ namespace KripteksVM
 
 
             // timer cycle time
-            if (swVarCycle.IsRunning)
+            if (_stopWatchCycleTimer.IsRunning)
             {
-                iPerformanceVarRefreshTickMs = (swVarCycle.Elapsed - tsswVarCycleElapsed).Milliseconds;
-                tsswVarCycleElapsed = swVarCycle.Elapsed;
+                _performanceVarRefreshTickMs = (_stopWatchCycleTimer.Elapsed - _stopWatchCycleElapsed).Milliseconds;
+                _stopWatchCycleElapsed = _stopWatchCycleTimer.Elapsed;
             }
             else
             {
-                swVarCycle.Start();
+                _stopWatchCycleTimer.Start();
             }
 
-            
+
             // cycle time guncelle / buradan alinmali
-            tmrVarRefresh.Interval = clController.stControllerProperties.iControllerCycleMs;
+            s_timerVariables.Interval = _controllerSettings.cycleTime;
 
             // refresh controller variable
-            clController.RefreshVar();
+            _virtualMachine = _controller.RefreshVariables(_virtualMachine);
 
 
             try
             {
                 // web -> api | api -> web
-                if (clControlBrowser.boMainFrameLoaded)
+                if (_chromiumBrowser.isMainFrameLoaded)
                 {
-                    clControlBrowser.browser.ExecuteScriptAsync("wAppLive=" + clController.stKVM.stStatus.wLiveCounter);
-                    clControlBrowser.browser.ExecuteScriptAsync("wRecLive=" + "0");
+                    _chromiumBrowser.browser.ExecuteScriptAsync("wAppLive=" + _virtualMachine.controllerStatus.liveCounter);
+                    _chromiumBrowser.browser.ExecuteScriptAsync("wRecLive=" + "0");
 
                     string[] sBoolStatus = { "false", "true" };
                     string sboAWString = "boAW=[" + sBoolStatus[Convert.ToInt16(boAW[0])];
-                    for (int i = 1; i < ControlClass.iBoolSize; i++)
+                    for (int i = 1; i < Constants.BoolArraySize; i++)
                     {
                         sboAWString += "," + sBoolStatus[Convert.ToInt16(boAW[i])];
                     }
                     sboAWString += "]";
-                    clControlBrowser.browser.ExecuteScriptAsync(sboAWString);
+                    _chromiumBrowser.browser.ExecuteScriptAsync(sboAWString);
 
 
-                    string sboWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "boWA");
+                    string sboWA = _chromiumBrowser.GetJSValueByVar(_chromiumBrowser.browser, "boWA");
                     string[] arrsboWA = sboWA.Split(':');
-                    for (int i = 0; i < ControlClass.iBoolSize; i++)
+                    for (int i = 0; i < Constants.BoolArraySize; i++)
                     {
                         if (arrsboWA[i] != "") boWA[i] = Convert.ToBoolean(arrsboWA[i]);
                     }
 
 
-                    clControlBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(",", ".") + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
+                    _chromiumBrowser.browser.ExecuteScriptAsync("dAW=[" + dAW[0].ToString().Replace(",", ".") + "," + dAW[1].ToString().Replace(",", ".") + "," + dAW[2].ToString().Replace(",", ".") + "," + dAW[3].ToString().Replace(",", ".") + "," + dAW[4].ToString().Replace(",", ".") + "," + dAW[5].ToString().Replace(",", ".") + "," + dAW[6].ToString().Replace(",", ".") + "," + dAW[7].ToString().Replace(",", ".") + "]");
 
-                    string sdWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "dWA");
+                    string sdWA = _chromiumBrowser.GetJSValueByVar(_chromiumBrowser.browser, "dWA");
                     string[] arrsdWA = sdWA.Split(':');
-                    for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                    for (int i = 0; i < Constants.DoubleArraySize; i++)
                     {
-                        if (arrsdWA[i] != "") dWA[i] = Convert.ToDouble(arrsdWA[i].Replace(sForDoubleFloatCharOld, sForDoubleFloatCharNew));
+                        if (arrsdWA[i] != "") dWA[i] = Convert.ToDouble(arrsdWA[i].Replace(".", FloatingPointChar()));
                     }
 
-                    clControlBrowser.browser.ExecuteScriptAsync("wAW=[" + wAW[0].ToString() + "," + wAW[1].ToString() + "," + wAW[2].ToString() + "," + wAW[3].ToString() + "," + wAW[4].ToString() + "," + wAW[5].ToString() + "," + wAW[6].ToString() + "," + wAW[7].ToString() + "]");
-                    string swWA = clControlBrowser.GetJSValueByVar(clControlBrowser.browser, "wWA");
+                    _chromiumBrowser.browser.ExecuteScriptAsync("wAW=[" + wAW[0].ToString() + "," + wAW[1].ToString() + "," + wAW[2].ToString() + "," + wAW[3].ToString() + "," + wAW[4].ToString() + "," + wAW[5].ToString() + "," + wAW[6].ToString() + "," + wAW[7].ToString() + "]");
+                    string swWA = _chromiumBrowser.GetJSValueByVar(_chromiumBrowser.browser, "wWA");
                     string[] arrswWA = swWA.Split(':');
-                    for (int i = 0; i < ControlClass.iWordSize; i++)
+                    for (int i = 0; i < Constants.WordArraySize; i++)
                     {
                         if (arrswWA[i] != "") wWA[i] = Convert.ToUInt16(arrswWA[i]);
                     }
                 }
                 
                 // controller -> api | api -> controller
-                for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                for (int i = 0; i < Constants.DoubleArraySize; i++)
                 {
-                    if (!bodWAForce[i]) clController.stKVM.stAC.dAC[i] = dWA[i];
-                    if (!bodAWForce[i]) dAW[i] = clController.stKVM.stCA.dCA[i];
+                    if (!bodWAForce[i]) _virtualMachine.applicationToControllerVariables.doubleArray[i] = dWA[i];
+                    if (!bodAWForce[i]) dAW[i] = _virtualMachine.controllerToApplicationVariables.doubleArray[i];
                 }
-                for (int i = 0; i < ControlClass.iWordSize; i++)
+                for (int i = 0; i < Constants.WordArraySize; i++)
                 {
-                    if (!bowAWForce[i]) wAW[i] = clController.stKVM.stCA.wCA[i];
-                    if (!bowWAForce[i]) clController.stKVM.stAC.wAC[i] = wWA[i];
+                    if (!bowAWForce[i]) wAW[i] = _virtualMachine.controllerToApplicationVariables.wordArray[i];
+                    if (!bowWAForce[i]) _virtualMachine.applicationToControllerVariables.wordArray[i] = wWA[i];
                 }
-                for (int i = 0; i < ControlClass.iBoolSize; i++)
+                for (int i = 0; i < Constants.BoolArraySize; i++)
                 {
-                    if (!boboAWForce[i]) boAW[i] = clController.stKVM.stCA.boCA[i];
-                    if (!boboWAForce[i]) clController.stKVM.stAC.boAC[i] = boWA[i];
+                    if (!boboAWForce[i]) boAW[i] = _virtualMachine.controllerToApplicationVariables.boolArray[i];
+                    if (!boboWAForce[i]) _virtualMachine.applicationToControllerVariables.boolArray[i] = boWA[i];
                 }
             }
             catch
@@ -476,73 +467,71 @@ namespace KripteksVM
             }
 
             // islem suresi
-            iPerformanceControllerElapsedTimeMs = stopWatch.Elapsed.Milliseconds;
+            _performanceControllerElapsedTimeMs = stopWatch.Elapsed.Milliseconds;
             stopWatch.Stop();
 
             // Alive timer count
-            iPerformanceVarRefreshAliveCount--;
+            _performanceVarRefreshAliveCount--;
         }
 
         private void tmrFormRefresh_Tick(object sender, EventArgs e)
         {
-            iCommentsCount++;
-            if (iCommentsCount >= 10)
+            _commentsRefreshCount++;
+            if (_commentsRefreshCount >= 10)
             {
-                iCommentsCount = 0;
+                _commentsRefreshCount = 0;
 
-                clController.GetComments();
-                PropertiesApplicationForm.stKVM = clController.stKVM;
+                _virtualMachine = _controller.GetComments(_virtualMachine);
+                applicationSettingsForm.VirtualMachine = _virtualMachine;
 
-                this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = clController.stKVM.stApp.sAID; });
-                this.lblATName.BeginInvoke((MethodInvoker)delegate () { this.lblATName.Text = clController.stKVM.stApp.sName; });
-                this.lblATInfo.BeginInvoke((MethodInvoker)delegate () { this.lblATInfo.Text = clController.stKVM.stApp.sInfo; });
+                this.lblATAID.BeginInvoke((MethodInvoker)delegate () { this.lblATAID.Text = _virtualMachine.virtualApplication.AID; });
+                this.lblATName.BeginInvoke((MethodInvoker)delegate () { this.lblATName.Text = _virtualMachine.virtualApplication.name; });
+                this.lblATInfo.BeginInvoke((MethodInvoker)delegate () { this.lblATInfo.Text = _virtualMachine.virtualApplication.info; });
 
             }
 
-            this.lblATElapsedTime.BeginInvoke((MethodInvoker)delegate () { this.lblATElapsedTime.Text = clController.stKVM.stStatus.dElapsedTimeSec.ToString(); });
+            this.lblATElapsedTime.BeginInvoke((MethodInvoker)delegate () { this.lblATElapsedTime.Text = _virtualMachine.controllerStatus.elapsedTime.ToString(); });
 
 
-            lblBeckhoffAMSNetID.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffAMSNetID;
-            lblBeckhoffPortNo.Text = clController.stControllerProperties.stControllerBeckhoff.sBeckhoffPortNo;
-            lblPerformanceControllerCycleTickMs.Text = clController.stControllerProperties.iControllerCycleMs.ToString();
-            lblPerformanceControllerElapsedTimeMs.Text = iPerformanceControllerElapsedTimeMs.ToString();
-            lblPerformanceVarRefreshTickMs.Text = iPerformanceVarRefreshTickMs.ToString();
-            lblPerformanceGPUUsage.Text = fGPUUsage.ToString("0.00");
-            lblPerformanceVarRefreshAliveCount.Text = iPerformanceVarRefreshAliveCount.ToString();
+            lblBeckhoffAMSNetID.Text = _controllerSettings.controllerBeckhoff.AMSNetID;
+            lblBeckhoffPortNo.Text = _controllerSettings.controllerBeckhoff.portNo;
+            lblPerformanceControllerCycleTickMs.Text = _controllerSettings.cycleTime.ToString();
+            lblPerformanceControllerElapsedTimeMs.Text = _performanceControllerElapsedTimeMs.ToString();
+            lblPerformanceVarRefreshTickMs.Text = _performanceVarRefreshTickMs.ToString();
+            lblPerformanceGPUUsage.Text = _gpuUsage.ToString("0.00");
+            lblPerformanceVarRefreshAliveCount.Text = _performanceVarRefreshAliveCount.ToString();
 
             // form update
-            btnConnectController.Visible = clController.boConnectControllerVisible;
-            btnDisconnectController.Visible = clController.boDisconnectControllerVisible;
-            lblControllerStatus_.BackColor = clController.colorControllerStatus;
-            lblControllerStatus_.Text = clController.stKVM.stStatus.wLiveCounter.ToString();
-            lblAID.Text = clController.stKVM.stApp.sAID;
-            lblSID.Text = clController.stKVM.stApp.sSID;
-            lblCID.Text = clController.stKVM.stApp.sCID;
-/*
-            if (clController.boDisconnectControllerVisible) {
+            if (_virtualMachine.controllerStatus.isConnnected)
+            {
+                btnConnectController.Visible = false;
+                btnDisconnectController.Visible = true;
                 tslControllerStatus.Text = "Connected";
-                if (!boControllerFirstConnectAck)
-                {
-                    boControllerFirstConnectAck = true;
-                    fbLogger("Controller is connected.");
-                }
             }
-            else {
+            else
+            {
                 tslControllerStatus.Text = "Disconnected";
-                if (boControllerFirstConnectAck)
-                {
-                    boControllerFirstConnectAck = false;
-                    fbLogger("Controller is disconnected.");
-                }
+                btnConnectController.Visible = true;
+                btnDisconnectController.Visible = false;
             }
-            */
+
+            if (_virtualMachine.controllerStatus.isLive)
+                lblControllerStatus_.BackColor = Color.Green;
+            else
+                lblControllerStatus_.BackColor = Color.Red;
+            
+            lblControllerStatus_.Text = _virtualMachine.controllerStatus.liveCounter.ToString();
+            lblAID.Text = _virtualMachine.virtualApplication.AID;
+            lblSID.Text = _virtualMachine.virtualApplication.SID;
+            lblCID.Text = _virtualMachine.virtualApplication.CID;
+
             tslElapsedTime.Text = (DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()).ToString().Substring(0,8);
 
-            if (iVariablesSourceIndex == 1)
+            if (cbVariablesSource.SelectedIndex == 1)
             {
-                if (iVariablesTypeIndex == 1 & dgvVariables.Rows.Count == 9)
+                if (cbVariablesType.SelectedIndex == 1 & dgvVariables.Rows.Count == 9)
                 {
-                    for (int i = 0; i < ControlClass.iWordSize; i++)
+                    for (int i = 0; i < Constants.WordArraySize; i++)
                     {
                         if (Convert.ToBoolean(dgvVariables.Rows[i].Cells[2].Value) == true)
                         {
@@ -558,9 +547,9 @@ namespace KripteksVM
                         }
                     }
                 }
-                else if (iVariablesTypeIndex == 2 & dgvVariables.Rows.Count == 9)
+                else if (cbVariablesType.SelectedIndex == 2 & dgvVariables.Rows.Count == 9)
                 {
-                    for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                    for (int i = 0; i < Constants.DoubleArraySize; i++)
                     {
                         if (Convert.ToBoolean(dgvVariables.Rows[i].Cells[2].Value) == true)
                         {
@@ -576,9 +565,9 @@ namespace KripteksVM
                         }
                     }
                 }
-                else if (iVariablesTypeIndex == 3 & dgvVariables.Rows.Count == 33)
+                else if (cbVariablesType.SelectedIndex == 3 & dgvVariables.Rows.Count == 33)
                 {
-                    for (int i = 0; i < ControlClass.iBoolSize; i++)
+                    for (int i = 0; i < Constants.BoolArraySize; i++)
                     {
                         if (Convert.ToBoolean(dgvVariables.Rows[i].Cells[2].Value) == true)
                         {
@@ -602,47 +591,47 @@ namespace KripteksVM
                     }
                 }
             }
-            else if (iVariablesSourceIndex == 2)
+            else if (cbVariablesSource.SelectedIndex == 2)
             {
-                if (iVariablesTypeIndex == 1 & dgvVariables.Rows.Count == 9)
+                if (cbVariablesType.SelectedIndex == 1 & dgvVariables.Rows.Count == 9)
                 {
-                    for (int i = 0; i < ControlClass.iWordSize; i++)
+                    for (int i = 0; i < Constants.WordArraySize; i++)
                     {
                         if (Convert.ToBoolean(dgvVariables.Rows[i].Cells[2].Value) == true)
                         {
                             bowWAForce[i] = true;
                             dgvVariables.Rows[i].Cells[1].Style.BackColor = Color.Red;
-                            clController.stKVM.stAC.wAC[i] = Convert.ToUInt16(dgvVariables.Rows[i].Cells[1].Value.ToString());
+                            _virtualMachine.applicationToControllerVariables.wordArray[i] = Convert.ToUInt16(dgvVariables.Rows[i].Cells[1].Value.ToString());
                         }
                         else
                         {
                             bowWAForce[i] = false;
                             dgvVariables.Rows[i].Cells[1].Style.BackColor = Color.White;
-                            dgvVariables.Rows[i].Cells[1].Value = clController.stKVM.stAC.wAC[i].ToString();
+                            dgvVariables.Rows[i].Cells[1].Value = _virtualMachine.applicationToControllerVariables.wordArray[i].ToString();
                         }
                     }
                 }
-                else if (iVariablesTypeIndex == 2 & dgvVariables.Rows.Count == 9)
+                else if (cbVariablesType.SelectedIndex == 2 & dgvVariables.Rows.Count == 9)
                 {
-                    for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                    for (int i = 0; i < Constants.DoubleArraySize; i++)
                     {
                         if (Convert.ToBoolean(dgvVariables.Rows[i].Cells[2].Value) == true)
                         {
                             bodWAForce[i] = true;
                             dgvVariables.Rows[i].Cells[1].Style.BackColor = Color.Red;
-                            clController.stKVM.stAC.dAC[i] = Convert.ToDouble(dgvVariables.Rows[i].Cells[1].Value.ToString());
+                            _virtualMachine.applicationToControllerVariables.doubleArray[i] = Convert.ToDouble(dgvVariables.Rows[i].Cells[1].Value.ToString());
                         }
                         else
                         {
                             bodWAForce[i] = false;
                             dgvVariables.Rows[i].Cells[1].Style.BackColor = Color.White;
-                            dgvVariables.Rows[i].Cells[1].Value = clController.stKVM.stAC.dAC[i].ToString();
+                            dgvVariables.Rows[i].Cells[1].Value = _virtualMachine.applicationToControllerVariables.doubleArray[i].ToString();
                         }
                     }
                 }
-                else if (iVariablesTypeIndex == 3 & dgvVariables.Rows.Count == 33)
+                else if (cbVariablesType.SelectedIndex == 3 & dgvVariables.Rows.Count == 33)
                 {
-                    for (int i = 0; i < ControlClass.iBoolSize; i++)
+                    for (int i = 0; i < Constants.BoolArraySize; i++)
                     {
                         if (Convert.ToBoolean(dgvVariables.Rows[i].Cells[2].Value) == true)
                         {
@@ -651,19 +640,19 @@ namespace KripteksVM
 
                             if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "0" | dgvVariables.Rows[i].Cells[1].Value.ToString() == "1")
                             {
-                                if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "1") clController.stKVM.stAC.boAC[i] = true;
-                                else if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "0") clController.stKVM.stAC.boAC[i] = false;
+                                if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "1") _virtualMachine.applicationToControllerVariables.boolArray[i] = true;
+                                else if (dgvVariables.Rows[i].Cells[1].Value.ToString() == "0") _virtualMachine.applicationToControllerVariables.boolArray[i] = false;
                             }
                             else
                             {
-                                dgvVariables.Rows[i].Cells[1].Value = "0"; clController.stKVM.stAC.boAC[i] = false;
+                                dgvVariables.Rows[i].Cells[1].Value = "0"; _virtualMachine.applicationToControllerVariables.boolArray[i] = false;
                             }
                         }
                         else
                         {
                             boboWAForce[i] = false;
                             dgvVariables.Rows[i].Cells[1].Style.BackColor = Color.White;
-                            if (clController.stKVM.stAC.boAC[i])
+                            if (_virtualMachine.applicationToControllerVariables.boolArray[i])
                                 dgvVariables.Rows[i].Cells[1].Value = "1";
                             else
                                 dgvVariables.Rows[i].Cells[1].Value = "0";
@@ -676,80 +665,73 @@ namespace KripteksVM
         #endregion
          
         #region Form Resize
-        private void KripteksVMB_Load(object sender, EventArgs e)
-        {
-            fbscMainResize();
-        }
         private void KripteksVMB_SizeChanged(object sender, EventArgs e)
         {
-            fbscMainResize();
+            MainFormResize();
         }
-        public void fbscMainResize()
+        public void MainFormResize()
         {
-            int iFormWidth = this.Size.Width - 18;
-            int iFormHeight = this.Size.Height - 78;
-            scMain.Size = new Size(iFormWidth, iFormHeight);
-            if (iFormWidth > iscMainPanel2Width) scMain.SplitterDistance = iFormWidth - iscMainPanel2Width;
-        }
-        private void fbTabComExplorerResize()
-        {
-            tabComExplorer.Size = new Size(scMain.Panel2.Width - 3, scMain.Panel2.Height - 36);
-            //lblTabMainTitle.Size= new Size(scMain.Panel2.Width - 3, 30);
-            //lblTabMainTitle.Text = tabComExplorer.SelectedTab.Text;
-
-            dgvVariables.Size= new Size(scMain.Panel2.Width - 48, dgvVariables.Height);
-            gbControllerComm.Size = new Size(scMain.Panel2.Width - 33, gbControllerComm.Height);
-            gbControllerVariables.Size = new Size(scMain.Panel2.Width - 33, gbControllerVariables.Height);
-
-            rtbLog.Size = new Size(scMain.Panel2.Width - 15, scMain.Panel2.Height - 110);
-            btnLogClear.Location = new Point(10, scMain.Panel2.Height - 100);
+            int formWidth = this.Size.Width - 18;
+            int formHeight = this.Size.Height - 78;
+            scMain.Size = new Size(formWidth, formHeight);
+            if (formWidth > iscMainPanel2Width) scMain.SplitterDistance = formWidth - iscMainPanel2Width;
         }
         private void scMain_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            fbTabComExplorerResize();
+            TabComExplorerResize();
             int iFormWidth = this.Size.Width - 18;
-            if(iFormWidthOld == this.Size.Width)
+            if (iFormWidthOld == this.Size.Width)
                 iscMainPanel2Width = iFormWidth - scMain.SplitterDistance;
             else
                 iFormWidthOld = this.Size.Width;
 
             iscMainSplitterDistance = scMain.SplitterDistance;
         }
+        private void TabComExplorerResize()
+        {
+            tabComExplorer.Size = new Size(scMain.Panel2.Width - 3, scMain.Panel2.Height - 36);
+            
+            dgvVariables.Size = new Size(scMain.Panel2.Width - 48, dgvVariables.Height);
+            gbControllerComm.Size = new Size(scMain.Panel2.Width - 33, gbControllerComm.Height);
+            gbControllerVariables.Size = new Size(scMain.Panel2.Width - 33, gbControllerVariables.Height);
+
+            tbLog.Size = new Size(scMain.Panel2.Width - 15, scMain.Panel2.Height - 110);
+            btnLogClear.Location = new Point(10, scMain.Panel2.Height - 100);
+        }
         private void tabComExplorer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //lblTabMainTitle.Text = tabComExplorer.SelectedTab.Text;
         }
         private void KripteksVMB_ResizeEnd(object sender, EventArgs e)
         {
-            fbscMainResize();
+            MainFormResize();
         }
         #endregion
 
         #region Variables
-        private void fbVariablesInit()
+        private void VariablesInit()
         {
             dgvVariables.Rows.Clear();
             if (cbVariablesSource.SelectedIndex == 1)
             {
                 if (cbVariablesType.SelectedIndex == 1)
                 {
-                    for (int i = 0; i < ControlClass.iWordSize; i++)
+                    for (int i = 0; i < Constants.WordArraySize; i++)
                     {
-                        dgvVariables.Rows.Add("wAW[" + i + "]", "0", bowAWForce[i], "word", clController.stKVM.stCA.swCAComments[i]);
+                        dgvVariables.Rows.Add("wAW[" + i + "]", "0", bowAWForce[i], "word", _virtualMachine.controllerToApplicationVariables.wordArrayComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 2)
                 {
-                    for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                    for (int i = 0; i < Constants.DoubleArraySize; i++)
                     {
-                        dgvVariables.Rows.Add("dAW[" + i + "]", "0", bodAWForce[i], "double", clController.stKVM.stCA.sdCAComments[i]);
+                        dgvVariables.Rows.Add("dAW[" + i + "]", "0", bodAWForce[i], "double", _virtualMachine.controllerToApplicationVariables.doubleArrayComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 3)
                 {
-                    for (int i = 0; i < ControlClass.iBoolSize; i++)
+                    for (int i = 0; i < Constants.BoolArraySize; i++)
                     {
-                        dgvVariables.Rows.Add("boAW[" + i + "]", "0", boboAWForce[i], "bool", clController.stKVM.stCA.sboCAComments[i]);
+                        dgvVariables.Rows.Add("boAW[" + i + "]", "0", boboAWForce[i], "bool", _virtualMachine.controllerToApplicationVariables.boolArrayComments[i]);
                     }
                 }
             }
@@ -757,36 +739,34 @@ namespace KripteksVM
             {
                 if (cbVariablesType.SelectedIndex == 1)
                 {
-                    for (int i = 0; i < ControlClass.iWordSize; i++)
+                    for (int i = 0; i < Constants.WordArraySize; i++)
                     {
-                        dgvVariables.Rows.Add("wWA[" + i + "]", "0", bowWAForce[i], "word", clController.stKVM.stAC.swACComments[i]);
+                        dgvVariables.Rows.Add("wWA[" + i + "]", "0", bowWAForce[i], "word", _virtualMachine.applicationToControllerVariables.wordArrayComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 2)
                 {
-                    for (int i = 0; i < ControlClass.iDoubleSize; i++)
+                    for (int i = 0; i < Constants.DoubleArraySize; i++)
                     {
-                        dgvVariables.Rows.Add("dWA[" + i + "]", "0", bodWAForce[i], "double", clController.stKVM.stAC.sdACComments[i]);
+                        dgvVariables.Rows.Add("dWA[" + i + "]", "0", bodWAForce[i], "double", _virtualMachine.applicationToControllerVariables.doubleArrayComments[i]);
                     }
                 }
                 if (cbVariablesType.SelectedIndex == 3)
                 {
-                    for (int i = 0; i < ControlClass.iBoolSize; i++)
+                    for (int i = 0; i < Constants.BoolArraySize; i++)
                     {
-                        dgvVariables.Rows.Add("boWA[" + i + "]", "0", boboWAForce[i], "bool", clController.stKVM.stAC.sboACComments[i]);
+                        dgvVariables.Rows.Add("boWA[" + i + "]", "0", boboWAForce[i], "bool", _virtualMachine.applicationToControllerVariables.boolArrayComments[i]);
                     }
                 }
             }
-            iVariablesSourceIndex = cbVariablesSource.SelectedIndex;
-            iVariablesTypeIndex = cbVariablesType.SelectedIndex;
         }
         private void cbVariablesSource_SelectedIndexChanged(object sender, EventArgs e)
         {
-            fbVariablesInit();
+            VariablesInit();
         }
         private void cbVariablesType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            fbVariablesInit();
+            VariablesInit();
         }
         private void dgvVariables_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -795,10 +775,10 @@ namespace KripteksVM
         #endregion
 
         #region FullScreen
-        private void fbFullScreenInit()
+        private void FullScreenInit()
         {
-            FullScreenForm = new FullScreenForm();
-            FullScreenForm.ButtonWasClicked += new FullScreenForm.ClickButton(formB_ButtonWasClicked);
+            fullScreenForm = new FullScreenForm();
+            fullScreenForm.ButtonWasClicked += new FullScreenForm.ClickButton(formB_ButtonWasClicked);
             // Properties form closing
         }
         void formB_ButtonWasClicked()
@@ -806,57 +786,56 @@ namespace KripteksVM
             GoFullscreen();
         }
 
-        private void fbFormApplicationPropertiesInit()
+        private void FormApplicastionSettingsInit()
         {
-            PropertiesApplicationForm = new ApplicationPropertiesForm();
+            applicationSettingsForm = new ApplicationSettingsForm();
         }
 
         private void fbFormControllerPropertiesInit()
         {
-            PropertiesControllerForm = new ControllerPropertiesForm();
+            controllerSettingsForm = new ControllerSettingsForm();
 
             // Properties form closing
-            PropertiesControllerForm.fbRefreshControllerPropertiesCallBack = new ControllerPropertiesForm.fbRefreshControllerProperties(this.fbRefreshControllerPropertiesfb);
+            controllerSettingsForm.CallBackRefreshControllerSettings = new ControllerSettingsForm.RefreshControllerSettings(this.CallBackRefreshControllerSettings);
         }
 
-        private void fbRefreshControllerPropertiesfb()
+        private void CallBackRefreshControllerSettings()
         {
-            clController.stControllerProperties= clControlFile.fbGetControllerProperties();
-            fbLogger(clController.Disconnect());
-            fbLogger(clController.Connect());
-            boBrowserInitAck = false;
-            iBrowserInitCount = 0;
+            _controllerSettings = _controllerSettingsFile.GetControllerSettings();
+            _controller.Disconnect(_controllerSettings);
+            _controller.Connect(_controllerSettings);
+            _isBrowserInitAck = false;
+            _browserInitCount = 0;
         }
 
         private void GoFullscreen()
-        {
-            boFullScreen = !boFullScreen;
-            if (boFullScreen)
+        {            
+            if (!fullScreenForm.Visible)
             {
                 var myFirstScreen = Screen.FromControl(this);
                 var mySecondScreen = Screen.AllScreens.FirstOrDefault(s => !s.Equals(myFirstScreen)) ?? myFirstScreen;
 
-                fbFullScreenInit();
+                FullScreenInit();
 
-                Rectangle newRec = fbWhichScreen();
-                FullScreenForm.Controls.Add(clControlBrowser.browser);
+                Rectangle newRec = WhichScreen();
+                fullScreenForm.Controls.Add(_chromiumBrowser.browser);
                
-                FullScreenForm.Left = myFirstScreen.Bounds.Left;
-                FullScreenForm.Top = myFirstScreen.Bounds.Top;
-                FullScreenForm.Location = myFirstScreen.Bounds.Location;
-                FullScreenForm.StartPosition = FormStartPosition.Manual;
+                fullScreenForm.Left = myFirstScreen.Bounds.Left;
+                fullScreenForm.Top = myFirstScreen.Bounds.Top;
+                fullScreenForm.Location = myFirstScreen.Bounds.Location;
+                fullScreenForm.StartPosition = FormStartPosition.Manual;
 
-                FullScreenForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                FullScreenForm.Show();
-                FullScreenForm.WindowState = FormWindowState.Maximized;
+                fullScreenForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                fullScreenForm.Show();
+                fullScreenForm.WindowState = FormWindowState.Maximized;
                 //this.Hide();
             }
             else
             {
 
-                scMain.Panel1.Controls.Add(clControlBrowser.browser);
-                FullScreenForm.Hide();
-                FullScreenForm.Dispose();
+                scMain.Panel1.Controls.Add(_chromiumBrowser.browser);
+                fullScreenForm.Hide();
+                fullScreenForm.Dispose();
                 this.Show();
                 this.Focus();
             }
@@ -865,34 +844,32 @@ namespace KripteksVM
         #endregion
 
         #region Camera
-        private void fbPersonCam()
+        private void PersonCam()
         {
-            boCursorVisible = false;
-            boFreeCam = false;
-            boPersonCam = true;
+            _isCursorVisible = false;
+            _isFreeCam = false;
+            _isPersonCam = true;
         }
-        private void fbFreeCam()
+        private void FreeCam()
         {
-            boCursorVisible = false;
-            boFreeCam = true;
-            boPersonCam = false;
+            _isCursorVisible = false;
+            _isFreeCam = true;
+            _isPersonCam = false;
         }
-        private void fbCancelCam()
+        private void CancelCam()
         {
-            boCursorVisible = true;
-            boFreeCam = false;
-            boPersonCam = false;
+            _isCursorVisible = true;
+            _isFreeCam = false;
+            _isPersonCam = false;
         }
 
         private void KripteksVMB_Activated(object sender, EventArgs e)
         {
-            boFormFocused = this.Focused;
         }
 
         private void KripteksVMB_Deactivate(object sender, EventArgs e)
         {
-            boFormFocused = this.Focused;
-            fbCancelCam();
+            CancelCam();
         }
         #endregion
 
@@ -903,15 +880,15 @@ namespace KripteksVM
         }
         private void btnmsMenuFocusCam_Click(object sender, EventArgs e)
         {
-            fbCancelCam();
+            CancelCam();
         }
         private void btnmsMenuFreeCam_Click(object sender, EventArgs e)
         {
-            fbFreeCam();
+            FreeCam();
         }
         private void btnmsMenuFirstPersonCam_Click(object sender, EventArgs e)
         {
-            fbPersonCam();
+            PersonCam();
         }
         private void btnmsMenuGoFullScreen_Click(object sender, EventArgs e)
         {
@@ -919,87 +896,54 @@ namespace KripteksVM
         }
         private void btnmsMenuDevTools_Click(object sender, EventArgs e)
         {
-            clControlBrowser.browser.ShowDevTools();
+            _chromiumBrowser.browser.ShowDevTools();
         }
         private void btnmsMenuRefresh_Click(object sender, EventArgs e)
         {
-            clControlBrowser.fbRefresh(sHost, clController.stKVM.stApp.sCID, clController.stKVM.stApp.sSID, clController.stKVM.stApp.sAID, "1");
+            _chromiumBrowser.Refresh(_host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
         }
         private void btnmsMenuShareLink_Click(object sender, EventArgs e)
         {
-            fbGetShareLink();
+            GetShareLink();
         }
         private void btnmsMenuControllerProperties_Click(object sender, EventArgs e)
         {
             fbFormControllerPropertiesInit();
-            PropertiesControllerForm.Show();
+            controllerSettingsForm.Show();
         }
         private void btnmsMenuApplicationProperties_Click(object sender, EventArgs e)
         {
-            PropertiesApplicationForm.Show();
-            PropertiesApplicationForm.lblAID.Text = clController.stKVM.stApp.sAID;
-            fbFormApplicationPropertiesInit();
+            applicationSettingsForm.Show();
+            applicationSettingsForm.lblAID.Text = _virtualMachine.virtualApplication.AID;
+            FormApplicastionSettingsInit();
         }
         private void btnmsMenuApplication_Click(object sender, EventArgs e)
         {
-            clController.GetComments();
-            PropertiesApplicationForm.stKVM = clController.stKVM;
-        }
-        #endregion
-
-        #region Form General
-        private void fbLogger(string sLog)
-        {
-            bool boBuffered = false;
-            try
-            {
-                if (sLoggerBuffer != "")
-                {
-                    sLoggerBuffer = sLog + Environment.NewLine + sLoggerBuffer;
-                    sLoggerBufferHelp = sLoggerBuffer;
-                    boBuffered = true;
-                    this.rtbLog.BeginInvoke((MethodInvoker)delegate () { this.rtbLog.Text = sLoggerBufferHelp + Environment.NewLine + this.rtbLog.Text; });
-
-                    sLoggerBuffer = "";
-                }
-                else
-                {
-                    this.rtbLog.BeginInvoke((MethodInvoker)delegate () { this.rtbLog.Text = sLog + Environment.NewLine + this.rtbLog.Text; });
-                }
-            }
-            catch
-            {
-                if(!boBuffered) sLoggerBuffer= sLog + Environment.NewLine + sLoggerBuffer;
-            }
-            //rtbLog.Text = sLog + Environment.NewLine + rtbLog.Text;
+            _virtualMachine = _controller.GetComments(_virtualMachine);
+            applicationSettingsForm.VirtualMachine = _virtualMachine;
         }
         private void KripteksVMB_FormClosing(object sender, FormClosingEventArgs e)
         {
-            tmrVarRefresh.Enabled = false;
-            tmrCamRefresh.Enabled = false;
-            tmrFormRefresh.Enabled = false;
-            clControlBrowser.browser.Dispose();
-            clController.Disconnect();
+            s_timerVariables.Enabled = false;
+            s_timerCamera.Enabled = false;
+            timerForm.Enabled = false;
+            _chromiumBrowser.browser.Dispose();
+            _controller.Disconnect(_controllerSettings);
             Cef.Shutdown();
         }
         private void lblTrigValue_TextChanged(object sender, EventArgs e)
         {
             GoFullscreen();
         }
-        #endregion
-
-        #region Controller
         private void btnConnectController_Click(object sender, EventArgs e)
         {
-            fbLogger(clController.Connect());
+            _controller.Connect(_controllerSettings);
         }
 
         private void btnDisconnectController_Click(object sender, EventArgs e)
         {
-            fbLogger(clController.Disconnect());
+            _controller.Disconnect(_controllerSettings);
         }
-
-
         #endregion
 
     }

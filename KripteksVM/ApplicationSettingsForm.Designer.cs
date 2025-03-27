@@ -1,6 +1,6 @@
 ﻿namespace KripteksVM
 {
-    partial class ApplicationPropertiesForm
+    partial class ApplicationSettingsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,17 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationPropertiesForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSettingsForm));
             this.tabApplicationProperties = new System.Windows.Forms.TabControl();
             this.tabApplicationPropertiesGeneral = new System.Windows.Forms.TabPage();
+            this.lblInfo = new System.Windows.Forms.Label();
+            this.lblInfo_ = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
+            this.lblName_ = new System.Windows.Forms.Label();
             this.lblAID = new System.Windows.Forms.Label();
             this.lblAID_ = new System.Windows.Forms.Label();
             this.tabApplicationPropertiesWA = new System.Windows.Forms.TabPage();
             this.tabApplicationPropertiesAW = new System.Windows.Forms.TabPage();
-            this.lblName = new System.Windows.Forms.Label();
-            this.lblName_ = new System.Windows.Forms.Label();
-            this.lblInfo = new System.Windows.Forms.Label();
-            this.lblInfo_ = new System.Windows.Forms.Label();
             this.tabApplicationProperties.SuspendLayout();
             this.tabApplicationPropertiesGeneral.SuspendLayout();
             this.SuspendLayout();
@@ -69,6 +69,40 @@
             this.tabApplicationPropertiesGeneral.TabIndex = 0;
             this.tabApplicationPropertiesGeneral.Text = "General";
             this.tabApplicationPropertiesGeneral.UseVisualStyleBackColor = true;
+            // 
+            // lblInfo
+            // 
+            this.lblInfo.Location = new System.Drawing.Point(75, 84);
+            this.lblInfo.Name = "lblInfo";
+            this.lblInfo.Size = new System.Drawing.Size(655, 372);
+            this.lblInfo.TabIndex = 8;
+            this.lblInfo.Text = "    ";
+            // 
+            // lblInfo_
+            // 
+            this.lblInfo_.AutoSize = true;
+            this.lblInfo_.Location = new System.Drawing.Point(16, 84);
+            this.lblInfo_.Name = "lblInfo_";
+            this.lblInfo_.Size = new System.Drawing.Size(39, 17);
+            this.lblInfo_.TabIndex = 7;
+            this.lblInfo_.Text = "Info :";
+            // 
+            // lblName
+            // 
+            this.lblName.Location = new System.Drawing.Point(75, 49);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(655, 23);
+            this.lblName.TabIndex = 6;
+            this.lblName.Text = "    ";
+            // 
+            // lblName_
+            // 
+            this.lblName_.AutoSize = true;
+            this.lblName_.Location = new System.Drawing.Point(16, 52);
+            this.lblName_.Name = "lblName_";
+            this.lblName_.Size = new System.Drawing.Size(53, 17);
+            this.lblName_.TabIndex = 5;
+            this.lblName_.Text = "Name :";
             // 
             // lblAID
             // 
@@ -107,49 +141,15 @@
             this.tabApplicationPropertiesAW.Text = "A->W";
             this.tabApplicationPropertiesAW.UseVisualStyleBackColor = true;
             // 
-            // lblName
-            // 
-            this.lblName.Location = new System.Drawing.Point(75, 49);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(655, 23);
-            this.lblName.TabIndex = 6;
-            this.lblName.Text = "    ";
-            // 
-            // lblName_
-            // 
-            this.lblName_.AutoSize = true;
-            this.lblName_.Location = new System.Drawing.Point(16, 52);
-            this.lblName_.Name = "lblName_";
-            this.lblName_.Size = new System.Drawing.Size(53, 17);
-            this.lblName_.TabIndex = 5;
-            this.lblName_.Text = "Name :";
-            // 
-            // lblInfo
-            // 
-            this.lblInfo.Location = new System.Drawing.Point(75, 84);
-            this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(655, 372);
-            this.lblInfo.TabIndex = 8;
-            this.lblInfo.Text = "    ";
-            // 
-            // lblInfo_
-            // 
-            this.lblInfo_.AutoSize = true;
-            this.lblInfo_.Location = new System.Drawing.Point(16, 84);
-            this.lblInfo_.Name = "lblInfo_";
-            this.lblInfo_.Size = new System.Drawing.Size(39, 17);
-            this.lblInfo_.TabIndex = 7;
-            this.lblInfo_.Text = "Info :";
-            // 
-            // ApplicationPropertiesForm
+            // ApplicationSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 553);
             this.Controls.Add(this.tabApplicationProperties);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ApplicationPropertiesForm";
-            this.Text = "Application Properties";
+            this.Name = "ApplicationSettingsForm";
+            this.Text = "Application Settings";
             this.Load += new System.EventHandler(this.ApplicationPropertiesForm_Load);
             this.tabApplicationProperties.ResumeLayout(false);
             this.tabApplicationPropertiesGeneral.ResumeLayout(false);

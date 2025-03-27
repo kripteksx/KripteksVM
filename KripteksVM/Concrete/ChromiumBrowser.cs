@@ -1,6 +1,6 @@
 ﻿using CefSharp.DevTools.IO;
 using CefSharp.WinForms;
-using KripteksVM.Controls;
+using KripteksVM.Concrete;
 using CefSharp;
 using System;
 using System.Collections.Generic;
@@ -11,17 +11,17 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace KripteksVM.Controls
+namespace KripteksVM.Concrete
 {
-    public class ControlBrowser
+    public class ChromiumBrowser
     {
         public ChromiumWebBrowser browser;
 
-        public bool boMainFrameLoaded = false;
+        public bool isMainFrameLoaded = false;
 
         //public string sHost = "";
 
-        public void fbInit(string sHost, string sCID, string sSID, string sAID, string sHID)
+        public void Init(string sHost, string sCID, string sSID, string sAID, string sHID)
         {
             browser = new ChromiumWebBrowser(sHost + "/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
             
@@ -34,8 +34,7 @@ namespace KripteksVM.Controls
             browser.LoadingStateChanged += Browser_LoadingStateChanged;
 
 
-            var version = string.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}",
-               Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion);
+            var version = string.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion);
 
 #if NETCOREAPP
             // .NET Core
@@ -56,12 +55,12 @@ namespace KripteksVM.Controls
         {
             if (e.IsLoading == false)
             {
-                boMainFrameLoaded = true;
+                isMainFrameLoaded = true;
                 //All Resources Have Loaded
             }
             else
             {
-                boMainFrameLoaded = false;
+                isMainFrameLoaded = false;
             }
         }
         private void OnBrowserLoadError(object sender, LoadErrorEventArgs e)
@@ -101,9 +100,9 @@ namespace KripteksVM.Controls
         {
             //this.InvokeOnUiThreadIfRequired(() => outputLabel.Text = output);
         }
-        public void fbRefresh(string sHost, string sCID, string sSID, string sAID, string sHID)
+        public void Refresh(string host, string CID, string SID, string AID, string HID)
         {
-            LoadUrl(sHost + "/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
+            LoadUrl(host + "/application.aspx?CID=" + CID + "&SID=" + SID + "&AID=" + AID + "&HID=" + HID);
         }
         private void LoadUrl(string urlString)
         {
@@ -175,7 +174,6 @@ namespace KripteksVM.Controls
         }
         public string GetElementValueById(ChromiumWebBrowser myCwb, string eltId)
         {
-
             string script = string.Format("(function() {{return document.getElementById('{0}').value;}})();",
                  eltId);
             JavascriptResponse jr = myCwb.EvaluateScriptAsync(script).Result;
@@ -183,7 +181,7 @@ namespace KripteksVM.Controls
         }
         public string GetJSValueByVar(ChromiumWebBrowser myCwb, string var)
         {
-            string sReturn = "0";
+            string value = "0";
             try
             {
                 string script = string.Format("(function() {{let sR=''; let i=0; if (" + var + " instanceof Array){{  for(i in "+var+") {{sR+="+ var + "[i].toString()+':';}} return sR;}}else{{sR="+var+".toString(); return sR;}}}})();", var);
@@ -192,14 +190,14 @@ namespace KripteksVM.Controls
 
                 if (jr.Result != null)
                 {
-                    sReturn = jr.Result.ToString();
+                    value = jr.Result.ToString();
                 }
             }
             catch
             {
 
             }
-            return sReturn;
+            return value;
         }
 
 
