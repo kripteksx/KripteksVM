@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace KripteksVM.Concrete
 {
     class General
     {
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
         // ortak log 
         public TextBox txtLog { get; set; }
 
@@ -19,6 +26,20 @@ namespace KripteksVM.Concrete
             return _shared;
         }
 
+        public string FloatingPointChar()
+        {
+            string _floatingPointChar = ".";
+            string _double = "10.0";
+            if (Convert.ToDouble(_double) == 10)
+            {
+                _floatingPointChar = ".";
+            }
+            else
+            {
+                _floatingPointChar = ",";
+            }
+            return _floatingPointChar;
+        }
         public double FloatingPoint(double value, int floatingPoint)
         {
             double power = 0;
@@ -32,7 +53,6 @@ namespace KripteksVM.Concrete
 
             return newValue;
         }
-
         public string CID()
         {
             string cid = "";
@@ -44,7 +64,6 @@ namespace KripteksVM.Concrete
                     cid = cid + randomNo.Next(0, 9);
             return cid;
         }
-
         public void LogText(string text)
         {
             try
@@ -56,7 +75,6 @@ namespace KripteksVM.Concrete
 
             }
         }
-
         private string createTimeStampString()
         {
             string timeStampString = String.Empty;
@@ -68,7 +86,6 @@ namespace KripteksVM.Concrete
             timeStampString = dateString + " " + timeString;
             return timeStampString;
         }
-
         public static string ConvertHex(string hexString)
         {
             try
@@ -93,17 +110,14 @@ namespace KripteksVM.Concrete
 
             return string.Empty;
         }
-
         public void InvokerText(TextBox txt, string text)
         {
             txt.BeginInvoke((MethodInvoker)delegate () { txt.Text = text; });
         }
-
         public void InvokerEnabled(TextBox txt, bool value)
         {
             txt.BeginInvoke((MethodInvoker)delegate () { txt.Enabled = value; });
         }
-
         public void InvokerEnabled(Button btn, bool value)
         {
             try
@@ -115,10 +129,60 @@ namespace KripteksVM.Concrete
 
             }
         }
-
         public void InvokerEnabled(ComboBox cb, bool value)
         {
             cb.BeginInvoke((MethodInvoker)delegate () { cb.Enabled = value; });
         }
+        public void GetShareLink(string CID, string SID, string AID)
+        {
+            Thread thread = new Thread(() => Clipboard.SetText(Constants.Host + "/application.aspx?CID=" + CID + "&SID=" + SID + "&AID=" + AID));
+            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+            thread.Start();
+            thread.Join(); //Wait for the thread to end
+            thread.Abort();
+        }
+        public string GetActiveWindowTitle()
+        {
+            const int chars = 256;
+            StringBuilder buff = new StringBuilder(chars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, buff, chars) > 0)
+            {
+                return buff.ToString();
+            }
+            return null;
+        }
+        /*private Rectangle WhichScreen()
+        {
+            Rectangle recSecreenWorkingArea = new Rectangle();
+
+            // Hangi ekranda calisiyor            
+            foreach (Screen screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                Point PrgLocation = new Point(this.Location.X + 10, this.Location.Y + 10);
+                if (screen.Bounds.Contains(PrgLocation))
+                {
+                    recSecreenWorkingArea = screen.WorkingArea;
+                }
+            }
+            return recSecreenWorkingArea;
+        }*/
+         /* private void GetScreenProperties()
+          {
+              foreach (Screen screen in Screen.AllScreens)
+              {
+
+
+      // For each screen, add the screen properties to a list box.
+      //listBox1.Items.Add("Device Name: " + screen.DeviceName);
+      //listBox1.Items.Add("Bounds: " + screen.Bounds.ToString());
+      //listBox1.Items.Add("Type: " + screen.GetType().ToString());
+      //listBox1.Items.Add("Working Area: " + screen.WorkingArea.ToString());
+      //listBox1.Items.Add("Primary Screen: " + screen.Primary.ToString());
+
+              }
+          }*/
+
     }
 }

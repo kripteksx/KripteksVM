@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KripteksVMB));
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
-            this.lblTrigValue = new System.Windows.Forms.Label();
             this.sFormStatus = new System.Windows.Forms.StatusStrip();
             this.tsslControllerStatus_ = new System.Windows.Forms.ToolStripStatusLabel();
             this.tslControllerStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -68,8 +67,8 @@
             this.tabComExplorer = new System.Windows.Forms.TabControl();
             this.tabCEController = new System.Windows.Forms.TabPage();
             this.gbControllerVariables = new System.Windows.Forms.GroupBox();
-            this.cbVariablesSource = new System.Windows.Forms.ComboBox();
-            this.cbVariablesType = new System.Windows.Forms.ComboBox();
+            this.cbVariableDirection = new System.Windows.Forms.ComboBox();
+            this.cbVariableType = new System.Windows.Forms.ComboBox();
             this.dgvVariables = new System.Windows.Forms.DataGridView();
             this.Variable = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -145,7 +144,6 @@
             // toolStripContainer.ContentPanel
             // 
             this.toolStripContainer.ContentPanel.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.toolStripContainer.ContentPanel.Controls.Add(this.lblTrigValue);
             this.toolStripContainer.ContentPanel.Controls.Add(this.sFormStatus);
             this.toolStripContainer.ContentPanel.Controls.Add(this.msMenu);
             this.toolStripContainer.ContentPanel.Controls.Add(this.scMain);
@@ -160,16 +158,6 @@
             this.toolStripContainer.Size = new System.Drawing.Size(970, 753);
             this.toolStripContainer.TabIndex = 0;
             this.toolStripContainer.Text = "toolStripContainer1";
-            // 
-            // lblTrigValue
-            // 
-            this.lblTrigValue.AutoSize = true;
-            this.lblTrigValue.Location = new System.Drawing.Point(589, 12);
-            this.lblTrigValue.Name = "lblTrigValue";
-            this.lblTrigValue.Size = new System.Drawing.Size(16, 17);
-            this.lblTrigValue.TabIndex = 6;
-            this.lblTrigValue.Text = "  ";
-            this.lblTrigValue.TextChanged += new System.EventHandler(this.lblTrigValue_TextChanged);
             // 
             // sFormStatus
             // 
@@ -373,7 +361,6 @@
             this.btnmsMenuApplication.Name = "btnmsMenuApplication";
             this.btnmsMenuApplication.Size = new System.Drawing.Size(74, 23);
             this.btnmsMenuApplication.Text = "Settings";
-            this.btnmsMenuApplication.Click += new System.EventHandler(this.btnmsMenuApplication_Click);
             // 
             // btnmsMenuApplicationProperties
             // 
@@ -465,7 +452,6 @@
             this.tabComExplorer.SelectedIndex = 0;
             this.tabComExplorer.Size = new System.Drawing.Size(296, 581);
             this.tabComExplorer.TabIndex = 15;
-            this.tabComExplorer.SelectedIndexChanged += new System.EventHandler(this.tabComExplorer_SelectedIndexChanged);
             // 
             // tabCEController
             // 
@@ -481,8 +467,8 @@
             // 
             // gbControllerVariables
             // 
-            this.gbControllerVariables.Controls.Add(this.cbVariablesSource);
-            this.gbControllerVariables.Controls.Add(this.cbVariablesType);
+            this.gbControllerVariables.Controls.Add(this.cbVariableDirection);
+            this.gbControllerVariables.Controls.Add(this.cbVariableType);
             this.gbControllerVariables.Controls.Add(this.dgvVariables);
             this.gbControllerVariables.Location = new System.Drawing.Point(6, 250);
             this.gbControllerVariables.Name = "gbControllerVariables";
@@ -491,34 +477,34 @@
             this.gbControllerVariables.TabStop = false;
             this.gbControllerVariables.Text = "Variables";
             // 
-            // cbVariablesSource
+            // cbVariableDirection
             // 
-            this.cbVariablesSource.FormattingEnabled = true;
-            this.cbVariablesSource.Items.AddRange(new object[] {
+            this.cbVariableDirection.FormattingEnabled = true;
+            this.cbVariableDirection.Items.AddRange(new object[] {
             "None",
-            "Api -> Web",
-            "Web-> Api"});
-            this.cbVariablesSource.Location = new System.Drawing.Point(6, 21);
-            this.cbVariablesSource.Name = "cbVariablesSource";
-            this.cbVariablesSource.Size = new System.Drawing.Size(121, 24);
-            this.cbVariablesSource.TabIndex = 13;
-            this.cbVariablesSource.Text = "None";
-            this.cbVariablesSource.SelectedIndexChanged += new System.EventHandler(this.cbVariablesSource_SelectedIndexChanged);
+            "toApplication",
+            "toController"});
+            this.cbVariableDirection.Location = new System.Drawing.Point(6, 21);
+            this.cbVariableDirection.Name = "cbVariableDirection";
+            this.cbVariableDirection.Size = new System.Drawing.Size(121, 24);
+            this.cbVariableDirection.TabIndex = 13;
+            this.cbVariableDirection.Text = "None";
+            this.cbVariableDirection.SelectedIndexChanged += new System.EventHandler(this.cbVariableDirection_SelectedIndexChanged);
             // 
-            // cbVariablesType
+            // cbVariableType
             // 
-            this.cbVariablesType.FormattingEnabled = true;
-            this.cbVariablesType.Items.AddRange(new object[] {
+            this.cbVariableType.FormattingEnabled = true;
+            this.cbVariableType.Items.AddRange(new object[] {
             "None",
             "word",
             "double",
             "bool"});
-            this.cbVariablesType.Location = new System.Drawing.Point(133, 21);
-            this.cbVariablesType.Name = "cbVariablesType";
-            this.cbVariablesType.Size = new System.Drawing.Size(121, 24);
-            this.cbVariablesType.TabIndex = 14;
-            this.cbVariablesType.Text = "None";
-            this.cbVariablesType.SelectedIndexChanged += new System.EventHandler(this.cbVariablesType_SelectedIndexChanged);
+            this.cbVariableType.Location = new System.Drawing.Point(133, 21);
+            this.cbVariableType.Name = "cbVariableType";
+            this.cbVariableType.Size = new System.Drawing.Size(121, 24);
+            this.cbVariableType.TabIndex = 14;
+            this.cbVariableType.Text = "None";
+            this.cbVariableType.SelectedIndexChanged += new System.EventHandler(this.cbVariableType_SelectedIndexChanged);
             // 
             // dgvVariables
             // 
@@ -1014,11 +1000,8 @@
             this.Name = "KripteksVMB";
             this.Text = "KripteksVM";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
-            this.Activated += new System.EventHandler(this.KripteksVMB_Activated);
-            this.Deactivate += new System.EventHandler(this.KripteksVMB_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KripteksVMB_FormClosing);
             this.Load += new System.EventHandler(this.KripteksVMB_Load);
-            this.ResizeEnd += new System.EventHandler(this.KripteksVMB_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.KripteksVMB_SizeChanged);
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
             this.toolStripContainer.ContentPanel.PerformLayout();
@@ -1068,8 +1051,8 @@
         private System.Windows.Forms.TabPage tabCEApplication;
         private System.Windows.Forms.TabPage tabCEServer;
         private System.Windows.Forms.DataGridView dgvVariables;
-        private System.Windows.Forms.ComboBox cbVariablesSource;
-        private System.Windows.Forms.ComboBox cbVariablesType;
+        private System.Windows.Forms.ComboBox cbVariableDirection;
+        private System.Windows.Forms.ComboBox cbVariableType;
         private System.Windows.Forms.GroupBox gbControllerComm;
         private System.Windows.Forms.Label lblAID_;
         private System.Windows.Forms.Label lblSID_;
@@ -1105,7 +1088,6 @@
         private System.Windows.Forms.ToolStripStatusLabel tslSeperator4;
         private System.Windows.Forms.ToolStripMenuItem cameraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFocusCam;
-        private System.Windows.Forms.Label lblTrigValue;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFreeCam;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFirstPersonCam;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuGoFullScreen;

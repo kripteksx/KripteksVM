@@ -126,8 +126,10 @@
   <ItemGroup>
     <Compile Include="Concrete\Constants.cs" />
     <Compile Include="Concrete\ControllerSettings.cs" />
+    <Compile Include="Concrete\DataGridViewVariables.cs" />
     <Compile Include="Concrete\GPUUsage.cs" />
     <Compile Include="Concrete\General.cs" />
+    <Compile Include="Concrete\Performance.cs" />
     <Compile Include="Concrete\VirtrualMachineVariables.cs" />
     <Compile Include="Concrete\VirtualMachine.cs" />
     <Compile Include="Abstract\IController.cs" />

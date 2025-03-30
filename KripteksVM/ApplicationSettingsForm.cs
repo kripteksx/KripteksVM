@@ -36,6 +36,8 @@ namespace KripteksVM
             InitializeComponent();
 
             Init();
+
+            VarToForm();
         }
         
         private void Init()
