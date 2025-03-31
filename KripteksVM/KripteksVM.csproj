@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KripteksVM</RootNamespace>
     <AssemblyName>KripteksVM</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -90,17 +90,14 @@
     <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CefSharp, Version=108.4.130.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138">
+    <Reference Include="CefSharp, Version=108.4.130.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
       <HintPath>..\packages\CefSharp.Common.108.4.130\lib\net452\CefSharp.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="CefSharp.Core, Version=108.4.130.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138">
+    <Reference Include="CefSharp.Core, Version=108.4.130.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
       <HintPath>..\packages\CefSharp.Common.108.4.130\lib\net452\CefSharp.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="CefSharp.WinForms, Version=108.4.130.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138">
-      <HintPath>..\packages\CefSharp.WinForms.108.4.130\lib\net452\CefSharp.WinForms.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CefSharp.WinForms, Version=108.4.130.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
+      <HintPath>..\packages\CefSharp.WinForms.108.4.130\lib\net462\CefSharp.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.4.0\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
@@ -240,6 +237,13 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CefSharpAfterBuildDebug" AfterTargets="AfterBuild">
     <CallTarget Targets="CefSharpAfterBuildDiagnostic" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\CefSharp.Common.108.4.130\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.108.4.130\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.108.4.130\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.108.4.130\build\CefSharp.Common.targets'))" />
   </Target>
   <Import Project="..\packages\CefSharp.Common.108.4.130\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.108.4.130\build\CefSharp.Common.targets')" />
 </Project>

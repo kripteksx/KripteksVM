@@ -1,15 +1,14 @@
-﻿using CefSharp.DevTools.IO;
-using CefSharp.WinForms;
-using KripteksVM.Concrete;
-using CefSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Net;
-using System.IO;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using CefSharp;
+using CefSharp.DevTools.IO;
+using CefSharp.WinForms;
 
 namespace KripteksVM.Concrete
 {
@@ -24,8 +23,8 @@ namespace KripteksVM.Concrete
         public void Init(string sHost, string sCID, string sSID, string sAID, string sHID)
         {
             browser = new ChromiumWebBrowser(sHost + "/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
-            
-            
+
+            browser.Focus();
             browser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged;
             browser.ConsoleMessage += OnBrowserConsoleMessage;
             browser.StatusMessage += OnBrowserStatusMessage;

@@ -60,7 +60,7 @@
             this.cameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuFocusCam = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuFreeCam = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnmsMenuFirstPersonCam = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnmsMenuPersonCam = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuGoFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scMain = new System.Windows.Forms.SplitContainer();
@@ -119,6 +119,7 @@
             this.tbLog = new System.Windows.Forms.TextBox();
             this.btnLogClear = new System.Windows.Forms.Button();
             this.timerForm = new System.Windows.Forms.Timer(this.components);
+            this.btnmsMenuNoneCam = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -381,8 +382,9 @@
             this.cameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnmsMenuFocusCam,
             this.btnmsMenuFreeCam,
-            this.btnmsMenuFirstPersonCam,
-            this.btnmsMenuGoFullScreen});
+            this.btnmsMenuPersonCam,
+            this.btnmsMenuGoFullScreen,
+            this.btnmsMenuNoneCam});
             this.cameraToolStripMenuItem.Name = "cameraToolStripMenuItem";
             this.cameraToolStripMenuItem.Size = new System.Drawing.Size(72, 23);
             this.cameraToolStripMenuItem.Text = "Camera";
@@ -390,28 +392,28 @@
             // btnmsMenuFocusCam
             // 
             this.btnmsMenuFocusCam.Name = "btnmsMenuFocusCam";
-            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuFocusCam.Text = "Focus [ESC]";
             this.btnmsMenuFocusCam.Click += new System.EventHandler(this.btnmsMenuFocusCam_Click);
             // 
             // btnmsMenuFreeCam
             // 
             this.btnmsMenuFreeCam.Name = "btnmsMenuFreeCam";
-            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuFreeCam.Text = "Free [O]";
             this.btnmsMenuFreeCam.Click += new System.EventHandler(this.btnmsMenuFreeCam_Click);
             // 
-            // btnmsMenuFirstPersonCam
+            // btnmsMenuPersonCam
             // 
-            this.btnmsMenuFirstPersonCam.Name = "btnmsMenuFirstPersonCam";
-            this.btnmsMenuFirstPersonCam.Size = new System.Drawing.Size(192, 26);
-            this.btnmsMenuFirstPersonCam.Text = "First Person [P]";
-            this.btnmsMenuFirstPersonCam.Click += new System.EventHandler(this.btnmsMenuFirstPersonCam_Click);
+            this.btnmsMenuPersonCam.Name = "btnmsMenuPersonCam";
+            this.btnmsMenuPersonCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuPersonCam.Text = "Person [P]";
+            this.btnmsMenuPersonCam.Click += new System.EventHandler(this.btnmsMenuPersonCam_Click);
             // 
             // btnmsMenuGoFullScreen
             // 
             this.btnmsMenuGoFullScreen.Name = "btnmsMenuGoFullScreen";
-            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(192, 26);
+            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(216, 26);
             this.btnmsMenuGoFullScreen.Text = "Full Screen [F11]";
             this.btnmsMenuGoFullScreen.Click += new System.EventHandler(this.btnmsMenuGoFullScreen_Click);
             // 
@@ -987,6 +989,13 @@
             this.timerForm.Interval = 250;
             this.timerForm.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
+            // btnmsMenuNoneCam
+            // 
+            this.btnmsMenuNoneCam.Name = "btnmsMenuNoneCam";
+            this.btnmsMenuNoneCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuNoneCam.Text = "None";
+            this.btnmsMenuNoneCam.Click += new System.EventHandler(this.btnmsMenuNoneCam_Click);
+            // 
             // KripteksVMB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1089,7 +1098,7 @@
         private System.Windows.Forms.ToolStripMenuItem cameraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFocusCam;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuFreeCam;
-        private System.Windows.Forms.ToolStripMenuItem btnmsMenuFirstPersonCam;
+        private System.Windows.Forms.ToolStripMenuItem btnmsMenuPersonCam;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuGoFullScreen;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuApplication;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuApplicationProperties;
@@ -1122,5 +1131,6 @@
         private System.Windows.Forms.Label lblPerformanceControllerCycleTickMs;
         private System.Windows.Forms.Label lblPerformanceControllerElapsedTimeMs;
         private System.Windows.Forms.TextBox tbLog;
+        private System.Windows.Forms.ToolStripMenuItem btnmsMenuNoneCam;
     }
 }

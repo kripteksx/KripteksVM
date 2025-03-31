@@ -63,6 +63,7 @@ namespace KripteksVM
             // loaded
             this.Show();
             splashForm.Hide();
+
         }
 
         private void KripteksVMB_Load(object sender, EventArgs e)
@@ -159,33 +160,32 @@ namespace KripteksVM
                     _keyHelp[79] = true;
                     _cameraNo = CameraNo.Free;
                 }
+                if (_key[27] & !_keyHelp[27]) // ESC
+                {
+                    _keyHelp[27] = true;
+                    _cameraNo = CameraNo.None;
+                }
+                if (_key[116] & !_keyHelp[116]) // F5
+                {
+                    _keyHelp[116] = true;
+                    _chromiumBrowser.Refresh(Constants.Host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
+                }
+                if (_key[121] & !_keyHelp[121]) // F10
+                {
+                    _keyHelp[121] = true;
+                    _general.GetShareLink(_virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID);
+                }
+                if (_key[122] & !_keyHelp[122]) // F11
+                {
+                    _keyHelp[122] = true;
+                    GoFullscreen();
+                }
+                if (_key[123] & !_keyHelp[123]) // F12
+                {
+                    _keyHelp[123] = true;
+                    _chromiumBrowser.browser.ShowDevTools();
+                }
             }
-            if (_key[27] & !_keyHelp[27]) // ESC
-            {
-                _keyHelp[27] = true;
-                _cameraNo = CameraNo.None;
-            }
-            if (_key[116] & !_keyHelp[116]) // F5
-            {
-                _keyHelp[116] = true;
-                _chromiumBrowser.Refresh(Constants.Host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
-            }
-            if (_key[121] & !_keyHelp[121]) // F10
-            {
-                _keyHelp[121] = true;
-                _general.GetShareLink(_virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID);
-            }
-            if (_key[122] & !_keyHelp[122]) // F11
-            {
-                _keyHelp[122] = true;
-                GoFullscreen();
-            }
-            if (_key[123] & !_keyHelp[123]) // F12
-            {
-                _keyHelp[123] = true;
-                _chromiumBrowser.browser.ShowDevTools();
-            }
-            
             if (_chromiumBrowser.isMainFrameLoaded )
             {
                 try
@@ -251,6 +251,8 @@ namespace KripteksVM
         }
         private void tmrVarRefresh_Tick(object sender, EventArgs e)
         {
+            Application.DoEvents();
+
             // Alive timer count
             _performance.varRefreshAliveCount++;
 
@@ -514,9 +516,14 @@ namespace KripteksVM
         {
             _cameraNo = CameraNo.Free;
         }
-        private void btnmsMenuFirstPersonCam_Click(object sender, EventArgs e)
+        private void btnmsMenuPersonCam_Click(object sender, EventArgs e)
         {
             _cameraNo = CameraNo.Person;
+        }
+        private void btnmsMenuNoneCam_Click(object sender, EventArgs e)
+        {
+            if (_chromiumBrowser.browser.Visible) _chromiumBrowser.browser.Visible = false;
+            else _chromiumBrowser.browser.Visible = true;
         }
         private void btnmsMenuGoFullScreen_Click(object sender, EventArgs e)
         {
@@ -567,5 +574,6 @@ namespace KripteksVM
             _controller.Disconnect(_controllerSettings);
         }
         #endregion
+
     }
 }
