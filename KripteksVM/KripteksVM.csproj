@@ -121,6 +121,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IChromiumBrowser.cs" />
+    <Compile Include="Abstract\IControllerSettingsFile.cs" />
+    <Compile Include="Abstract\IDataGridViewVariables.cs" />
     <Compile Include="Concrete\Constants.cs" />
     <Compile Include="Concrete\ControllerSettings.cs" />
     <Compile Include="Concrete\DataGridViewVariables.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KripteksVM.Concrete
 {
-    public static class GPUUsage
+    public static class GPUUsage 
     {
         public static List<PerformanceCounter> GetGPUCounters()
         {

@@ -9,7 +9,7 @@ using KripteksVM.Concrete;
 
 namespace KripteksVM.Concrete
 {
-    public class ControllerSettingsFile
+    public class ControllerSettingsFile : IControllerSettingsFile
     {
         public ControllerSettings GetControllerSettings()
         {
@@ -19,7 +19,6 @@ namespace KripteksVM.Concrete
             string dosyaYolu = path + "\\Config\\ControllerProperties.ini";
             if (File.Exists(dosyaYolu))
             {
-                
                 FileStream fs = new FileStream(dosyaYolu, FileMode.Open, FileAccess.Read);
                 StreamReader sw = new StreamReader(fs);
                 string yazi = sw.ReadLine();
@@ -34,13 +33,11 @@ namespace KripteksVM.Concrete
                     if (values[0] == "BeckhoffAMSNetID") controllerSettings.controllerBeckhoff.AMSNetID = values[1];
                     if (values[0] == "BeckhoffPortNo") controllerSettings.controllerBeckhoff.portNo = values[1];
 
-
                     yazi = sw.ReadLine();
                 }
 
                 sw.Close();
                 fs.Close();
-
             }
             else
             {

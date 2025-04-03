@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace KripteksVM.Concrete
 {
-    public class DataGridViewVariables
+    public class DataGridViewVariables : IDataGridViewVariables
     {
         public void DataGripViewRefresh(DataGridView dgv, UInt16[] w, bool[] isForced)
         {

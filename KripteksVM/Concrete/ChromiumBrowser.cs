@@ -12,13 +12,11 @@ using CefSharp.WinForms;
 
 namespace KripteksVM.Concrete
 {
-    public class ChromiumBrowser
+    public class ChromiumBrowser : IChromiumBrowser
     {
         public ChromiumWebBrowser browser;
 
         public bool isMainFrameLoaded = false;
-
-        //public string sHost = "";
 
         public void Init(string sHost, string sCID, string sSID, string sAID, string sHID)
         {

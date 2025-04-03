@@ -251,7 +251,10 @@ namespace KripteksVM
         }
         private void tmrVarRefresh_Tick(object sender, EventArgs e)
         {
-            Application.DoEvents();
+            //Application.DoEvents();
+
+            //_general.SetPriorityProcessAndTheards("KripteksVM", ProcessPriorityClass.RealTime, ThreadPriorityLevel.TimeCritical);
+
 
             // Alive timer count
             _performance.varRefreshAliveCount++;
