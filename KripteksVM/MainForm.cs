@@ -21,6 +21,7 @@ namespace KripteksVM
         private VirtualMachine _virtualMachine = new VirtualMachine();
         private ControllerSettings _controllerSettings = new ControllerSettings();
         private ControllerBeckhoff _controllerBeckhoff = new ControllerBeckhoff();
+        private ControllerModbus _controllerModbus = new ControllerModbus();
         private DataGridViewVariables _dataGridViewVariables = new DataGridViewVariables();
         private IController _controller;
         private ControllerSettingsFile _controllerSettingsFile = new ControllerSettingsFile();
@@ -39,9 +40,14 @@ namespace KripteksVM
         private DataGridViewVariableDirection _dataGridViewVariableDirection;
         private DataGridViewVariableType _dataGridViewVariableType;
         private CameraNo _cameraNo;
-        
+
         // formlar 
-        SplashForm splashForm = new SplashForm();
+        //SplashForm splashForm = new SplashForm();
+        public delegate void RefreshInitStatus(string status);
+        public RefreshInitStatus CallBackRefreshInitStatus;
+
+        private int _initState = 0;
+        public bool isInitialized = false;
         FullScreenForm fullScreenForm = new FullScreenForm();
         ControllerSettingsForm controllerSettingsForm = new ControllerSettingsForm();
         ApplicationSettingsForm applicationSettingsForm = new ApplicationSettingsForm();
@@ -54,48 +60,8 @@ namespace KripteksVM
         
         public KripteksVMB()
         {
-            // loading 
-            splashForm.Show();
-            this.Hide();
-
             InitializeComponent();
-
-            // loaded
-            this.Show();
-            splashForm.Hide();
-
-        }
-
-        private void KripteksVMB_Load(object sender, EventArgs e)
-        {
-            // ortak logger
-            _general.txtLog = tbLog;
-
-            // diger controller secimi
-            _controller = _controllerBeckhoff;
-
-            // Config okunuyor
-            _controllerSettings = _controllerSettingsFile.GetControllerSettings();
-
-            // Connect controller
-            _virtualMachine = _controller.Init(_virtualMachine);
-            _controller.Connect(_controllerSettings);
-            _virtualMachine = _controller.RefreshVariables(_virtualMachine);
-            _virtualMachine = _controller.GetComments(_virtualMachine);
-
-            // fullscreen
-            WindowState = FormWindowState.Maximized;
-
-            // refresh
-            TimerInit();
-
-            // chromium
-            _general.LogText("Host is " + Constants.Host);
-            _chromiumBrowser.Init(Constants.Host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
-            scMain.Panel1.Controls.Add(_chromiumBrowser.browser);
-
-        }
-        
+        }     
         #region Timers
         private void TimerInit()
         {
@@ -121,7 +87,85 @@ namespace KripteksVM
             s_timerSlow.Enabled = true;
             s_timerSlow.AutoReset = true;
 
+            tmrForm.Enabled = true;
             _general.LogText("Timers started.");
+        }
+
+        private void tmrInit_Tick(object sender, EventArgs e)
+        {
+            switch (_initState)
+            {
+                case 0:
+                    if (CallBackRefreshInitStatus != null)
+                    {
+                        CallBackRefreshInitStatus("initialized.");
+                        _initState = 10;
+                    }
+                    break;
+
+                case 10:
+                    _general.txtLog = tbLog;
+                    WindowState = FormWindowState.Maximized;
+                    CallBackRefreshInitStatus("logger initialized.");
+                    _initState = 20;
+                    break;
+
+                case 20:
+                    _controllerSettings = _controllerSettingsFile.GetControllerSettings();
+                    ChangeControllerType();
+                    CallBackRefreshInitStatus("controller settings.");
+                    _initState = 30;
+                    break;
+
+                case 30:
+                    // Connect controller
+                    CallBackRefreshInitStatus("connecting controller.");
+                    _controller.Connect(_controllerSettings);
+                    _virtualMachine = _controller.RefreshVariables(_virtualMachine);
+                    _virtualMachine = _controller.GetComments(_virtualMachine);
+                    CallBackRefreshInitStatus("controller connected.");
+                    _initState = 40;
+                    break;
+
+                case 40:
+                    // refresh
+                    TimerInit();
+                    CallBackRefreshInitStatus("timers started.");
+                    _initState = 50;
+                    break;
+
+                case 50:
+                    // refresh
+                    // chromium
+                    CallBackRefreshInitStatus("browser initializing.");
+                    _general.LogText("Host is " + Constants.Host);
+                    _chromiumBrowser.Init(Constants.Host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
+                    scMain.Panel1.Controls.Add(_chromiumBrowser.browser);
+                    _initState = 60;
+                    break;
+
+                case 60:
+                    // refresh
+                    if (_chromiumBrowser.browser.IsBrowserInitialized)
+                    {
+                        CallBackRefreshInitStatus("browser initialized.");
+                        _initState = 70;
+                    }
+                    break;
+
+                case 70:
+                    if (_chromiumBrowser.browser.IsLoading)
+                    {
+                        CallBackRefreshInitStatus("browser loading.");
+                    }
+                    else
+                    {
+                        isInitialized = true;
+                        tmrInit.Enabled = false;
+                    }
+                    break;
+            }
+
         }
         private void tmrSlowRefresh_Tick(object sender, EventArgs e)
         {
@@ -323,18 +367,19 @@ namespace KripteksVM
                     string[] arrswWA = swWA.Split(':');
                     for (int i = 0; i < Constants.WordArraySize; i++)
                     {
-                        if (arrswWA[i] != "") _virtualMachine.applicationToControllerVariables.wordArrayBuff[i] = Convert.ToUInt16(arrswWA[i]);
+                        if (arrswWA[i] != "") _virtualMachine.applicationToControllerVariables.wordArrayBuff[i] = Convert.ToInt16(arrswWA[i]);
                     }
                 }
-
-                // controller <-> application
-                _dataGridViewVariables.DataGridViewForced(_virtualMachine);
+            
             }
             catch
             {
                 // Alive timer count
                 //iPerformanceVarRefreshAliveCount--;
             }
+
+            // controller <-> application
+            _dataGridViewVariables.DataGridViewForced(_virtualMachine);
 
             // islem suresi
             _performance.controllerElapsedTimeMs = stopWatch.Elapsed.Milliseconds;
@@ -345,14 +390,27 @@ namespace KripteksVM
         }
         private void tmrFormRefresh_Tick(object sender, EventArgs e)
         {
+
+
             lblATAID.Text = _virtualMachine.virtualApplication.AID;
             lblATName.Text = _virtualMachine.virtualApplication.name;
             lblATInfo.Text = _virtualMachine.virtualApplication.info;
 
             lblATElapsedTime.Text = _virtualMachine.controllerStatus.elapsedTime.ToString();
-            
-            lblBeckhoffAMSNetID.Text = _controllerSettings.controllerBeckhoff.AMSNetID;
-            lblBeckhoffPortNo.Text = _controllerSettings.controllerBeckhoff.portNo;
+            if (_controllerSettings.controllerType == "Beckhoff")
+            {
+                lblControllerConnectionAddress_.Text = "AMSNetID";
+                lblControllerConnectionPortNo_.Text = "Port No";
+                lblControllerConnectionAddress.Text = _controllerSettings.controllerBeckhoff.AMSNetID;
+                lblControllerConnectionPortNo.Text = _controllerSettings.controllerBeckhoff.portNo;
+            }
+            else if (_controllerSettings.controllerType == "Modbus")
+            {
+                lblControllerConnectionAddress_.Text = "IP Address";
+                lblControllerConnectionPortNo_.Text = "Port No";
+                lblControllerConnectionAddress.Text = _controllerSettings.controllerModbus.IPAddress;
+                lblControllerConnectionPortNo.Text = _controllerSettings.controllerModbus.portNo.ToString();
+            }
             lblPerformanceControllerCycleTickMs.Text = _controllerSettings.cycleTime.ToString();
             lblPerformanceControllerElapsedTimeMs.Text = _performance.controllerElapsedTimeMs.ToString();
             lblPerformanceVarRefreshTickMs.Text = _performance.varRefreshTickMs.ToString();
@@ -456,12 +514,23 @@ namespace KripteksVM
         }
         private void dgvVariables_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+        }
+        private void dgvVariables_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
             dgvVariables.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
+
+        private void ChangeControllerType()
+        {
+            if (_controllerSettings.controllerType == "Beckhoff") _controller = _controllerBeckhoff;
+            else if (_controllerSettings.controllerType == "Modbus") _controller = _controllerModbus;
+            _virtualMachine = _controller.Init(_virtualMachine);
         }
         private void CallBackRefreshControllerSettings()
         {
-            _controllerSettings = _controllerSettingsFile.GetControllerSettings();
             _controller.Disconnect(_controllerSettings);
+            _controllerSettings = _controllerSettingsFile.GetControllerSettings();
+            ChangeControllerType();
             _controller.Connect(_controllerSettings);
             _chromiumBrowser.Refresh(Constants.Host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
         }
@@ -563,10 +632,12 @@ namespace KripteksVM
             s_timerCamera.Enabled = false;
             s_timerKeyboard.Enabled = false;
             s_timerSlow.Enabled = false;
-            timerForm.Enabled = false;
-            _chromiumBrowser.browser.Dispose();
+            tmrForm.Enabled = false;
+            if(_chromiumBrowser.browser!=null)
+                _chromiumBrowser.browser.Dispose();
             _controller.Disconnect(_controllerSettings);
             Cef.Shutdown();
+            Environment.Exit(0); // splash kapatiliyor
         }
         private void btnConnectController_Click(object sender, EventArgs e)
         {

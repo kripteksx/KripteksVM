@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashForm));
             this.lblKripteksVM = new System.Windows.Forms.Label();
+            this.tmrInit = new System.Windows.Forms.Timer(this.components);
+            this.lblInitStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblKripteksVM
@@ -39,10 +42,25 @@
             this.lblKripteksVM.ForeColor = System.Drawing.SystemColors.Control;
             this.lblKripteksVM.Location = new System.Drawing.Point(141, 83);
             this.lblKripteksVM.Name = "lblKripteksVM";
-            this.lblKripteksVM.Size = new System.Drawing.Size(160, 32);
+            this.lblKripteksVM.Size = new System.Drawing.Size(159, 32);
             this.lblKripteksVM.TabIndex = 1;
             this.lblKripteksVM.Text = "KripteksVM";
-            this.lblKripteksVM.Click += new System.EventHandler(this.lblKripteksVM_Click);
+            // 
+            // tmrInit
+            // 
+            this.tmrInit.Enabled = true;
+            this.tmrInit.Interval = 2000;
+            this.tmrInit.Tick += new System.EventHandler(this.tmrInit_Tick);
+            // 
+            // lblInitStatus
+            // 
+            this.lblInitStatus.AutoSize = true;
+            this.lblInitStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblInitStatus.Location = new System.Drawing.Point(120, 159);
+            this.lblInitStatus.Name = "lblInitStatus";
+            this.lblInitStatus.Size = new System.Drawing.Size(73, 16);
+            this.lblInitStatus.TabIndex = 2;
+            this.lblInitStatus.Text = "initializing...";
             // 
             // SplashForm
             // 
@@ -50,6 +68,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(450, 200);
+            this.Controls.Add(this.lblInitStatus);
             this.Controls.Add(this.lblKripteksVM);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -66,5 +85,7 @@
         #endregion
 
         private System.Windows.Forms.Label lblKripteksVM;
+        private System.Windows.Forms.Timer tmrInit;
+        private System.Windows.Forms.Label lblInitStatus;
     }
 }

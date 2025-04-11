@@ -38,9 +38,12 @@ namespace KripteksVM
                     cbControllerType.SelectedIndex = i;
             }
 
-            tbBeckhoffAMSNetID.Text = controllerSettings.controllerBeckhoff.AMSNetID;
-            tbBeckhoffPortNo.Text = controllerSettings.controllerBeckhoff.portNo;
-            tbControllerCycleMs.Text = controllerSettings.cycleTime.ToString(); 
+            txtBeckhoffAMSNetID.Text = controllerSettings.controllerBeckhoff.AMSNetID;
+            txtBeckhoffPortNo.Text = controllerSettings.controllerBeckhoff.portNo;
+            txtControllerCycleMs.Text = controllerSettings.cycleTime.ToString();
+
+            txtModbusIPAddress.Text = controllerSettings.controllerModbus.IPAddress;
+            txtModbusPortNo.Text = controllerSettings.controllerModbus.portNo.ToString();
         }
         
         private void btnControllerPropertiesClose_Click(object sender, EventArgs e)
@@ -53,10 +56,13 @@ namespace KripteksVM
 
             ControllerSettings controllerSettings = new ControllerSettings();
 
-            controllerSettings.controllerBeckhoff.AMSNetID = tbBeckhoffAMSNetID.Text;
-            controllerSettings.controllerBeckhoff.portNo = tbBeckhoffPortNo.Text;
+            controllerSettings.controllerBeckhoff.AMSNetID = txtBeckhoffAMSNetID.Text;
+            controllerSettings.controllerBeckhoff.portNo = txtBeckhoffPortNo.Text;
             controllerSettings.controllerType = cbControllerType.SelectedItem.ToString();
-            controllerSettings.cycleTime = int.Parse(tbControllerCycleMs.Text);
+            controllerSettings.cycleTime = int.Parse(txtControllerCycleMs.Text);
+
+            controllerSettings.controllerModbus.IPAddress=txtModbusIPAddress.Text;
+            controllerSettings.controllerModbus.portNo = Convert.ToUInt16(txtModbusPortNo.Text);
             clControlFile.SetControllerSettings(controllerSettings);
 
             CallBackRefreshControllerSettings();// diger form u tetikle

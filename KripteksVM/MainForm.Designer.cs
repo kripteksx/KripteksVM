@@ -62,6 +62,7 @@
             this.btnmsMenuFreeCam = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuPersonCam = new System.Windows.Forms.ToolStripMenuItem();
             this.btnmsMenuGoFullScreen = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnmsMenuNoneCam = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scMain = new System.Windows.Forms.SplitContainer();
             this.tabComExplorer = new System.Windows.Forms.TabControl();
@@ -76,10 +77,10 @@
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbControllerComm = new System.Windows.Forms.GroupBox();
-            this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
-            this.lblBeckhoffAMSNetID_ = new System.Windows.Forms.Label();
-            this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
-            this.lblBeckhoffPortNo_ = new System.Windows.Forms.Label();
+            this.lblControllerConnectionAddress = new System.Windows.Forms.Label();
+            this.lblControllerConnectionAddress_ = new System.Windows.Forms.Label();
+            this.lblControllerConnectionPortNo = new System.Windows.Forms.Label();
+            this.lblControllerConnectionPortNo_ = new System.Windows.Forms.Label();
             this.lblCID = new System.Windows.Forms.Label();
             this.lblCID_ = new System.Windows.Forms.Label();
             this.lblAID = new System.Windows.Forms.Label();
@@ -118,8 +119,8 @@
             this.tabCELog = new System.Windows.Forms.TabPage();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.btnLogClear = new System.Windows.Forms.Button();
-            this.timerForm = new System.Windows.Forms.Timer(this.components);
-            this.btnmsMenuNoneCam = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmrForm = new System.Windows.Forms.Timer(this.components);
+            this.tmrInit = new System.Windows.Forms.Timer(this.components);
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.sFormStatus.SuspendLayout();
@@ -185,7 +186,7 @@
             // tsslControllerStatus_
             // 
             this.tsslControllerStatus_.Name = "tsslControllerStatus_";
-            this.tsslControllerStatus_.Size = new System.Drawing.Size(82, 25);
+            this.tsslControllerStatus_.Size = new System.Drawing.Size(82, 24);
             this.tsslControllerStatus_.Text = "Controller :";
             // 
             // tslControllerStatus
@@ -193,20 +194,20 @@
             this.tslControllerStatus.AutoSize = false;
             this.tslControllerStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.tslControllerStatus.Name = "tslControllerStatus";
-            this.tslControllerStatus.Size = new System.Drawing.Size(100, 25);
+            this.tslControllerStatus.Size = new System.Drawing.Size(100, 24);
             this.tslControllerStatus.Text = "Connected";
             this.tslControllerStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tslSeperator1
             // 
             this.tslSeperator1.Name = "tslSeperator1";
-            this.tslSeperator1.Size = new System.Drawing.Size(13, 25);
+            this.tslSeperator1.Size = new System.Drawing.Size(13, 24);
             this.tslSeperator1.Text = "|";
             // 
             // tslServerStatus_
             // 
             this.tslServerStatus_.Name = "tslServerStatus_";
-            this.tslServerStatus_.Size = new System.Drawing.Size(57, 25);
+            this.tslServerStatus_.Size = new System.Drawing.Size(57, 24);
             this.tslServerStatus_.Text = "Server :";
             // 
             // tslServerStatus
@@ -214,20 +215,20 @@
             this.tslServerStatus.AutoSize = false;
             this.tslServerStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.tslServerStatus.Name = "tslServerStatus";
-            this.tslServerStatus.Size = new System.Drawing.Size(100, 25);
+            this.tslServerStatus.Size = new System.Drawing.Size(100, 24);
             this.tslServerStatus.Text = "Connected";
             this.tslServerStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tslSeperator2
             // 
             this.tslSeperator2.Name = "tslSeperator2";
-            this.tslSeperator2.Size = new System.Drawing.Size(13, 25);
+            this.tslSeperator2.Size = new System.Drawing.Size(13, 24);
             this.tslSeperator2.Text = "|";
             // 
             // tslClientsStatus_
             // 
             this.tslClientsStatus_.Name = "tslClientsStatus_";
-            this.tslClientsStatus_.Size = new System.Drawing.Size(60, 25);
+            this.tslClientsStatus_.Size = new System.Drawing.Size(60, 24);
             this.tslClientsStatus_.Text = "Clients :";
             // 
             // tslClientsStatus
@@ -235,27 +236,27 @@
             this.tslClientsStatus.AutoSize = false;
             this.tslClientsStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.tslClientsStatus.Name = "tslClientsStatus";
-            this.tslClientsStatus.Size = new System.Drawing.Size(30, 25);
+            this.tslClientsStatus.Size = new System.Drawing.Size(30, 24);
             this.tslClientsStatus.Text = "0";
             this.tslClientsStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tslSeperator3
             // 
             this.tslSeperator3.Name = "tslSeperator3";
-            this.tslSeperator3.Size = new System.Drawing.Size(13, 25);
+            this.tslSeperator3.Size = new System.Drawing.Size(13, 24);
             this.tslSeperator3.Text = "|";
             // 
             // tslElapsedTime
             // 
             this.tslElapsedTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.tslElapsedTime.Name = "tslElapsedTime";
-            this.tslElapsedTime.Size = new System.Drawing.Size(63, 25);
+            this.tslElapsedTime.Size = new System.Drawing.Size(63, 24);
             this.tslElapsedTime.Text = "00:00:00";
             // 
             // tslSeperator4
             // 
             this.tslSeperator4.Name = "tslSeperator4";
-            this.tslSeperator4.Size = new System.Drawing.Size(13, 25);
+            this.tslSeperator4.Size = new System.Drawing.Size(13, 24);
             this.tslSeperator4.Text = "|";
             // 
             // msMenu
@@ -286,31 +287,31 @@
             this.saveAsToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 23);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 23);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(141, 26);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(141, 26);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(141, 26);
             this.saveAsToolStripMenuItem.Text = "Save as";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(141, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -318,7 +319,7 @@
             // 
             this.userToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.userToolStripMenuItem.Name = "userToolStripMenuItem";
-            this.userToolStripMenuItem.Size = new System.Drawing.Size(50, 23);
+            this.userToolStripMenuItem.Size = new System.Drawing.Size(52, 23);
             this.userToolStripMenuItem.Text = "User";
             // 
             // browserToolStripMenuItem
@@ -328,7 +329,7 @@
             this.btnmsMenuDevTools,
             this.btnmsMenuShareLink});
             this.browserToolStripMenuItem.Name = "browserToolStripMenuItem";
-            this.browserToolStripMenuItem.Size = new System.Drawing.Size(74, 23);
+            this.browserToolStripMenuItem.Size = new System.Drawing.Size(76, 23);
             this.browserToolStripMenuItem.Text = "Browser";
             // 
             // btnmsMenuRefresh
@@ -336,21 +337,21 @@
             this.btnmsMenuRefresh.Name = "btnmsMenuRefresh";
             this.btnmsMenuRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.btnmsMenuRefresh.ShowShortcutKeys = false;
-            this.btnmsMenuRefresh.Size = new System.Drawing.Size(188, 26);
+            this.btnmsMenuRefresh.Size = new System.Drawing.Size(196, 26);
             this.btnmsMenuRefresh.Text = "Refresh [F5]";
             this.btnmsMenuRefresh.Click += new System.EventHandler(this.btnmsMenuRefresh_Click);
             // 
             // btnmsMenuDevTools
             // 
             this.btnmsMenuDevTools.Name = "btnmsMenuDevTools";
-            this.btnmsMenuDevTools.Size = new System.Drawing.Size(188, 26);
+            this.btnmsMenuDevTools.Size = new System.Drawing.Size(196, 26);
             this.btnmsMenuDevTools.Text = "DevTools [F12]";
             this.btnmsMenuDevTools.Click += new System.EventHandler(this.btnmsMenuDevTools_Click);
             // 
             // btnmsMenuShareLink
             // 
             this.btnmsMenuShareLink.Name = "btnmsMenuShareLink";
-            this.btnmsMenuShareLink.Size = new System.Drawing.Size(188, 26);
+            this.btnmsMenuShareLink.Size = new System.Drawing.Size(196, 26);
             this.btnmsMenuShareLink.Text = "Share Link [F10]";
             this.btnmsMenuShareLink.Click += new System.EventHandler(this.btnmsMenuShareLink_Click);
             // 
@@ -360,20 +361,20 @@
             this.btnmsMenuApplicationProperties,
             this.btnmsMenuControllerProperties});
             this.btnmsMenuApplication.Name = "btnmsMenuApplication";
-            this.btnmsMenuApplication.Size = new System.Drawing.Size(74, 23);
+            this.btnmsMenuApplication.Size = new System.Drawing.Size(76, 23);
             this.btnmsMenuApplication.Text = "Settings";
             // 
             // btnmsMenuApplicationProperties
             // 
             this.btnmsMenuApplicationProperties.Name = "btnmsMenuApplicationProperties";
-            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(161, 26);
+            this.btnmsMenuApplicationProperties.Size = new System.Drawing.Size(169, 26);
             this.btnmsMenuApplicationProperties.Text = "Application";
             this.btnmsMenuApplicationProperties.Click += new System.EventHandler(this.btnmsMenuApplicationProperties_Click);
             // 
             // btnmsMenuControllerProperties
             // 
             this.btnmsMenuControllerProperties.Name = "btnmsMenuControllerProperties";
-            this.btnmsMenuControllerProperties.Size = new System.Drawing.Size(161, 26);
+            this.btnmsMenuControllerProperties.Size = new System.Drawing.Size(169, 26);
             this.btnmsMenuControllerProperties.Text = "Controller";
             this.btnmsMenuControllerProperties.Click += new System.EventHandler(this.btnmsMenuControllerProperties_Click);
             // 
@@ -386,41 +387,48 @@
             this.btnmsMenuGoFullScreen,
             this.btnmsMenuNoneCam});
             this.cameraToolStripMenuItem.Name = "cameraToolStripMenuItem";
-            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(72, 23);
+            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(74, 23);
             this.cameraToolStripMenuItem.Text = "Camera";
             // 
             // btnmsMenuFocusCam
             // 
             this.btnmsMenuFocusCam.Name = "btnmsMenuFocusCam";
-            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuFocusCam.Size = new System.Drawing.Size(200, 26);
             this.btnmsMenuFocusCam.Text = "Focus [ESC]";
             this.btnmsMenuFocusCam.Click += new System.EventHandler(this.btnmsMenuFocusCam_Click);
             // 
             // btnmsMenuFreeCam
             // 
             this.btnmsMenuFreeCam.Name = "btnmsMenuFreeCam";
-            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuFreeCam.Size = new System.Drawing.Size(200, 26);
             this.btnmsMenuFreeCam.Text = "Free [O]";
             this.btnmsMenuFreeCam.Click += new System.EventHandler(this.btnmsMenuFreeCam_Click);
             // 
             // btnmsMenuPersonCam
             // 
             this.btnmsMenuPersonCam.Name = "btnmsMenuPersonCam";
-            this.btnmsMenuPersonCam.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuPersonCam.Size = new System.Drawing.Size(200, 26);
             this.btnmsMenuPersonCam.Text = "Person [P]";
             this.btnmsMenuPersonCam.Click += new System.EventHandler(this.btnmsMenuPersonCam_Click);
             // 
             // btnmsMenuGoFullScreen
             // 
             this.btnmsMenuGoFullScreen.Name = "btnmsMenuGoFullScreen";
-            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(216, 26);
+            this.btnmsMenuGoFullScreen.Size = new System.Drawing.Size(200, 26);
             this.btnmsMenuGoFullScreen.Text = "Full Screen [F11]";
             this.btnmsMenuGoFullScreen.Click += new System.EventHandler(this.btnmsMenuGoFullScreen_Click);
+            // 
+            // btnmsMenuNoneCam
+            // 
+            this.btnmsMenuNoneCam.Name = "btnmsMenuNoneCam";
+            this.btnmsMenuNoneCam.Size = new System.Drawing.Size(200, 26);
+            this.btnmsMenuNoneCam.Text = "None";
+            this.btnmsMenuNoneCam.Click += new System.EventHandler(this.btnmsMenuNoneCam_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 23);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 23);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // scMain
@@ -520,14 +528,17 @@
             this.dgvVariables.Location = new System.Drawing.Point(6, 51);
             this.dgvVariables.Name = "dgvVariables";
             this.dgvVariables.RowHeadersVisible = false;
+            this.dgvVariables.RowHeadersWidth = 51;
             this.dgvVariables.RowTemplate.Height = 24;
             this.dgvVariables.Size = new System.Drawing.Size(270, 281);
             this.dgvVariables.TabIndex = 0;
             this.dgvVariables.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVariables_CellContentClick);
+            this.dgvVariables.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVariables_CellEndEdit);
             // 
             // Variable
             // 
             this.Variable.HeaderText = "Variable";
+            this.Variable.MinimumWidth = 6;
             this.Variable.Name = "Variable";
             this.Variable.ReadOnly = true;
             this.Variable.Width = 80;
@@ -535,6 +546,7 @@
             // Value
             // 
             this.Value.HeaderText = "Value";
+            this.Value.MinimumWidth = 6;
             this.Value.Name = "Value";
             this.Value.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Value.Width = 80;
@@ -542,12 +554,14 @@
             // Force
             // 
             this.Force.HeaderText = "Force";
+            this.Force.MinimumWidth = 6;
             this.Force.Name = "Force";
             this.Force.Width = 50;
             // 
             // Type
             // 
             this.Type.HeaderText = "Type";
+            this.Type.MinimumWidth = 6;
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.Width = 80;
@@ -555,16 +569,17 @@
             // Comment
             // 
             this.Comment.HeaderText = "Comment";
+            this.Comment.MinimumWidth = 6;
             this.Comment.Name = "Comment";
             this.Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Comment.Width = 200;
             // 
             // gbControllerComm
             // 
-            this.gbControllerComm.Controls.Add(this.lblBeckhoffAMSNetID);
-            this.gbControllerComm.Controls.Add(this.lblBeckhoffAMSNetID_);
-            this.gbControllerComm.Controls.Add(this.lblBeckhoffPortNo);
-            this.gbControllerComm.Controls.Add(this.lblBeckhoffPortNo_);
+            this.gbControllerComm.Controls.Add(this.lblControllerConnectionAddress);
+            this.gbControllerComm.Controls.Add(this.lblControllerConnectionAddress_);
+            this.gbControllerComm.Controls.Add(this.lblControllerConnectionPortNo);
+            this.gbControllerComm.Controls.Add(this.lblControllerConnectionPortNo_);
             this.gbControllerComm.Controls.Add(this.lblCID);
             this.gbControllerComm.Controls.Add(this.lblCID_);
             this.gbControllerComm.Controls.Add(this.lblAID);
@@ -581,48 +596,48 @@
             this.gbControllerComm.TabStop = false;
             this.gbControllerComm.Text = "Communication";
             // 
-            // lblBeckhoffAMSNetID
+            // lblControllerConnectionAddress
             // 
-            this.lblBeckhoffAMSNetID.AutoSize = true;
-            this.lblBeckhoffAMSNetID.Location = new System.Drawing.Point(112, 80);
-            this.lblBeckhoffAMSNetID.Name = "lblBeckhoffAMSNetID";
-            this.lblBeckhoffAMSNetID.Size = new System.Drawing.Size(16, 17);
-            this.lblBeckhoffAMSNetID.TabIndex = 24;
-            this.lblBeckhoffAMSNetID.Text = "0";
+            this.lblControllerConnectionAddress.AutoSize = true;
+            this.lblControllerConnectionAddress.Location = new System.Drawing.Point(112, 80);
+            this.lblControllerConnectionAddress.Name = "lblControllerConnectionAddress";
+            this.lblControllerConnectionAddress.Size = new System.Drawing.Size(14, 16);
+            this.lblControllerConnectionAddress.TabIndex = 24;
+            this.lblControllerConnectionAddress.Text = "0";
             // 
-            // lblBeckhoffAMSNetID_
+            // lblControllerConnectionAddress_
             // 
-            this.lblBeckhoffAMSNetID_.AutoSize = true;
-            this.lblBeckhoffAMSNetID_.Location = new System.Drawing.Point(6, 80);
-            this.lblBeckhoffAMSNetID_.Name = "lblBeckhoffAMSNetID_";
-            this.lblBeckhoffAMSNetID_.Size = new System.Drawing.Size(76, 17);
-            this.lblBeckhoffAMSNetID_.TabIndex = 23;
-            this.lblBeckhoffAMSNetID_.Text = "AmsNETID";
+            this.lblControllerConnectionAddress_.AutoSize = true;
+            this.lblControllerConnectionAddress_.Location = new System.Drawing.Point(6, 80);
+            this.lblControllerConnectionAddress_.Name = "lblControllerConnectionAddress_";
+            this.lblControllerConnectionAddress_.Size = new System.Drawing.Size(75, 16);
+            this.lblControllerConnectionAddress_.TabIndex = 23;
+            this.lblControllerConnectionAddress_.Text = "AmsNETID";
             // 
-            // lblBeckhoffPortNo
+            // lblControllerConnectionPortNo
             // 
-            this.lblBeckhoffPortNo.AutoSize = true;
-            this.lblBeckhoffPortNo.Location = new System.Drawing.Point(112, 105);
-            this.lblBeckhoffPortNo.Name = "lblBeckhoffPortNo";
-            this.lblBeckhoffPortNo.Size = new System.Drawing.Size(16, 17);
-            this.lblBeckhoffPortNo.TabIndex = 22;
-            this.lblBeckhoffPortNo.Text = "0";
+            this.lblControllerConnectionPortNo.AutoSize = true;
+            this.lblControllerConnectionPortNo.Location = new System.Drawing.Point(112, 105);
+            this.lblControllerConnectionPortNo.Name = "lblControllerConnectionPortNo";
+            this.lblControllerConnectionPortNo.Size = new System.Drawing.Size(14, 16);
+            this.lblControllerConnectionPortNo.TabIndex = 22;
+            this.lblControllerConnectionPortNo.Text = "0";
             // 
-            // lblBeckhoffPortNo_
+            // lblControllerConnectionPortNo_
             // 
-            this.lblBeckhoffPortNo_.AutoSize = true;
-            this.lblBeckhoffPortNo_.Location = new System.Drawing.Point(6, 105);
-            this.lblBeckhoffPortNo_.Name = "lblBeckhoffPortNo_";
-            this.lblBeckhoffPortNo_.Size = new System.Drawing.Size(34, 17);
-            this.lblBeckhoffPortNo_.TabIndex = 21;
-            this.lblBeckhoffPortNo_.Text = "Port";
+            this.lblControllerConnectionPortNo_.AutoSize = true;
+            this.lblControllerConnectionPortNo_.Location = new System.Drawing.Point(6, 105);
+            this.lblControllerConnectionPortNo_.Name = "lblControllerConnectionPortNo_";
+            this.lblControllerConnectionPortNo_.Size = new System.Drawing.Size(31, 16);
+            this.lblControllerConnectionPortNo_.TabIndex = 21;
+            this.lblControllerConnectionPortNo_.Text = "Port";
             // 
             // lblCID
             // 
             this.lblCID.AutoSize = true;
             this.lblCID.Location = new System.Drawing.Point(112, 180);
             this.lblCID.Name = "lblCID";
-            this.lblCID.Size = new System.Drawing.Size(16, 17);
+            this.lblCID.Size = new System.Drawing.Size(14, 16);
             this.lblCID.TabIndex = 20;
             this.lblCID.Text = "0";
             // 
@@ -631,7 +646,7 @@
             this.lblCID_.AutoSize = true;
             this.lblCID_.Location = new System.Drawing.Point(6, 180);
             this.lblCID_.Name = "lblCID_";
-            this.lblCID_.Size = new System.Drawing.Size(30, 17);
+            this.lblCID_.Size = new System.Drawing.Size(29, 16);
             this.lblCID_.TabIndex = 19;
             this.lblCID_.Text = "CID";
             // 
@@ -640,7 +655,7 @@
             this.lblAID.AutoSize = true;
             this.lblAID.Location = new System.Drawing.Point(112, 155);
             this.lblAID.Name = "lblAID";
-            this.lblAID.Size = new System.Drawing.Size(16, 17);
+            this.lblAID.Size = new System.Drawing.Size(14, 16);
             this.lblAID.TabIndex = 18;
             this.lblAID.Text = "0";
             // 
@@ -649,7 +664,7 @@
             this.lblSID.AutoSize = true;
             this.lblSID.Location = new System.Drawing.Point(112, 130);
             this.lblSID.Name = "lblSID";
-            this.lblSID.Size = new System.Drawing.Size(16, 17);
+            this.lblSID.Size = new System.Drawing.Size(14, 16);
             this.lblSID.TabIndex = 17;
             this.lblSID.Text = "0";
             // 
@@ -668,7 +683,7 @@
             this.lblAID_.AutoSize = true;
             this.lblAID_.Location = new System.Drawing.Point(6, 155);
             this.lblAID_.Name = "lblAID_";
-            this.lblAID_.Size = new System.Drawing.Size(30, 17);
+            this.lblAID_.Size = new System.Drawing.Size(29, 16);
             this.lblAID_.TabIndex = 16;
             this.lblAID_.Text = "AID";
             // 
@@ -687,7 +702,7 @@
             this.lblSID_.AutoSize = true;
             this.lblSID_.Location = new System.Drawing.Point(6, 130);
             this.lblSID_.Name = "lblSID_";
-            this.lblSID_.Size = new System.Drawing.Size(30, 17);
+            this.lblSID_.Size = new System.Drawing.Size(29, 16);
             this.lblSID_.TabIndex = 15;
             this.lblSID_.Text = "SID";
             // 
@@ -735,7 +750,7 @@
             this.lblPerformanceGPUUsage_.AutoSize = true;
             this.lblPerformanceGPUUsage_.Location = new System.Drawing.Point(9, 486);
             this.lblPerformanceGPUUsage_.Name = "lblPerformanceGPUUsage_";
-            this.lblPerformanceGPUUsage_.Size = new System.Drawing.Size(89, 17);
+            this.lblPerformanceGPUUsage_.Size = new System.Drawing.Size(83, 16);
             this.lblPerformanceGPUUsage_.TabIndex = 39;
             this.lblPerformanceGPUUsage_.Text = "GPU usage :";
             // 
@@ -744,7 +759,7 @@
             this.lblPerformanceVarRefreshAliveCount_.AutoSize = true;
             this.lblPerformanceVarRefreshAliveCount_.Location = new System.Drawing.Point(9, 460);
             this.lblPerformanceVarRefreshAliveCount_.Name = "lblPerformanceVarRefreshAliveCount_";
-            this.lblPerformanceVarRefreshAliveCount_.Size = new System.Drawing.Size(120, 17);
+            this.lblPerformanceVarRefreshAliveCount_.Size = new System.Drawing.Size(110, 16);
             this.lblPerformanceVarRefreshAliveCount_.TabIndex = 38;
             this.lblPerformanceVarRefreshAliveCount_.Text = "Alive timer count :";
             // 
@@ -753,7 +768,7 @@
             this.lblPerformanceVarRefreshTickMs_.AutoSize = true;
             this.lblPerformanceVarRefreshTickMs_.Location = new System.Drawing.Point(9, 434);
             this.lblPerformanceVarRefreshTickMs_.Name = "lblPerformanceVarRefreshTickMs_";
-            this.lblPerformanceVarRefreshTickMs_.Size = new System.Drawing.Size(162, 17);
+            this.lblPerformanceVarRefreshTickMs_.Size = new System.Drawing.Size(149, 16);
             this.lblPerformanceVarRefreshTickMs_.TabIndex = 37;
             this.lblPerformanceVarRefreshTickMs_.Text = "Timer tick act time (ms) :";
             // 
@@ -762,7 +777,7 @@
             this.lblPerformanceControllerCycleTickMs_.AutoSize = true;
             this.lblPerformanceControllerCycleTickMs_.Location = new System.Drawing.Point(9, 408);
             this.lblPerformanceControllerCycleTickMs_.Name = "lblPerformanceControllerCycleTickMs_";
-            this.lblPerformanceControllerCycleTickMs_.Size = new System.Drawing.Size(162, 17);
+            this.lblPerformanceControllerCycleTickMs_.Size = new System.Drawing.Size(149, 16);
             this.lblPerformanceControllerCycleTickMs_.TabIndex = 36;
             this.lblPerformanceControllerCycleTickMs_.Text = "Timer tick set time (ms) :";
             // 
@@ -771,7 +786,7 @@
             this.lblPerformanceControllerElapsedTimeMs_.AutoSize = true;
             this.lblPerformanceControllerElapsedTimeMs_.Location = new System.Drawing.Point(9, 382);
             this.lblPerformanceControllerElapsedTimeMs_.Name = "lblPerformanceControllerElapsedTimeMs_";
-            this.lblPerformanceControllerElapsedTimeMs_.Size = new System.Drawing.Size(193, 17);
+            this.lblPerformanceControllerElapsedTimeMs_.Size = new System.Drawing.Size(180, 16);
             this.lblPerformanceControllerElapsedTimeMs_.TabIndex = 35;
             this.lblPerformanceControllerElapsedTimeMs_.Text = "Timer tick process time (ms) :";
             // 
@@ -780,7 +795,7 @@
             this.lblPerformanceVarRefreshAliveCount.AutoSize = true;
             this.lblPerformanceVarRefreshAliveCount.Location = new System.Drawing.Point(209, 460);
             this.lblPerformanceVarRefreshAliveCount.Name = "lblPerformanceVarRefreshAliveCount";
-            this.lblPerformanceVarRefreshAliveCount.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceVarRefreshAliveCount.Size = new System.Drawing.Size(14, 16);
             this.lblPerformanceVarRefreshAliveCount.TabIndex = 34;
             this.lblPerformanceVarRefreshAliveCount.Text = "0";
             // 
@@ -789,7 +804,7 @@
             this.lblPerformanceGPUUsage.AutoSize = true;
             this.lblPerformanceGPUUsage.Location = new System.Drawing.Point(209, 486);
             this.lblPerformanceGPUUsage.Name = "lblPerformanceGPUUsage";
-            this.lblPerformanceGPUUsage.Size = new System.Drawing.Size(36, 17);
+            this.lblPerformanceGPUUsage.Size = new System.Drawing.Size(31, 16);
             this.lblPerformanceGPUUsage.TabIndex = 33;
             this.lblPerformanceGPUUsage.Text = "0.00";
             // 
@@ -798,7 +813,7 @@
             this.lblPerformanceVarRefreshTickMs.AutoSize = true;
             this.lblPerformanceVarRefreshTickMs.Location = new System.Drawing.Point(209, 434);
             this.lblPerformanceVarRefreshTickMs.Name = "lblPerformanceVarRefreshTickMs";
-            this.lblPerformanceVarRefreshTickMs.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceVarRefreshTickMs.Size = new System.Drawing.Size(14, 16);
             this.lblPerformanceVarRefreshTickMs.TabIndex = 32;
             this.lblPerformanceVarRefreshTickMs.Text = "0";
             // 
@@ -807,7 +822,7 @@
             this.lblPerformanceControllerCycleTickMs.AutoSize = true;
             this.lblPerformanceControllerCycleTickMs.Location = new System.Drawing.Point(209, 408);
             this.lblPerformanceControllerCycleTickMs.Name = "lblPerformanceControllerCycleTickMs";
-            this.lblPerformanceControllerCycleTickMs.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceControllerCycleTickMs.Size = new System.Drawing.Size(14, 16);
             this.lblPerformanceControllerCycleTickMs.TabIndex = 31;
             this.lblPerformanceControllerCycleTickMs.Text = "0";
             // 
@@ -816,7 +831,7 @@
             this.lblPerformanceControllerElapsedTimeMs.AutoSize = true;
             this.lblPerformanceControllerElapsedTimeMs.Location = new System.Drawing.Point(209, 382);
             this.lblPerformanceControllerElapsedTimeMs.Name = "lblPerformanceControllerElapsedTimeMs";
-            this.lblPerformanceControllerElapsedTimeMs.Size = new System.Drawing.Size(16, 17);
+            this.lblPerformanceControllerElapsedTimeMs.Size = new System.Drawing.Size(14, 16);
             this.lblPerformanceControllerElapsedTimeMs.TabIndex = 30;
             this.lblPerformanceControllerElapsedTimeMs.Text = "0";
             // 
@@ -825,7 +840,7 @@
             this.lblATElapsedTimeUnit.AutoSize = true;
             this.lblATElapsedTimeUnit.Location = new System.Drawing.Point(168, 348);
             this.lblATElapsedTimeUnit.Name = "lblATElapsedTimeUnit";
-            this.lblATElapsedTimeUnit.Size = new System.Drawing.Size(34, 17);
+            this.lblATElapsedTimeUnit.Size = new System.Drawing.Size(32, 16);
             this.lblATElapsedTimeUnit.TabIndex = 17;
             this.lblATElapsedTimeUnit.Text = "sec.";
             // 
@@ -842,7 +857,7 @@
             this.lblATElapsedTime_.AutoSize = true;
             this.lblATElapsedTime_.Location = new System.Drawing.Point(9, 345);
             this.lblATElapsedTime_.Name = "lblATElapsedTime_";
-            this.lblATElapsedTime_.Size = new System.Drawing.Size(47, 17);
+            this.lblATElapsedTime_.Size = new System.Drawing.Size(44, 16);
             this.lblATElapsedTime_.TabIndex = 15;
             this.lblATElapsedTime_.Text = "Time :";
             // 
@@ -859,7 +874,7 @@
             this.lblATInfo_.AutoSize = true;
             this.lblATInfo_.Location = new System.Drawing.Point(9, 81);
             this.lblATInfo_.Name = "lblATInfo_";
-            this.lblATInfo_.Size = new System.Drawing.Size(39, 17);
+            this.lblATInfo_.Size = new System.Drawing.Size(34, 16);
             this.lblATInfo_.TabIndex = 13;
             this.lblATInfo_.Text = "Info :";
             // 
@@ -876,7 +891,7 @@
             this.lblATName_.AutoSize = true;
             this.lblATName_.Location = new System.Drawing.Point(9, 49);
             this.lblATName_.Name = "lblATName_";
-            this.lblATName_.Size = new System.Drawing.Size(53, 17);
+            this.lblATName_.Size = new System.Drawing.Size(50, 16);
             this.lblATName_.TabIndex = 11;
             this.lblATName_.Text = "Name :";
             // 
@@ -893,7 +908,7 @@
             this.lblATAID_.AutoSize = true;
             this.lblATAID_.Location = new System.Drawing.Point(9, 16);
             this.lblATAID_.Name = "lblATAID_";
-            this.lblATAID_.Size = new System.Drawing.Size(38, 17);
+            this.lblATAID_.Size = new System.Drawing.Size(35, 16);
             this.lblATAID_.TabIndex = 9;
             this.lblATAID_.Text = "AID :";
             // 
@@ -927,6 +942,7 @@
             this.dgvUserList.Location = new System.Drawing.Point(6, 21);
             this.dgvUserList.Name = "dgvUserList";
             this.dgvUserList.RowHeadersVisible = false;
+            this.dgvUserList.RowHeadersWidth = 51;
             this.dgvUserList.RowTemplate.Height = 24;
             this.dgvUserList.Size = new System.Drawing.Size(242, 230);
             this.dgvUserList.TabIndex = 8;
@@ -934,12 +950,15 @@
             // UserID
             // 
             this.UserID.HeaderText = "UserID";
+            this.UserID.MinimumWidth = 6;
             this.UserID.Name = "UserID";
             this.UserID.ReadOnly = true;
+            this.UserID.Width = 125;
             // 
             // ConnectionID
             // 
             this.ConnectionID.HeaderText = "ConnectionID";
+            this.ConnectionID.MinimumWidth = 6;
             this.ConnectionID.Name = "ConnectionID";
             this.ConnectionID.Width = 110;
             // 
@@ -983,18 +1002,15 @@
             this.btnLogClear.Text = "Clear";
             this.btnLogClear.UseVisualStyleBackColor = true;
             // 
-            // timerForm
+            // tmrForm
             // 
-            this.timerForm.Enabled = true;
-            this.timerForm.Interval = 250;
-            this.timerForm.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
+            this.tmrForm.Interval = 250;
+            this.tmrForm.Tick += new System.EventHandler(this.tmrFormRefresh_Tick);
             // 
-            // btnmsMenuNoneCam
+            // tmrInit
             // 
-            this.btnmsMenuNoneCam.Name = "btnmsMenuNoneCam";
-            this.btnmsMenuNoneCam.Size = new System.Drawing.Size(216, 26);
-            this.btnmsMenuNoneCam.Text = "None";
-            this.btnmsMenuNoneCam.Click += new System.EventHandler(this.btnmsMenuNoneCam_Click);
+            this.tmrInit.Enabled = true;
+            this.tmrInit.Tick += new System.EventHandler(this.tmrInit_Tick);
             // 
             // KripteksVMB
             // 
@@ -1010,7 +1026,6 @@
             this.Text = "KripteksVM";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KripteksVMB_FormClosing);
-            this.Load += new System.EventHandler(this.KripteksVMB_Load);
             this.SizeChanged += new System.EventHandler(this.KripteksVMB_SizeChanged);
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
             this.toolStripContainer.ContentPanel.PerformLayout();
@@ -1068,7 +1083,7 @@
         private System.Windows.Forms.GroupBox gbControllerVariables;
         private System.Windows.Forms.Label lblAID;
         private System.Windows.Forms.Label lblSID;
-        private System.Windows.Forms.Timer timerForm;
+        private System.Windows.Forms.Timer tmrForm;
         private System.Windows.Forms.DataGridView dgvUserList;
         private System.Windows.Forms.GroupBox gbSignalRComm;
         private System.Windows.Forms.DataGridViewTextBoxColumn Variable;
@@ -1113,10 +1128,10 @@
         public System.Windows.Forms.Label lblATElapsedTime;
         private System.Windows.Forms.Label lblATElapsedTime_;
         private System.Windows.Forms.Label lblATElapsedTimeUnit;
-        private System.Windows.Forms.Label lblBeckhoffAMSNetID;
-        private System.Windows.Forms.Label lblBeckhoffAMSNetID_;
-        private System.Windows.Forms.Label lblBeckhoffPortNo;
-        private System.Windows.Forms.Label lblBeckhoffPortNo_;
+        private System.Windows.Forms.Label lblControllerConnectionAddress;
+        private System.Windows.Forms.Label lblControllerConnectionAddress_;
+        private System.Windows.Forms.Label lblControllerConnectionPortNo;
+        private System.Windows.Forms.Label lblControllerConnectionPortNo_;
         private System.Windows.Forms.TabPage tabCELog;
         private System.Windows.Forms.Button btnLogClear;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuControllerProperties;
@@ -1132,5 +1147,6 @@
         private System.Windows.Forms.Label lblPerformanceControllerElapsedTimeMs;
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.ToolStripMenuItem btnmsMenuNoneCam;
+        private System.Windows.Forms.Timer tmrInit;
     }
 }

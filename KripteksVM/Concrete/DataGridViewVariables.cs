@@ -10,14 +10,14 @@ namespace KripteksVM.Concrete
 {
     public class DataGridViewVariables : IDataGridViewVariables
     {
-        public void DataGripViewRefresh(DataGridView dgv, UInt16[] w, bool[] isForced)
+        public void DataGripViewRefresh(DataGridView dgv, Int16[] w, bool[] isForced)
         {
             for (int i = 0; i < w.Length; i++)
             {
                 if (Convert.ToBoolean(dgv.Rows[i].Cells[2].Value) == true)
                 {
                     dgv.Rows[i].Cells[1].Style.BackColor = Color.Red;
-                    w[i] = Convert.ToUInt16(dgv.Rows[i].Cells[1].EditedFormattedValue);
+                    w[i] = Convert.ToInt16(dgv.Rows[i].Cells[1].EditedFormattedValue);
                     isForced[i] = true;
                 }
                 else

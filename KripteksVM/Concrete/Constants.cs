@@ -28,6 +28,12 @@ namespace KripteksVM.Concrete
         Double = 2,
         Bool = 3
     }
+    public enum ControllerType : int
+    {
+        None = 0,
+        Beckhoff = 1,
+        Modbus = 2
+    }
     public enum CameraNo : int
     {
         None = 0 ,

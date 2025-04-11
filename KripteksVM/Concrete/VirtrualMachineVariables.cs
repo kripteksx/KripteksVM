@@ -9,11 +9,11 @@ namespace KripteksVM.Concrete
     public class VirtrualMachineVariables
     {
         public double[] doubleArray = new double[Constants.DoubleArraySize];
-        public UInt16[] wordArray = new UInt16[Constants.WordArraySize];
+        public Int16[] wordArray = new Int16[Constants.WordArraySize];
         public bool[] boolArray = new bool[Constants.BoolArraySize];
 
         public double[] doubleArrayBuff = new double[Constants.DoubleArraySize];
-        public UInt16[] wordArrayBuff = new UInt16[Constants.WordArraySize];
+        public Int16[] wordArrayBuff = new Int16[Constants.WordArraySize];
         public bool[] boolArrayBuff = new bool[Constants.BoolArraySize];
 
         public bool[] isDoubleArrayForced = new bool[Constants.DoubleArraySize];

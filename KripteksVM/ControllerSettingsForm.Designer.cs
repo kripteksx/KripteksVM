@@ -34,15 +34,21 @@
             this.cbControllerType = new System.Windows.Forms.ComboBox();
             this.tabControllerProperties = new System.Windows.Forms.TabControl();
             this.tabControllerPropertiesBeckhoff = new System.Windows.Forms.TabPage();
-            this.tbBeckhoffPortNo = new System.Windows.Forms.TextBox();
-            this.tbBeckhoffAMSNetID = new System.Windows.Forms.TextBox();
+            this.txtBeckhoffPortNo = new System.Windows.Forms.TextBox();
+            this.txtBeckhoffAMSNetID = new System.Windows.Forms.TextBox();
             this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
             this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
             this.tabControllerPropertiesArduino = new System.Windows.Forms.TabPage();
-            this.tbControllerCycleMs = new System.Windows.Forms.TextBox();
+            this.tabControllerPropertiesModbus = new System.Windows.Forms.TabPage();
+            this.txtModbusPortNo = new System.Windows.Forms.TextBox();
+            this.txtModbusIPAddress = new System.Windows.Forms.TextBox();
+            this.lblModbusPortNo = new System.Windows.Forms.Label();
+            this.lblModbusIPAddress = new System.Windows.Forms.Label();
+            this.txtControllerCycleMs = new System.Windows.Forms.TextBox();
             this.lblControllerCycleMs_ = new System.Windows.Forms.Label();
             this.tabControllerProperties.SuspendLayout();
             this.tabControllerPropertiesBeckhoff.SuspendLayout();
+            this.tabControllerPropertiesModbus.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnControllerSettingsApply
@@ -70,7 +76,8 @@
             this.cbControllerType.FormattingEnabled = true;
             this.cbControllerType.Items.AddRange(new object[] {
             "Arduino",
-            "Beckhoff"});
+            "Beckhoff",
+            "Modbus"});
             this.cbControllerType.Location = new System.Drawing.Point(12, 12);
             this.cbControllerType.Name = "cbControllerType";
             this.cbControllerType.Size = new System.Drawing.Size(121, 24);
@@ -79,8 +86,9 @@
             // 
             // tabControllerProperties
             // 
-            this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesBeckhoff);
             this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesArduino);
+            this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesBeckhoff);
+            this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesModbus);
             this.tabControllerProperties.Location = new System.Drawing.Point(12, 42);
             this.tabControllerProperties.Name = "tabControllerProperties";
             this.tabControllerProperties.SelectedIndex = 0;
@@ -89,8 +97,8 @@
             // 
             // tabControllerPropertiesBeckhoff
             // 
-            this.tabControllerPropertiesBeckhoff.Controls.Add(this.tbBeckhoffPortNo);
-            this.tabControllerPropertiesBeckhoff.Controls.Add(this.tbBeckhoffAMSNetID);
+            this.tabControllerPropertiesBeckhoff.Controls.Add(this.txtBeckhoffPortNo);
+            this.tabControllerPropertiesBeckhoff.Controls.Add(this.txtBeckhoffAMSNetID);
             this.tabControllerPropertiesBeckhoff.Controls.Add(this.lblBeckhoffPortNo);
             this.tabControllerPropertiesBeckhoff.Controls.Add(this.lblBeckhoffAMSNetID);
             this.tabControllerPropertiesBeckhoff.Location = new System.Drawing.Point(4, 25);
@@ -101,26 +109,26 @@
             this.tabControllerPropertiesBeckhoff.Text = "Beckhoff";
             this.tabControllerPropertiesBeckhoff.UseVisualStyleBackColor = true;
             // 
-            // tbBeckhoffPortNo
+            // txtBeckhoffPortNo
             // 
-            this.tbBeckhoffPortNo.Location = new System.Drawing.Point(86, 46);
-            this.tbBeckhoffPortNo.Name = "tbBeckhoffPortNo";
-            this.tbBeckhoffPortNo.Size = new System.Drawing.Size(56, 22);
-            this.tbBeckhoffPortNo.TabIndex = 2;
+            this.txtBeckhoffPortNo.Location = new System.Drawing.Point(86, 46);
+            this.txtBeckhoffPortNo.Name = "txtBeckhoffPortNo";
+            this.txtBeckhoffPortNo.Size = new System.Drawing.Size(56, 22);
+            this.txtBeckhoffPortNo.TabIndex = 2;
             // 
-            // tbBeckhoffAMSNetID
+            // txtBeckhoffAMSNetID
             // 
-            this.tbBeckhoffAMSNetID.Location = new System.Drawing.Point(86, 19);
-            this.tbBeckhoffAMSNetID.Name = "tbBeckhoffAMSNetID";
-            this.tbBeckhoffAMSNetID.Size = new System.Drawing.Size(135, 22);
-            this.tbBeckhoffAMSNetID.TabIndex = 2;
+            this.txtBeckhoffAMSNetID.Location = new System.Drawing.Point(86, 19);
+            this.txtBeckhoffAMSNetID.Name = "txtBeckhoffAMSNetID";
+            this.txtBeckhoffAMSNetID.Size = new System.Drawing.Size(135, 22);
+            this.txtBeckhoffAMSNetID.TabIndex = 2;
             // 
             // lblBeckhoffPortNo
             // 
             this.lblBeckhoffPortNo.AutoSize = true;
             this.lblBeckhoffPortNo.Location = new System.Drawing.Point(7, 49);
             this.lblBeckhoffPortNo.Name = "lblBeckhoffPortNo";
-            this.lblBeckhoffPortNo.Size = new System.Drawing.Size(56, 17);
+            this.lblBeckhoffPortNo.Size = new System.Drawing.Size(52, 16);
             this.lblBeckhoffPortNo.TabIndex = 1;
             this.lblBeckhoffPortNo.Text = "Port No";
             // 
@@ -129,7 +137,7 @@
             this.lblBeckhoffAMSNetID.AutoSize = true;
             this.lblBeckhoffAMSNetID.Location = new System.Drawing.Point(7, 22);
             this.lblBeckhoffAMSNetID.Name = "lblBeckhoffAMSNetID";
-            this.lblBeckhoffAMSNetID.Size = new System.Drawing.Size(72, 17);
+            this.lblBeckhoffAMSNetID.Size = new System.Drawing.Size(70, 16);
             this.lblBeckhoffAMSNetID.TabIndex = 0;
             this.lblBeckhoffAMSNetID.Text = "AMSNetID";
             // 
@@ -143,19 +151,64 @@
             this.tabControllerPropertiesArduino.Text = "Arduino";
             this.tabControllerPropertiesArduino.UseVisualStyleBackColor = true;
             // 
-            // tbControllerCycleMs
+            // tabControllerPropertiesModbus
             // 
-            this.tbControllerCycleMs.Location = new System.Drawing.Point(246, 12);
-            this.tbControllerCycleMs.Name = "tbControllerCycleMs";
-            this.tbControllerCycleMs.Size = new System.Drawing.Size(50, 22);
-            this.tbControllerCycleMs.TabIndex = 6;
+            this.tabControllerPropertiesModbus.Controls.Add(this.txtModbusPortNo);
+            this.tabControllerPropertiesModbus.Controls.Add(this.txtModbusIPAddress);
+            this.tabControllerPropertiesModbus.Controls.Add(this.lblModbusPortNo);
+            this.tabControllerPropertiesModbus.Controls.Add(this.lblModbusIPAddress);
+            this.tabControllerPropertiesModbus.Location = new System.Drawing.Point(4, 25);
+            this.tabControllerPropertiesModbus.Name = "tabControllerPropertiesModbus";
+            this.tabControllerPropertiesModbus.Size = new System.Drawing.Size(750, 434);
+            this.tabControllerPropertiesModbus.TabIndex = 2;
+            this.tabControllerPropertiesModbus.Text = "Modbus";
+            this.tabControllerPropertiesModbus.UseVisualStyleBackColor = true;
+            // 
+            // txtModbusPortNo
+            // 
+            this.txtModbusPortNo.Location = new System.Drawing.Point(86, 46);
+            this.txtModbusPortNo.Name = "txtModbusPortNo";
+            this.txtModbusPortNo.Size = new System.Drawing.Size(56, 22);
+            this.txtModbusPortNo.TabIndex = 5;
+            // 
+            // txtModbusIPAddress
+            // 
+            this.txtModbusIPAddress.Location = new System.Drawing.Point(86, 19);
+            this.txtModbusIPAddress.Name = "txtModbusIPAddress";
+            this.txtModbusIPAddress.Size = new System.Drawing.Size(135, 22);
+            this.txtModbusIPAddress.TabIndex = 6;
+            // 
+            // lblModbusPortNo
+            // 
+            this.lblModbusPortNo.AutoSize = true;
+            this.lblModbusPortNo.Location = new System.Drawing.Point(7, 49);
+            this.lblModbusPortNo.Name = "lblModbusPortNo";
+            this.lblModbusPortNo.Size = new System.Drawing.Size(52, 16);
+            this.lblModbusPortNo.TabIndex = 4;
+            this.lblModbusPortNo.Text = "Port No";
+            // 
+            // lblModbusIPAddress
+            // 
+            this.lblModbusIPAddress.AutoSize = true;
+            this.lblModbusIPAddress.Location = new System.Drawing.Point(7, 22);
+            this.lblModbusIPAddress.Name = "lblModbusIPAddress";
+            this.lblModbusIPAddress.Size = new System.Drawing.Size(70, 16);
+            this.lblModbusIPAddress.TabIndex = 3;
+            this.lblModbusIPAddress.Text = "AMSNetID";
+            // 
+            // txtControllerCycleMs
+            // 
+            this.txtControllerCycleMs.Location = new System.Drawing.Point(246, 12);
+            this.txtControllerCycleMs.Name = "txtControllerCycleMs";
+            this.txtControllerCycleMs.Size = new System.Drawing.Size(50, 22);
+            this.txtControllerCycleMs.TabIndex = 6;
             // 
             // lblControllerCycleMs_
             // 
             this.lblControllerCycleMs_.AutoSize = true;
             this.lblControllerCycleMs_.Location = new System.Drawing.Point(166, 15);
             this.lblControllerCycleMs_.Name = "lblControllerCycleMs_";
-            this.lblControllerCycleMs_.Size = new System.Drawing.Size(74, 17);
+            this.lblControllerCycleMs_.Size = new System.Drawing.Size(70, 16);
             this.lblControllerCycleMs_.TabIndex = 3;
             this.lblControllerCycleMs_.Text = "Cycle (ms)";
             // 
@@ -165,7 +218,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 553);
             this.Controls.Add(this.lblControllerCycleMs_);
-            this.Controls.Add(this.tbControllerCycleMs);
+            this.Controls.Add(this.txtControllerCycleMs);
             this.Controls.Add(this.tabControllerProperties);
             this.Controls.Add(this.btnControllerPropertiesClose);
             this.Controls.Add(this.btnControllerSettingsApply);
@@ -177,6 +230,8 @@
             this.tabControllerProperties.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.PerformLayout();
+            this.tabControllerPropertiesModbus.ResumeLayout(false);
+            this.tabControllerPropertiesModbus.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,12 +243,17 @@
         private System.Windows.Forms.ComboBox cbControllerType;
         private System.Windows.Forms.TabControl tabControllerProperties;
         private System.Windows.Forms.TabPage tabControllerPropertiesBeckhoff;
-        private System.Windows.Forms.TextBox tbBeckhoffPortNo;
-        private System.Windows.Forms.TextBox tbBeckhoffAMSNetID;
+        private System.Windows.Forms.TextBox txtBeckhoffPortNo;
+        private System.Windows.Forms.TextBox txtBeckhoffAMSNetID;
         private System.Windows.Forms.Label lblBeckhoffPortNo;
         private System.Windows.Forms.Label lblBeckhoffAMSNetID;
         private System.Windows.Forms.TabPage tabControllerPropertiesArduino;
-        private System.Windows.Forms.TextBox tbControllerCycleMs;
+        private System.Windows.Forms.TextBox txtControllerCycleMs;
         private System.Windows.Forms.Label lblControllerCycleMs_;
+        private System.Windows.Forms.TabPage tabControllerPropertiesModbus;
+        private System.Windows.Forms.TextBox txtModbusPortNo;
+        private System.Windows.Forms.TextBox txtModbusIPAddress;
+        private System.Windows.Forms.Label lblModbusPortNo;
+        private System.Windows.Forms.Label lblModbusIPAddress;
     }
 }

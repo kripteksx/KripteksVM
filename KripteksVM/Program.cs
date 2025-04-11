@@ -38,9 +38,12 @@ namespace KripteksVM
 
             //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
-                        
-            var browser = new KripteksVMB();
-            Application.Run(browser);
+
+            SplashForm splashForm = new SplashForm();
+            Application.Run(splashForm);
+
+            //var browser = new KripteksVMB();
+            //Application.Run(browser);
 
             return 0;
         }

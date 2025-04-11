@@ -20,17 +20,14 @@ namespace KripteksVM.Concrete
         public void Connect(ControllerSettings controllerSettings)
         {
             ControllerBeckhoffConnect(controllerSettings);
-            _general.LogText(controllerSettings.controllerBeckhoff.AMSNetID + ":" + controllerSettings.controllerBeckhoff.portNo + " connected.");
-            _general.LogText("Controller is " + controllerSettings.controllerType + ".");
         }
         public void Disconnect(ControllerSettings controllerSettings)
         {
             ControllerBeckhoffDisconnect();
-            _general.LogText("Controller disconnected.");
         }
         public VirtualMachine Init(VirtualMachine virtualMachine)
         {
-            virtualMachine.virtualApplication.CID = _general.CID();
+            virtualMachine.virtualApplication.SID = _general.SID();
             return virtualMachine;
         }
         public VirtualMachine RefreshVariables(VirtualMachine virtualMachine)
@@ -67,21 +64,21 @@ namespace KripteksVM.Concrete
 
 
                     // session id
-                    int ihwControllerToApiSID = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.wSID");
-                    virtualMachine.virtualApplication.SID = ((UInt16)_adsClient.ReadAny(ihwControllerToApiSID, typeof(UInt16))).ToString();
+                    int ihwControllerToApiSID = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sSID");
+                    _adsClient.WriteAny(ihwControllerToApiSID, virtualMachine.virtualApplication.SID, new int[] { 8 });
 
                     // application id
                     int ihwControllerToApiAID = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.wAID");
                     virtualMachine.virtualApplication.AID = ((UInt16)_adsClient.ReadAny(ihwControllerToApiAID, typeof(UInt16))).ToString();
 
                     // controller id
-                    int ihwApiToControllerCID = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sCID");
-                    _adsClient.WriteAny(ihwApiToControllerCID, virtualMachine.virtualApplication.CID, new int[] { 8 });
+                    int ihwApiToControllerCID = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.wCID");
+                    virtualMachine.virtualApplication.CID = ((UInt16)_adsClient.ReadAny(ihwApiToControllerCID, typeof(UInt16))).ToString();
 
                     // degiskenler guncelleniyor
                     // word
                     int ihwCAx = _adsClient.CreateVariableHandle("KVM.gstKVM.stCA.wCA");
-                    virtualMachine.controllerToApplicationVariables.wordArray = (UInt16[])_adsClient.ReadAny(ihwCAx, typeof(UInt16[]), new int[] { Constants.WordArraySize });
+                    virtualMachine.controllerToApplicationVariables.wordArray = (Int16[])_adsClient.ReadAny(ihwCAx, typeof(Int16[]), new int[] { Constants.WordArraySize });
 
                     int ihwACx = _adsClient.CreateVariableHandle("KVM.gstKVM.stAC.wAC");
                     _adsClient.WriteAny(ihwACx, virtualMachine.applicationToControllerVariables.wordArray);
@@ -121,25 +118,30 @@ namespace KripteksVM.Concrete
                     // Deger guncellemede hata olusursa baglantiyi kopar
                     ControllerBeckhoffDisconnect();
                     virtualMachine.virtualApplication.AID = "";
-                    virtualMachine.virtualApplication.SID = "";
+                    virtualMachine.virtualApplication.CID = "";
                 }
             }
             return virtualMachine;
         }
-        private void ControllerBeckhoffConnect(ControllerSettings controllerProperties)
+        private void ControllerBeckhoffConnect(ControllerSettings controllerSettings)
         {
             try
             {
                 // Connect to local PLC - Runtime 1 - TwinCAT2 Port=801, TwinCAT3 Port=851
-                _adsClient.Connect(controllerProperties.controllerBeckhoff.AMSNetID, int.Parse(controllerProperties.controllerBeckhoff.portNo));
+                _adsClient.Connect(controllerSettings.controllerBeckhoff.AMSNetID, int.Parse(controllerSettings.controllerBeckhoff.portNo));
                 //adsClient.Connect("192.168.1.102.1.1", 851);
                 _adsClient.ReadState();
+
+                _general.LogText(controllerSettings.controllerBeckhoff.AMSNetID + ":" + controllerSettings.controllerBeckhoff.portNo + " connected.");
+                _general.LogText("Controller is " + controllerSettings.controllerType + ".");
             }
-            catch
+            catch (Exception e)
             {
                 //stKVM.stStatus.wLiveCounter = 0;
                 //stKVM.stApp.sAID = "";
                 //stKVM.stApp.sSID = "";
+                _general.LogText(e.Message);
+                _general.LogText("Controller could not connect.");
             }
         }
         private void ControllerBeckhoffDisconnect()
@@ -147,6 +149,11 @@ namespace KripteksVM.Concrete
             if (_adsClient.IsConnected)
             {
                 _adsClient.Disconnect();
+                _general.LogText("Controller disconnected.");
+            }
+            else
+            {
+                _general.LogText("Controller has been disconnected.");
             }
         }
         private VirtualMachine ControllerBeckhoffGetComments(VirtualMachine virtualMachine)

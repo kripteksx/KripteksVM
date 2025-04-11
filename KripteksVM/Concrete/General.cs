@@ -54,16 +54,16 @@ namespace KripteksVM.Concrete
 
             return newValue;
         }
-        public string CID()
+        public string SID()
         {
-            string cid = "";
+            string sid = "";
             Random randomNo = new Random();
             for (int i = 0; i <= 7; i++)
                 if (i == 0)
-                    cid = cid + randomNo.Next(1, 9);
+                    sid = sid + randomNo.Next(1, 9);
                 else
-                    cid = cid + randomNo.Next(0, 9);
-            return cid;
+                    sid = sid + randomNo.Next(0, 9);
+            return sid;
         }
         public void LogText(string text)
         {

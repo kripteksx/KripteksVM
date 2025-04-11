@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using KripteksVM.Concrete;
 
 namespace KripteksVM
 {
     public partial class SplashForm : Form
     {
-
+        KripteksVMB MainForm = new KripteksVMB();
         public SplashForm()
         {
             InitializeComponent();
@@ -22,15 +23,22 @@ namespace KripteksVM
             //this.Bounds= Screen.PrimaryScreen.Bounds;
             //this.Bounds = new Rectangle(500,500,500,500);
             this.Location = new Point((resolution.Width -450) / 2, (resolution.Height - 200) / 2);
-            //lblFormYukleniyor.Visible = true;
 
-
-
+            MainForm.CallBackRefreshInitStatus = new KripteksVMB.RefreshInitStatus(this.CallBackRefreshInitStatus);
+            MainForm.Show();
         }
 
-        private void lblKripteksVM_Click(object sender, EventArgs e)
+        private void tmrInit_Tick(object sender, EventArgs e)
         {
-
+            if (MainForm.isInitialized)
+            {
+                tmrInit.Enabled = false;
+                this.Hide();
+            }
+        }
+        private void CallBackRefreshInitStatus(string status)
+        {
+            lblInitStatus.Text = status;
         }
     }
 }
