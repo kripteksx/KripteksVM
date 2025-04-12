@@ -41,13 +41,14 @@ namespace KripteksVM
         private DataGridViewVariableType _dataGridViewVariableType;
         private CameraNo _cameraNo;
 
-        // formlar 
-        //SplashForm splashForm = new SplashForm();
+        // initializing status 
+        private int _initState = 0;
+        private int _initWait = 0;
+        public bool isInitialized = false;
         public delegate void RefreshInitStatus(string status);
         public RefreshInitStatus CallBackRefreshInitStatus;
 
-        private int _initState = 0;
-        public bool isInitialized = false;
+        // forms 
         FullScreenForm fullScreenForm = new FullScreenForm();
         ControllerSettingsForm controllerSettingsForm = new ControllerSettingsForm();
         ApplicationSettingsForm applicationSettingsForm = new ApplicationSettingsForm();
@@ -63,7 +64,7 @@ namespace KripteksVM
             InitializeComponent();
         }     
         #region Timers
-        private void TimerInit()
+        private void InitTimers()
         {
             // web java script
             s_timerCamera.Elapsed += new System.Timers.ElapsedEventHandler(tmrCamRefresh_Tick);
@@ -119,7 +120,7 @@ namespace KripteksVM
 
                 case 30:
                     // Connect controller
-                    CallBackRefreshInitStatus("connecting controller.");
+                    CallBackRefreshInitStatus("controller is connecting...");
                     _controller.Connect(_controllerSettings);
                     _virtualMachine = _controller.RefreshVariables(_virtualMachine);
                     _virtualMachine = _controller.GetComments(_virtualMachine);
@@ -129,7 +130,7 @@ namespace KripteksVM
 
                 case 40:
                     // refresh
-                    TimerInit();
+                    InitTimers();
                     CallBackRefreshInitStatus("timers started.");
                     _initState = 50;
                     break;
@@ -137,7 +138,7 @@ namespace KripteksVM
                 case 50:
                     // refresh
                     // chromium
-                    CallBackRefreshInitStatus("browser initializing.");
+                    CallBackRefreshInitStatus("browser is initializing.");
                     _general.LogText("Host is " + Constants.Host);
                     _chromiumBrowser.Init(Constants.Host, _virtualMachine.virtualApplication.CID, _virtualMachine.virtualApplication.SID, _virtualMachine.virtualApplication.AID, "1");
                     scMain.Panel1.Controls.Add(_chromiumBrowser.browser);
@@ -156,15 +157,28 @@ namespace KripteksVM
                 case 70:
                     if (_chromiumBrowser.browser.IsLoading)
                     {
-                        CallBackRefreshInitStatus("browser loading.");
+                        CallBackRefreshInitStatus("application is loading... | "+ _chromiumBrowser.ConsoleLog);
                     }
                     else
+                    {
+                        if (_chromiumBrowser.isMainFrameLoaded)
+                        {
+                            _initState = 80;
+                        }
+                    }
+                    break;
+
+                case 80:
+                    CallBackRefreshInitStatus("application is loading... | " + _initWait.ToString() + " | " + _chromiumBrowser.ConsoleLog);
+                    _initWait++;
+                    if (_initWait > 100 | _chromiumBrowser.ConsoleLog=="3")
                     {
                         isInitialized = true;
                         tmrInit.Enabled = false;
                     }
                     break;
-            }
+
+            }   
 
         }
         private void tmrSlowRefresh_Tick(object sender, EventArgs e)
@@ -633,6 +647,7 @@ namespace KripteksVM
             s_timerKeyboard.Enabled = false;
             s_timerSlow.Enabled = false;
             tmrForm.Enabled = false;
+            tmrInit.Enabled = false;
             if(_chromiumBrowser.browser!=null)
                 _chromiumBrowser.browser.Dispose();
             _controller.Disconnect(_controllerSettings);

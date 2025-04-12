@@ -18,6 +18,8 @@ namespace KripteksVM.Concrete
 
         public bool isMainFrameLoaded = false;
 
+        public string ConsoleLog = "";
+
         public void Init(string sHost, string sCID, string sSID, string sAID, string sHID)
         {
             browser = new ChromiumWebBrowser(sHost + "/application.aspx?CID=" + sCID + "&SID=" + sSID + "&AID=" + sAID + "&HID=" + sHID);
@@ -84,6 +86,7 @@ namespace KripteksVM.Concrete
         private void OnBrowserConsoleMessage(object sender, ConsoleMessageEventArgs args)
         {
             DisplayOutput(string.Format("Line: {0}, Source: {1}, Message: {2}", args.Line, args.Source, args.Message));
+            ConsoleLog = args.Message;
         }
         private void OnBrowserStatusMessage(object sender, StatusMessageEventArgs args)
         {

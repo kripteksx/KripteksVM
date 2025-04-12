@@ -25,6 +25,7 @@ namespace KripteksVM
             this.Location = new Point((resolution.Width -450) / 2, (resolution.Height - 200) / 2);
 
             MainForm.CallBackRefreshInitStatus = new KripteksVMB.RefreshInitStatus(this.CallBackRefreshInitStatus);
+
             MainForm.Show();
         }
 
