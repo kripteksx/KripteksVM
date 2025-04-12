@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CefSharp;
+using CefSharp.WinForms;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using CefSharp;
-using CefSharp.WinForms;
 
 namespace KripteksVM
 {
@@ -11,7 +11,7 @@ namespace KripteksVM
         [STAThread]
         public static int Main(string[] args)
         {
-            
+
             string path = Application.StartupPath;
             string dosya_yolu = path + "\\debug.log";
 
@@ -26,7 +26,7 @@ namespace KripteksVM
 #endif
 
             string LocalCachePath = Application.StartupPath + "\\Cache";
-            if(Directory.Exists(LocalCachePath)) Directory.Delete(LocalCachePath, true);
+            if (Directory.Exists(LocalCachePath)) Directory.Delete(LocalCachePath, true);
             Directory.CreateDirectory(LocalCachePath);
 
             Cef.EnableHighDPISupport();

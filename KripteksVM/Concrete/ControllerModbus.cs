@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Threading;
-using System.Windows.Forms;
-using ModbusTCP;
-using TwinCAT.Ads;
+﻿using ModbusTCP;
+using System;
 using System.Collections;
-using System.Security.Cryptography;
+using System.Linq;
 
 namespace KripteksVM.Concrete
 {
@@ -36,7 +26,7 @@ namespace KripteksVM.Concrete
         }
         private byte[] GetData(Int16[] _int16)
         {
-            byte[] bytes = new byte[_int16.Length*2];
+            byte[] bytes = new byte[_int16.Length * 2];
             for (int i = 0; i < _int16.Length; i++)
             {
                 UInt16 uint16;
@@ -77,7 +67,7 @@ namespace KripteksVM.Concrete
         {
             try
             {
-                if (modbusClient != null )
+                if (modbusClient != null)
                 {
                     if (modbusClient.connected)
                     {
@@ -93,7 +83,7 @@ namespace KripteksVM.Concrete
 
                         // word
                         byte[] dataWord = GetData(virtualMachine.applicationToControllerVariables.wordArray);
-                        for (int i = 0; i<Constants.WordArraySize*2; i++)
+                        for (int i = 0; i < Constants.WordArraySize * 2; i++)
                         {
                             data[i] = dataWord[i];
                         }
@@ -102,7 +92,7 @@ namespace KripteksVM.Concrete
                         byte[] dataDouble = GetData(virtualMachine.applicationToControllerVariables.doubleArray);
                         for (int i = 0; i < Constants.DoubleArraySize * 2; i++)
                         {
-                            data[16+i] = dataDouble[i];
+                            data[16 + i] = dataDouble[i];
                         }
 
                         // bits
@@ -110,12 +100,12 @@ namespace KripteksVM.Concrete
                         {
                             bool[] bpBit = new bool[8];
 
-                            for(int j = 0; j < 8; j++)
+                            for (int j = 0; j < 8; j++)
                             {
                                 bpBit[j] = virtualMachine.applicationToControllerVariables.boolArray[i * 8 + j];
                             }
                             BitArray bitArray = new BitArray(bpBit);
-                            data[32+i] = ConvertToByte(bitArray);
+                            data[32 + i] = ConvertToByte(bitArray);
                         }
 
                         modbusClient.WriteMultipleRegister(8, 0, 20, data);
@@ -184,7 +174,8 @@ namespace KripteksVM.Concrete
                     _general.LogText("Controller has been disconnected.");
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 _general.LogText(e.Message);
             }
 
@@ -195,7 +186,7 @@ namespace KripteksVM.Concrete
             {
                 modbusClient = new Master(controllerSettings.controllerModbus.IPAddress, Convert.ToUInt16(controllerSettings.controllerModbus.portNo), true);
                 modbusClient.OnResponseData += new ModbusTCP.Master.ResponseData(MBmaster_OnResponseData);
-                
+
                 _general.LogText(controllerSettings.controllerModbus.IPAddress + ":" + controllerSettings.controllerModbus.portNo.ToString() + " connected.");
                 _general.LogText("Controller is " + controllerSettings.controllerType + ".");
             }
@@ -207,7 +198,7 @@ namespace KripteksVM.Concrete
         }
         private void MBmaster_OnResponseData(ushort ID, byte unit, byte function, byte[] values)
         {
-           
+
 
             // ------------------------------------------------------------------------
             // Identify requested data
@@ -237,20 +228,20 @@ namespace KripteksVM.Concrete
                     break;
                 case 4:
                     //grpData.Text = "Read input register";
-                    byte[] data= new byte[values.Length];
+                    byte[] data = new byte[values.Length];
                     data = values;
                     int[] wordArray = new int[Constants.WordArraySize];
                     for (int i = 0; i < Constants.WordArraySize; i++)
                     {
                         wordArray[i] = data[i * 2] * 256 + data[i * 2 + 1];
-                        if (wordArray[i] > 32767) wordArray[i] = wordArray[i]- 65536;
+                        if (wordArray[i] > 32767) wordArray[i] = wordArray[i] - 65536;
                         _virtualMachine.controllerToApplicationVariables.wordArray[i] = Convert.ToInt16(wordArray[i]);
                     }
 
                     int[] appArray = new int[2];
                     for (int i = 0; i < 2; i++)
                     {
-                        appArray[i] = data[i * 2+36] * 256 + data[i * 2 +36+ 1];
+                        appArray[i] = data[i * 2 + 36] * 256 + data[i * 2 + 36 + 1];
                     }
 
                     _virtualMachine.virtualApplication.AID = appArray[0].ToString();
@@ -262,14 +253,14 @@ namespace KripteksVM.Concrete
                     {
                         doubleArray[i] = data[(i + Constants.WordArraySize) * 2] * 256 + data[(i + Constants.WordArraySize) * 2 + 1];
                         if (doubleArray[i] > 32767) doubleArray[i] = doubleArray[i] - 65536;
-                        _virtualMachine.controllerToApplicationVariables.doubleArray[i] = Convert.ToDouble(doubleArray[i])/10;
+                        _virtualMachine.controllerToApplicationVariables.doubleArray[i] = Convert.ToDouble(doubleArray[i]) / 10;
                     }
                     for (int i = 0; i < 4; i++)
                     {
                         int iHelp = i;
                         iHelp = iHelp % 2;
                         if (iHelp == 0) iHelp = i + 1;
-                        else iHelp = i -1;
+                        else iHelp = i - 1;
                         BitArray myByte = new BitArray(BitConverter.GetBytes(data[32 + iHelp]).ToArray());
                         for (int j = 0; j < 8; j++)
                         {

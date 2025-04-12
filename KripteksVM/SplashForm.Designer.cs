@@ -56,7 +56,7 @@
             // 
             this.lblInitStatus.AutoSize = true;
             this.lblInitStatus.ForeColor = System.Drawing.Color.Red;
-            this.lblInitStatus.Location = new System.Drawing.Point(120, 159);
+            this.lblInitStatus.Location = new System.Drawing.Point(27, 162);
             this.lblInitStatus.Name = "lblInitStatus";
             this.lblInitStatus.Size = new System.Drawing.Size(73, 16);
             this.lblInitStatus.TabIndex = 2;

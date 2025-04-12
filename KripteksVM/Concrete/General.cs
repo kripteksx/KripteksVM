@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 
 namespace KripteksVM.Concrete
 {
@@ -21,7 +18,7 @@ namespace KripteksVM.Concrete
         public TextBox txtLog { get; set; }
 
         private static readonly General _shared = new General();
-        
+
         public static General GetInstance()
         {
             return _shared;

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using KripteksVM.Concrete;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using KripteksVM.Concrete;
 
 namespace KripteksVM
 {
@@ -30,7 +24,7 @@ namespace KripteksVM
         private Label[] lblwAW = new Label[Constants.WordArraySize];
         private Label[] lblboWA = new Label[Constants.BoolArraySize];
         private Label[] lblboAW = new Label[Constants.BoolArraySize];
-        
+
         public ApplicationSettingsForm()
         {
             InitializeComponent();
@@ -39,7 +33,7 @@ namespace KripteksVM
 
             VarToForm();
         }
-        
+
         private void Init()
         {
             for (int i = 0; i <= 7; i++)
@@ -132,9 +126,9 @@ namespace KripteksVM
                 tabApplicationPropertiesAW.Controls.Add(lblboAW[16 + i]);
             }
         }
-        
-        
-        
+
+
+
         private bool fbCheckAID(string sAIDHelp)
         {
             bool boAIDOk = false;

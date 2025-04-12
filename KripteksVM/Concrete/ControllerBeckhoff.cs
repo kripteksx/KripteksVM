@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TwinCAT.Ads;
-using System.Drawing;
-using KripteksVM.Concrete;
-using System.Windows.Forms;
 
 namespace KripteksVM.Concrete
 {
@@ -15,7 +8,7 @@ namespace KripteksVM.Concrete
         private General _general = General.GetInstance();
         private TcAdsClient _adsClient = new TcAdsClient();
         private int _retryCount = 0;
-                
+
         #region public class
         public void Connect(ControllerSettings controllerSettings)
         {
@@ -55,7 +48,7 @@ namespace KripteksVM.Concrete
                     // live bit formda gostermek icin
                     int ihboControllerToApiLive = _adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.boLive");
                     virtualMachine.controllerStatus.isLive = (System.Boolean)_adsClient.ReadAny(ihboControllerToApiLive, typeof(System.Boolean));
-                                       
+
                     int ihboApiToControllerLive = _adsClient.CreateVariableHandle("KVM.gstKVM.stStatus.boAppLive");
                     _adsClient.WriteAny(ihboApiToControllerLive, virtualMachine.controllerStatus.isLive);
 
@@ -167,7 +160,7 @@ namespace KripteksVM.Concrete
                     int hsName = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sName");
                     virtualMachine.virtualApplication.name = (System.String)_adsClient.ReadAny(hsName, typeof(System.String), new int[] { 63 }).ToString();
 
-                    int hsInfo =_adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sInfo");
+                    int hsInfo = _adsClient.CreateVariableHandle("KVM.gstKVM.stApp.sInfo");
                     virtualMachine.virtualApplication.info = (System.String)_adsClient.ReadAny(hsInfo, typeof(System.String), new int[] { 255 }).ToString();
 
 

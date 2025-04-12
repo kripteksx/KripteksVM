@@ -1,17 +1,11 @@
-﻿using System;
-using System.Net;
-using System.Data;
+﻿using CefSharp;
+using KripteksVM.Concrete;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using CefSharp;
-using CefSharp.DevTools.IO;
-using CefSharp.WinForms;
-using KripteksVM.Concrete;
 
 namespace KripteksVM
 {
@@ -32,7 +26,7 @@ namespace KripteksVM
         private static System.Windows.Forms.Timer s_timerKeyboard = new System.Windows.Forms.Timer();
         private static System.Timers.Timer s_timerVariables = new System.Timers.Timer();
         private static System.Timers.Timer s_timerSlow = new System.Timers.Timer();
-        
+
         private int _cursorPosXTop = 0;
         private int _cursorPosYTop = 0;
 
@@ -58,11 +52,11 @@ namespace KripteksVM
         static extern int GetAsyncKeyState(Int32 i);
         private bool[] _keyHelp = new bool[255];
         private bool[] _key = new bool[255];
-        
+
         public KripteksVMB()
         {
             InitializeComponent();
-        }     
+        }
         #region Timers
         private void InitTimers()
         {
@@ -157,7 +151,7 @@ namespace KripteksVM
                 case 70:
                     if (_chromiumBrowser.browser.IsLoading)
                     {
-                        CallBackRefreshInitStatus("application is loading... | "+ _chromiumBrowser.ConsoleLog);
+                        CallBackRefreshInitStatus("main frame is loaded... | " + _chromiumBrowser.ConsoleLog);
                     }
                     else
                     {
@@ -171,14 +165,14 @@ namespace KripteksVM
                 case 80:
                     CallBackRefreshInitStatus("application is loading... | " + _initWait.ToString() + " | " + _chromiumBrowser.ConsoleLog);
                     _initWait++;
-                    if (_initWait > 100 | _chromiumBrowser.ConsoleLog=="3")
+                    if (_initWait > 100 | _chromiumBrowser.ConsoleLog == "3")
                     {
                         isInitialized = true;
                         tmrInit.Enabled = false;
                     }
                     break;
 
-            }   
+            }
 
         }
         private void tmrSlowRefresh_Tick(object sender, EventArgs e)
@@ -244,7 +238,7 @@ namespace KripteksVM
                     _chromiumBrowser.browser.ShowDevTools();
                 }
             }
-            if (_chromiumBrowser.isMainFrameLoaded )
+            if (_chromiumBrowser.isMainFrameLoaded)
             {
                 try
                 {
@@ -384,7 +378,7 @@ namespace KripteksVM
                         if (arrswWA[i] != "") _virtualMachine.applicationToControllerVariables.wordArrayBuff[i] = Convert.ToInt16(arrswWA[i]);
                     }
                 }
-            
+
             }
             catch
             {
@@ -449,13 +443,13 @@ namespace KripteksVM
                 lblControllerStatus_.BackColor = Color.Green;
             else
                 lblControllerStatus_.BackColor = Color.Red;
-            
+
             lblControllerStatus_.Text = _virtualMachine.controllerStatus.liveCounter.ToString();
             lblAID.Text = _virtualMachine.virtualApplication.AID;
             lblSID.Text = _virtualMachine.virtualApplication.SID;
             lblCID.Text = _virtualMachine.virtualApplication.CID;
 
-            tslElapsedTime.Text = (DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()).ToString().Substring(0,8);
+            tslElapsedTime.Text = (DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()).ToString().Substring(0, 8);
 
             if (_dataGridViewVariableDirection == DataGridViewVariableDirection.ControllerToApplication)
             {
@@ -489,7 +483,7 @@ namespace KripteksVM
             }
         }
         #endregion
-         
+
         #region Form Resize
         private void KripteksVMB_SizeChanged(object sender, EventArgs e)
         {
@@ -556,7 +550,7 @@ namespace KripteksVM
             GoFullscreen();
         }
         private void GoFullscreen()
-        {            
+        {
             if (!fullScreenForm.Visible)
             {
                 var myFirstScreen = Screen.FromControl(this);
@@ -567,7 +561,7 @@ namespace KripteksVM
 
                 //Rectangle newRec = WhichScreen();
                 fullScreenForm.Controls.Add(_chromiumBrowser.browser);
-               
+
                 fullScreenForm.Left = myFirstScreen.Bounds.Left;
                 fullScreenForm.Top = myFirstScreen.Bounds.Top;
                 fullScreenForm.Location = myFirstScreen.Bounds.Location;
@@ -588,7 +582,7 @@ namespace KripteksVM
             }
         }
         #endregion
-        
+
         #region Tool Strip Menu
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -648,7 +642,7 @@ namespace KripteksVM
             s_timerSlow.Enabled = false;
             tmrForm.Enabled = false;
             tmrInit.Enabled = false;
-            if(_chromiumBrowser.browser!=null)
+            if (_chromiumBrowser.browser != null)
                 _chromiumBrowser.browser.Dispose();
             _controller.Disconnect(_controllerSettings);
             Cef.Shutdown();

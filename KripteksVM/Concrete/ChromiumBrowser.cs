@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using CefSharp;
-using CefSharp.DevTools.IO;
+﻿using CefSharp;
 using CefSharp.WinForms;
+using System;
+using System.Net;
 
 namespace KripteksVM.Concrete
 {
@@ -184,9 +177,9 @@ namespace KripteksVM.Concrete
             string value = "0";
             try
             {
-                string script = string.Format("(function() {{let sR=''; let i=0; if (" + var + " instanceof Array){{  for(i in "+var+") {{sR+="+ var + "[i].toString()+':';}} return sR;}}else{{sR="+var+".toString(); return sR;}}}})();", var);
+                string script = string.Format("(function() {{let sR=''; let i=0; if (" + var + " instanceof Array){{  for(i in " + var + ") {{sR+=" + var + "[i].toString()+':';}} return sR;}}else{{sR=" + var + ".toString(); return sR;}}}})();", var);
                 JavascriptResponse jr = myCwb.EvaluateScriptAsync(script).Result;
-               
+
 
                 if (jr.Result != null)
                 {

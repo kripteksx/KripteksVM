@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KripteksVM.Concrete;
+using System;
 using System.Windows.Forms;
-using KripteksVM.Concrete;
 
 namespace KripteksVM
 {
@@ -26,7 +19,7 @@ namespace KripteksVM
 
             GetControllerSettings();
         }
-        
+
         private void GetControllerSettings()
         {
             ControllerSettings controllerSettings = new ControllerSettings();
@@ -45,12 +38,12 @@ namespace KripteksVM
             txtModbusIPAddress.Text = controllerSettings.controllerModbus.IPAddress;
             txtModbusPortNo.Text = controllerSettings.controllerModbus.portNo.ToString();
         }
-        
+
         private void btnControllerPropertiesClose_Click(object sender, EventArgs e)
         {
             this.Hide();
         }
-        
+
         private void btnControllerSettingsApply_Click(object sender, EventArgs e)
         {
 
@@ -61,7 +54,7 @@ namespace KripteksVM
             controllerSettings.controllerType = cbControllerType.SelectedItem.ToString();
             controllerSettings.cycleTime = int.Parse(txtControllerCycleMs.Text);
 
-            controllerSettings.controllerModbus.IPAddress=txtModbusIPAddress.Text;
+            controllerSettings.controllerModbus.IPAddress = txtModbusIPAddress.Text;
             controllerSettings.controllerModbus.portNo = Convert.ToUInt16(txtModbusPortNo.Text);
             clControlFile.SetControllerSettings(controllerSettings);
 

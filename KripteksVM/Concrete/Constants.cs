@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KripteksVM.Concrete
+﻿namespace KripteksVM.Concrete
 {
     public static class Constants
     {
@@ -36,8 +30,8 @@ namespace KripteksVM.Concrete
     }
     public enum CameraNo : int
     {
-        None = 0 ,
-        Free = 1 ,
+        None = 0,
+        Free = 1,
         Person = 2
     }
 
