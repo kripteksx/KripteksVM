@@ -759,9 +759,9 @@
             this.lblPerformanceVarRefreshAliveCount_.AutoSize = true;
             this.lblPerformanceVarRefreshAliveCount_.Location = new System.Drawing.Point(9, 460);
             this.lblPerformanceVarRefreshAliveCount_.Name = "lblPerformanceVarRefreshAliveCount_";
-            this.lblPerformanceVarRefreshAliveCount_.Size = new System.Drawing.Size(110, 16);
+            this.lblPerformanceVarRefreshAliveCount_.Size = new System.Drawing.Size(107, 16);
             this.lblPerformanceVarRefreshAliveCount_.TabIndex = 38;
-            this.lblPerformanceVarRefreshAliveCount_.Text = "Alive timer count :";
+            this.lblPerformanceVarRefreshAliveCount_.Text = "Alive treat count :";
             // 
             // lblPerformanceVarRefreshTickMs_
             // 

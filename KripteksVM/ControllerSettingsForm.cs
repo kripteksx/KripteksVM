@@ -35,8 +35,8 @@ namespace KripteksVM
             txtBeckhoffPortNo.Text = controllerSettings.controllerBeckhoff.portNo;
             txtControllerCycleMs.Text = controllerSettings.cycleTime.ToString();
 
-            txtModbusIPAddress.Text = controllerSettings.controllerModbus.IPAddress;
-            txtModbusPortNo.Text = controllerSettings.controllerModbus.portNo.ToString();
+            txtModbusIPAddress.Text = controllerSettings.controllerModbusTCP.IPAddress;
+            txtModbusPortNo.Text = controllerSettings.controllerModbusTCP.portNo.ToString();
         }
 
         private void btnControllerPropertiesClose_Click(object sender, EventArgs e)
@@ -54,8 +54,8 @@ namespace KripteksVM
             controllerSettings.controllerType = cbControllerType.SelectedItem.ToString();
             controllerSettings.cycleTime = int.Parse(txtControllerCycleMs.Text);
 
-            controllerSettings.controllerModbus.IPAddress = txtModbusIPAddress.Text;
-            controllerSettings.controllerModbus.portNo = Convert.ToUInt16(txtModbusPortNo.Text);
+            controllerSettings.controllerModbusTCP.IPAddress = txtModbusIPAddress.Text;
+            controllerSettings.controllerModbusTCP.portNo = Convert.ToUInt16(txtModbusPortNo.Text);
             clControlFile.SetControllerSettings(controllerSettings);
 
             CallBackRefreshControllerSettings();// diger form u tetikle

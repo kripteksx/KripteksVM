@@ -15,7 +15,7 @@ namespace KripteksVM
         private VirtualMachine _virtualMachine = new VirtualMachine();
         private ControllerSettings _controllerSettings = new ControllerSettings();
         private ControllerBeckhoff _controllerBeckhoff = new ControllerBeckhoff();
-        private ControllerModbus _controllerModbus = new ControllerModbus();
+        private ControllerModbusTCP _controllerModbus = new ControllerModbusTCP();
         private DataGridViewVariables _dataGridViewVariables = new DataGridViewVariables();
         private IController _controller;
         private ControllerSettingsFile _controllerSettingsFile = new ControllerSettingsFile();
@@ -85,7 +85,6 @@ namespace KripteksVM
             tmrForm.Enabled = true;
             _general.LogText("Timers started.");
         }
-
         private void tmrInit_Tick(object sender, EventArgs e)
         {
             switch (_initState)
@@ -151,7 +150,7 @@ namespace KripteksVM
                 case 70:
                     if (_chromiumBrowser.browser.IsLoading)
                     {
-                        CallBackRefreshInitStatus("main frame is loaded... | " + _chromiumBrowser.ConsoleLog);
+                        CallBackRefreshInitStatus("main frame is loading... | " + _chromiumBrowser.ConsoleLog);
                     }
                     else
                     {
@@ -171,9 +170,7 @@ namespace KripteksVM
                         tmrInit.Enabled = false;
                     }
                     break;
-
             }
-
         }
         private void tmrSlowRefresh_Tick(object sender, EventArgs e)
         {
@@ -181,7 +178,7 @@ namespace KripteksVM
         }
         private void tmrKeyRefresh_Tick(object sender, EventArgs e)
         {
-            // klavye ve mouse 
+            // klavye 
             for (int i = 0; i < 255; i++)
             {
                 int state = GetAsyncKeyState(i);
@@ -261,7 +258,6 @@ namespace KripteksVM
                 }
                 catch
                 {
-
                 }
             }
         }
@@ -297,24 +293,17 @@ namespace KripteksVM
                 }
                 catch
                 {
-
                 }
             }
         }
         private void tmrVarRefresh_Tick(object sender, EventArgs e)
         {
-            //Application.DoEvents();
-
-            //_general.SetPriorityProcessAndTheards("KripteksVM", ProcessPriorityClass.RealTime, ThreadPriorityLevel.TimeCritical);
-
-
             // Alive timer count
             _performance.varRefreshAliveCount++;
 
             // islem suresi
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-
 
             // timer cycle time
             if (_performance.stopWatchCycleTimer.IsRunning)
@@ -327,13 +316,11 @@ namespace KripteksVM
                 _performance.stopWatchCycleTimer.Start();
             }
 
-
             // cycle time guncelle / buradan alinmali
             s_timerVariables.Interval = _controllerSettings.cycleTime;
 
             // refresh controller variable
             _virtualMachine = _controller.RefreshVariables(_virtualMachine);
-
 
             try
             {
@@ -360,7 +347,6 @@ namespace KripteksVM
                         if (arrsboWA[i] != "") _virtualMachine.applicationToControllerVariables.boolArrayBuff[i] = Convert.ToBoolean(arrsboWA[i]);
                     }
 
-
                     _chromiumBrowser.browser.ExecuteScriptAsync("dAW=[" + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[0].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[1].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[2].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[3].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[4].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[5].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[6].ToString().Replace(",", ".") + "," + _virtualMachine.controllerToApplicationVariables.doubleArrayBuff[7].ToString().Replace(",", ".") + "]");
 
                     string sdWA = _chromiumBrowser.GetJSValueByVar(_chromiumBrowser.browser, "dWA");
@@ -378,12 +364,9 @@ namespace KripteksVM
                         if (arrswWA[i] != "") _virtualMachine.applicationToControllerVariables.wordArrayBuff[i] = Convert.ToInt16(arrswWA[i]);
                     }
                 }
-
             }
             catch
             {
-                // Alive timer count
-                //iPerformanceVarRefreshAliveCount--;
             }
 
             // controller <-> application
@@ -398,8 +381,6 @@ namespace KripteksVM
         }
         private void tmrFormRefresh_Tick(object sender, EventArgs e)
         {
-
-
             lblATAID.Text = _virtualMachine.virtualApplication.AID;
             lblATName.Text = _virtualMachine.virtualApplication.name;
             lblATInfo.Text = _virtualMachine.virtualApplication.info;
@@ -412,12 +393,12 @@ namespace KripteksVM
                 lblControllerConnectionAddress.Text = _controllerSettings.controllerBeckhoff.AMSNetID;
                 lblControllerConnectionPortNo.Text = _controllerSettings.controllerBeckhoff.portNo;
             }
-            else if (_controllerSettings.controllerType == "Modbus")
+            else if (_controllerSettings.controllerType == "ModbusTCP")
             {
                 lblControllerConnectionAddress_.Text = "IP Address";
                 lblControllerConnectionPortNo_.Text = "Port No";
-                lblControllerConnectionAddress.Text = _controllerSettings.controllerModbus.IPAddress;
-                lblControllerConnectionPortNo.Text = _controllerSettings.controllerModbus.portNo.ToString();
+                lblControllerConnectionAddress.Text = _controllerSettings.controllerModbusTCP.IPAddress;
+                lblControllerConnectionPortNo.Text = _controllerSettings.controllerModbusTCP.portNo.ToString();
             }
             lblPerformanceControllerCycleTickMs.Text = _controllerSettings.cycleTime.ToString();
             lblPerformanceControllerElapsedTimeMs.Text = _performance.controllerElapsedTimeMs.ToString();
@@ -522,12 +503,12 @@ namespace KripteksVM
         }
         private void dgvVariables_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            dgvVariables.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
         private void dgvVariables_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             dgvVariables.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
-
         private void ChangeControllerType()
         {
             if (_controllerSettings.controllerType == "Beckhoff") _controller = _controllerBeckhoff;
@@ -582,7 +563,6 @@ namespace KripteksVM
             }
         }
         #endregion
-
         #region Tool Strip Menu
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -657,6 +637,5 @@ namespace KripteksVM
             _controller.Disconnect(_controllerSettings);
         }
         #endregion
-
     }
 }

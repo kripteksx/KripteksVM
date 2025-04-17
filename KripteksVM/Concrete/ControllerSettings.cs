@@ -5,13 +5,13 @@
         public string controllerType;
         public int cycleTime;
         public ControllerBeckhoff controllerBeckhoff;
-        public ControllerModbus controllerModbus;
+        public ControllerModbusTCP controllerModbusTCP;
         public ControllerSettings()
         {
             this.controllerType = "Beckhoff";
             this.cycleTime = 100;
             this.controllerBeckhoff = new ControllerBeckhoff();
-            this.controllerModbus = new ControllerModbus();
+            this.controllerModbusTCP = new ControllerModbusTCP();
         }
 
         public class ControllerBeckhoff
@@ -25,12 +25,12 @@
             }
 
         }
-        public class ControllerModbus
+        public class ControllerModbusTCP
         {
             public string IPAddress;
             public int portNo;
             public bool isClient;
-            public ControllerModbus()
+            public ControllerModbusTCP()
             {
                 this.IPAddress = "127.0.0.1";
                 this.portNo = 502;

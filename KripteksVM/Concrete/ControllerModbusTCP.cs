@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace KripteksVM.Concrete
 {
-    public class ControllerModbus : IController
+    public class ControllerModbusTCP : IController
     {
         private General _general = General.GetInstance();
-        private ModbusTCP.Master modbusClient;
+        private ModbusTCP.Master modbusTCPClient;
         private VirtualMachine _virtualMachine = new VirtualMachine();
         private int _retryCount = 0;
         public void Connect(ControllerSettings controllerSettings)
@@ -67,15 +67,15 @@ namespace KripteksVM.Concrete
         {
             try
             {
-                if (modbusClient != null)
+                if (modbusTCPClient != null)
                 {
-                    if (modbusClient.connected)
+                    if (modbusTCPClient.connected)
                     {
                         virtualMachine.controllerStatus.isConnnected = true;
 
                         //modbusClient.ReadDiscreteInputs(2, 0, 0, 32);
                         //bitleri word tarafina tasidik
-                        modbusClient.ReadInputRegister(4, 0, 0, 20);
+                        modbusTCPClient.ReadInputRegister(4, 0, 0, 20);
 
 
                         // gonderilen 
@@ -108,7 +108,7 @@ namespace KripteksVM.Concrete
                             data[32 + i] = ConvertToByte(bitArray);
                         }
 
-                        modbusClient.WriteMultipleRegister(8, 0, 20, data);
+                        modbusTCPClient.WriteMultipleRegister(8, 0, 20, data);
 
                         // onceki cevrimden guncellenen
                         virtualMachine.controllerToApplicationVariables = _virtualMachine.controllerToApplicationVariables;
@@ -156,13 +156,13 @@ namespace KripteksVM.Concrete
         {
             try
             {
-                if (modbusClient != null)
+                if (modbusTCPClient != null)
                 {
-                    if (modbusClient.connected)
+                    if (modbusTCPClient.connected)
                     {
-                        modbusClient.disconnect();
+                        modbusTCPClient.disconnect();
                         _general.LogText("Controller disconnected.");
-                        modbusClient = null;
+                        modbusTCPClient = null;
                     }
                     else
                     {
@@ -184,10 +184,10 @@ namespace KripteksVM.Concrete
         {
             try
             {
-                modbusClient = new Master(controllerSettings.controllerModbus.IPAddress, Convert.ToUInt16(controllerSettings.controllerModbus.portNo), true);
-                modbusClient.OnResponseData += new ModbusTCP.Master.ResponseData(MBmaster_OnResponseData);
+                modbusTCPClient = new Master(controllerSettings.controllerModbusTCP.IPAddress, Convert.ToUInt16(controllerSettings.controllerModbusTCP.portNo), true);
+                modbusTCPClient.OnResponseData += new ModbusTCP.Master.ResponseData(MBmaster_OnResponseData);
 
-                _general.LogText(controllerSettings.controllerModbus.IPAddress + ":" + controllerSettings.controllerModbus.portNo.ToString() + " connected.");
+                _general.LogText(controllerSettings.controllerModbusTCP.IPAddress + ":" + controllerSettings.controllerModbusTCP.portNo.ToString() + " connected.");
                 _general.LogText("Controller is " + controllerSettings.controllerType + ".");
             }
             catch (Exception e)

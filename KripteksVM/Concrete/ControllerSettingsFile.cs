@@ -27,8 +27,8 @@ namespace KripteksVM.Concrete
                     if (values[0] == "ControllerCycleMs") controllerSettings.cycleTime = int.Parse(values[1]);
                     if (values[0] == "BeckhoffAMSNetID") controllerSettings.controllerBeckhoff.AMSNetID = values[1];
                     if (values[0] == "BeckhoffPortNo") controllerSettings.controllerBeckhoff.portNo = values[1];
-                    if (values[0] == "ModbusIpAddress") controllerSettings.controllerModbus.IPAddress = values[1];
-                    if (values[0] == "ModbusPortNo") controllerSettings.controllerModbus.portNo = Convert.ToUInt16(values[1]);
+                    if (values[0] == "ModbusTCPIpAddress") controllerSettings.controllerModbusTCP.IPAddress = values[1];
+                    if (values[0] == "ModbusTCPPortNo") controllerSettings.controllerModbusTCP.portNo = Convert.ToUInt16(values[1]);
 
                     yazi = sw.ReadLine();
                 }
@@ -58,8 +58,8 @@ namespace KripteksVM.Concrete
                 sw.WriteLine("ControllerCycleMs" + "=" + controllerSettings.cycleTime);
                 sw.WriteLine("BeckhoffAMSNetID" + "=" + controllerSettings.controllerBeckhoff.AMSNetID);
                 sw.WriteLine("BeckhoffPortNo" + "=" + controllerSettings.controllerBeckhoff.portNo);
-                sw.WriteLine("ModbusIpAddress" + "=" + controllerSettings.controllerModbus.IPAddress);
-                sw.WriteLine("ModbusPortNo" + "=" + controllerSettings.controllerModbus.portNo);
+                sw.WriteLine("ModbusTCPIpAddress" + "=" + controllerSettings.controllerModbusTCP.IPAddress);
+                sw.WriteLine("ModbusTCPPortNo" + "=" + controllerSettings.controllerModbusTCP.portNo);
 
                 sw.Flush();
                 sw.Close();

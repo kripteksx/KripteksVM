@@ -33,13 +33,13 @@
             this.btnControllerPropertiesClose = new System.Windows.Forms.Button();
             this.cbControllerType = new System.Windows.Forms.ComboBox();
             this.tabControllerProperties = new System.Windows.Forms.TabControl();
+            this.tabControllerPropertiesArduino = new System.Windows.Forms.TabPage();
             this.tabControllerPropertiesBeckhoff = new System.Windows.Forms.TabPage();
             this.txtBeckhoffPortNo = new System.Windows.Forms.TextBox();
             this.txtBeckhoffAMSNetID = new System.Windows.Forms.TextBox();
             this.lblBeckhoffPortNo = new System.Windows.Forms.Label();
             this.lblBeckhoffAMSNetID = new System.Windows.Forms.Label();
-            this.tabControllerPropertiesArduino = new System.Windows.Forms.TabPage();
-            this.tabControllerPropertiesModbus = new System.Windows.Forms.TabPage();
+            this.tabControllerPropertiesModbusTCP = new System.Windows.Forms.TabPage();
             this.txtModbusPortNo = new System.Windows.Forms.TextBox();
             this.txtModbusIPAddress = new System.Windows.Forms.TextBox();
             this.lblModbusPortNo = new System.Windows.Forms.Label();
@@ -48,7 +48,7 @@
             this.lblControllerCycleMs_ = new System.Windows.Forms.Label();
             this.tabControllerProperties.SuspendLayout();
             this.tabControllerPropertiesBeckhoff.SuspendLayout();
-            this.tabControllerPropertiesModbus.SuspendLayout();
+            this.tabControllerPropertiesModbusTCP.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnControllerSettingsApply
@@ -77,7 +77,7 @@
             this.cbControllerType.Items.AddRange(new object[] {
             "Arduino",
             "Beckhoff",
-            "Modbus"});
+            "ModbusTCP"});
             this.cbControllerType.Location = new System.Drawing.Point(12, 12);
             this.cbControllerType.Name = "cbControllerType";
             this.cbControllerType.Size = new System.Drawing.Size(121, 24);
@@ -88,12 +88,22 @@
             // 
             this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesArduino);
             this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesBeckhoff);
-            this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesModbus);
+            this.tabControllerProperties.Controls.Add(this.tabControllerPropertiesModbusTCP);
             this.tabControllerProperties.Location = new System.Drawing.Point(12, 42);
             this.tabControllerProperties.Name = "tabControllerProperties";
             this.tabControllerProperties.SelectedIndex = 0;
             this.tabControllerProperties.Size = new System.Drawing.Size(758, 463);
             this.tabControllerProperties.TabIndex = 5;
+            // 
+            // tabControllerPropertiesArduino
+            // 
+            this.tabControllerPropertiesArduino.Location = new System.Drawing.Point(4, 25);
+            this.tabControllerPropertiesArduino.Name = "tabControllerPropertiesArduino";
+            this.tabControllerPropertiesArduino.Padding = new System.Windows.Forms.Padding(3);
+            this.tabControllerPropertiesArduino.Size = new System.Drawing.Size(750, 434);
+            this.tabControllerPropertiesArduino.TabIndex = 1;
+            this.tabControllerPropertiesArduino.Text = "Arduino";
+            this.tabControllerPropertiesArduino.UseVisualStyleBackColor = true;
             // 
             // tabControllerPropertiesBeckhoff
             // 
@@ -141,28 +151,18 @@
             this.lblBeckhoffAMSNetID.TabIndex = 0;
             this.lblBeckhoffAMSNetID.Text = "AMSNetID";
             // 
-            // tabControllerPropertiesArduino
+            // tabControllerPropertiesModbusTCP
             // 
-            this.tabControllerPropertiesArduino.Location = new System.Drawing.Point(4, 25);
-            this.tabControllerPropertiesArduino.Name = "tabControllerPropertiesArduino";
-            this.tabControllerPropertiesArduino.Padding = new System.Windows.Forms.Padding(3);
-            this.tabControllerPropertiesArduino.Size = new System.Drawing.Size(750, 434);
-            this.tabControllerPropertiesArduino.TabIndex = 1;
-            this.tabControllerPropertiesArduino.Text = "Arduino";
-            this.tabControllerPropertiesArduino.UseVisualStyleBackColor = true;
-            // 
-            // tabControllerPropertiesModbus
-            // 
-            this.tabControllerPropertiesModbus.Controls.Add(this.txtModbusPortNo);
-            this.tabControllerPropertiesModbus.Controls.Add(this.txtModbusIPAddress);
-            this.tabControllerPropertiesModbus.Controls.Add(this.lblModbusPortNo);
-            this.tabControllerPropertiesModbus.Controls.Add(this.lblModbusIPAddress);
-            this.tabControllerPropertiesModbus.Location = new System.Drawing.Point(4, 25);
-            this.tabControllerPropertiesModbus.Name = "tabControllerPropertiesModbus";
-            this.tabControllerPropertiesModbus.Size = new System.Drawing.Size(750, 434);
-            this.tabControllerPropertiesModbus.TabIndex = 2;
-            this.tabControllerPropertiesModbus.Text = "Modbus";
-            this.tabControllerPropertiesModbus.UseVisualStyleBackColor = true;
+            this.tabControllerPropertiesModbusTCP.Controls.Add(this.txtModbusPortNo);
+            this.tabControllerPropertiesModbusTCP.Controls.Add(this.txtModbusIPAddress);
+            this.tabControllerPropertiesModbusTCP.Controls.Add(this.lblModbusPortNo);
+            this.tabControllerPropertiesModbusTCP.Controls.Add(this.lblModbusIPAddress);
+            this.tabControllerPropertiesModbusTCP.Location = new System.Drawing.Point(4, 25);
+            this.tabControllerPropertiesModbusTCP.Name = "tabControllerPropertiesModbusTCP";
+            this.tabControllerPropertiesModbusTCP.Size = new System.Drawing.Size(750, 434);
+            this.tabControllerPropertiesModbusTCP.TabIndex = 2;
+            this.tabControllerPropertiesModbusTCP.Text = "ModbusTCP";
+            this.tabControllerPropertiesModbusTCP.UseVisualStyleBackColor = true;
             // 
             // txtModbusPortNo
             // 
@@ -230,8 +230,8 @@
             this.tabControllerProperties.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.ResumeLayout(false);
             this.tabControllerPropertiesBeckhoff.PerformLayout();
-            this.tabControllerPropertiesModbus.ResumeLayout(false);
-            this.tabControllerPropertiesModbus.PerformLayout();
+            this.tabControllerPropertiesModbusTCP.ResumeLayout(false);
+            this.tabControllerPropertiesModbusTCP.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -250,7 +250,7 @@
         private System.Windows.Forms.TabPage tabControllerPropertiesArduino;
         private System.Windows.Forms.TextBox txtControllerCycleMs;
         private System.Windows.Forms.Label lblControllerCycleMs_;
-        private System.Windows.Forms.TabPage tabControllerPropertiesModbus;
+        private System.Windows.Forms.TabPage tabControllerPropertiesModbusTCP;
         private System.Windows.Forms.TextBox txtModbusPortNo;
         private System.Windows.Forms.TextBox txtModbusIPAddress;
         private System.Windows.Forms.Label lblModbusPortNo;

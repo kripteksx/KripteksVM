@@ -10,7 +10,5 @@ namespace KripteksVM.Concrete
         void DataGripViewRefresh(DataGridView dgv, bool[] bo, bool[] isForced);
         void DataGridViewInit(DataGridView dgv, DataGridViewVariableDirection dgvVariableDirection, DataGridViewVariableType dgvVariableType, VirtualMachine virtualMachine);
         void DataGridViewForced(VirtualMachine virtualMachine);
-
-
     }
 }
